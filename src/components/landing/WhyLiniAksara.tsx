@@ -33,9 +33,9 @@ export default function WhyLiniAksara() {
                             <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
                                 {item.title}
                             </h3>
-                            {item.description && (
+                            {/* {item.description && (
                                 <p className="text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
-                            )}
+                            )} */}
                         </motion.div>
                     ))}
                 </div>

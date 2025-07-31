@@ -11,12 +11,12 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Header from "./layout/Header";
-import Footer from "./layout/Footer";
+import Header from "./landing/Header";
+import Footer from "./landing/Footer";
 import Hero from "./landing/Hero";
 import FeaturedFeatures from "./landing/FeaturedFeatures";
-import WhyLiniAksara from "./landing/WhyLiniAksara";
 import ContentShowcase from "./landing/ContentShowcase";
+import WhyLiniAksara from "./landing/WhyLiniAksara";
 
 export const Features = [
   {
@@ -103,10 +103,10 @@ export default function LandingPage() {
 
       <Hero onOpen={onOpen} />
       
-      <FeaturedFeatures features={Features} />
-      
+      <FeaturedFeatures />
+
       <WhyLiniAksara />
-      
+
       <ContentShowcase />
       
       <Footer />
