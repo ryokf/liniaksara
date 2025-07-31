@@ -1,8 +1,22 @@
 @import "tailwindcss";
 
 :root {
+  /* Base colors */
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Brand Colors */
+  --primary-1: #8A84E2;
+  --primary-2: #84A6E2;
+  --primary-3: #84C9E2;
+  --primary-4: #84E2DC;
+  
+  /* Gradient presets */
+  --gradient-primary: linear-gradient(to right, var(--primary-1), var(--primary-4));
+  --gradient-subtle: linear-gradient(to right, var(--primary-1), var(--primary-2), var(--primary-4));
+  
+  /* Shadows */
+  --shadow-glow: 0 0 10px rgba(138,132,226,0.6);
 }
 
 @theme inline {
@@ -19,8 +33,84 @@
   }
 }
 
+/* Utility Classes */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-bg {
+  background: var(--gradient-primary);
+}
+
+.gradient-border {
+  border-image: var(--gradient-primary);
+  border-image-slice: 1;
+}
+
+/* Feature Card Colors */
+.feature-icon {
+  color: var(--primary-1);
+}
+
+.feature-icon-1 { color: var(--primary-1); }
+.feature-icon-2 { color: var(--primary-2); }
+.feature-icon-3 { color: var(--primary-3); }
+.feature-icon-4 { color: var(--primary-4); }
+
+/* Background Gradients */
+.bg-gradient-1 {
+  background: linear-gradient(to right, var(--primary-1), var(--primary-2));
+}
+
+.bg-gradient-2 {
+  background: linear-gradient(to right, var(--primary-2), var(--primary-3));
+}
+
+.bg-gradient-3 {
+  background: linear-gradient(to right, var(--primary-3), var(--primary-4));
+}
+
+/* Hover Effects */
+.hover-gradient:hover {
+  box-shadow: 0 0 15px var(--primary-1);
+}
+
+.dark-toggle {
+  background: var(--gradient-primary);
+}
+
+.animate-glow {
+  animation: pulse 2s infinite;
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Base Styles */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
