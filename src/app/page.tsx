@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import LandingPage from "@/components/templates/LandingPage";
+import LandingPage from "@/components/organisms/LandingPage";
 
 
 export default function RootPage() {

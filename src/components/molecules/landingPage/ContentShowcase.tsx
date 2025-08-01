@@ -20,7 +20,7 @@ export default function ContentShowcase() {
           <span className="gradient-text">LiniAksara</span>?
         </h2>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+        <div className="grid sm:grid-cols-2 gap-8 text-left">
           {ContentTypes.map((item, index) => (
             <motion.div
               key={index}

@@ -1,0 +1,84 @@
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import Logo from '../../atoms/Logo';
+import Button from '../../atoms/Button';
+import NavMenu from '../../organisms/NavMenu';
+
+interface HeaderProps {
+    onOpen: (type: 'login' | 'signup') => void;
+}
+
+export default function Header({
+    onOpen,
+}: HeaderProps) {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    return (
+        <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-sm">
+            <div className="w-full">
+                <div className="max-w-7xl  mx-auto flex items-center justify-between h-20 px-6 lg:px-12">
+                    <Logo />
+
+                    <NavMenu />
+
+                    {/* Desktop Actions */}
+                    <div className="hidden md:flex items-center gap-x-4 pl-4 flex-shrink-0">
+
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => onOpen('login')}
+                        >
+                            Login
+                        </Button>
+
+                        <Button
+                            size="sm"
+                            onClick={() => onOpen('signup')}
+                        >
+                            Signup
+                        </Button>
+                    </div>
+
+                    {/* Mobile Menu Toggle */}
+                    <div className="md:hidden">
+                        <button
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            className="text-gray-800 dark:text-white"
+                        >
+                            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                        </button>
+                    </div>
+                </div>
+
+                {/* Mobile Menu */}
+                {isMenuOpen && (
+                    <div className="md:hidden px-6 pb-4 bg-white dark:bg-gray-900">
+                        <NavMenu mobile />
+
+                        <div className="flex flex-col gap-4 pt-4">
+
+                            <Button
+                                variant="outline"
+                                onClick={() => onOpen('login')}
+                                className="w-full"
+                            >
+                                Login
+                            </Button>
+
+                            <Button
+                                onClick={() => onOpen('signup')}
+                                className="w-full"
+                            >
+                                Signup
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Animated Neon Divider */}
+                <div className="h-1 w-full gradient-bg animate-glow" />
+            </div>
+        </header>
+    );
+}

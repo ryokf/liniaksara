@@ -59,7 +59,7 @@ export const WhyLiniAksaraItems = [
   {
     icon: faShieldAlt,
     color: "feature-icon-1",
-    title: "Legally Licensed and Protected",
+    title: "Protected with Smart Contracts",
   },
   {
     icon: faPaintBrush,
@@ -95,18 +95,8 @@ export const ContentTypes = [
     desc: "View and share colorful visual artworks from the creative International community.",
   },
   {
-    src: "/images/zine.jpeg",
-    title: "Zines & Creative Works",
-    desc: "Discover zines, short stories, and expressive creative content made with passion!",
-  },
-  {
     src: "/images/anime.png",
     title: "Anime & Donghua",
     desc: "Stream your favorite anime with official licenses and top-quality viewing experience.",
-  },
-  {
-    src: "/images/drama.jpg",
-    title: "Asian Dramas",
-    desc: "Watch Korean, Japanese, and other Asian dramas to brighten your days with heartfelt stories.",
   },
 ];
