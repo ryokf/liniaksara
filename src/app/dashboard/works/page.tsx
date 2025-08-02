@@ -5,6 +5,7 @@ import { Plus, Search } from 'lucide-react';
 import DashboardLayout from '@/components/templates/DashboardLayout';
 import FilterButton from '@/components/atoms/FilterButton';
 import WorkCard from '@/components/molecules/WorkCard';
+import UploadWorkForm from '@/components/molecules/UploadWorkForm';
 
 type WorkType = 'book' | 'image' | 'video';
 
@@ -35,6 +36,7 @@ const mockWorks = [
 export default function MyWorksPage() {
     const [activeFilter, setActiveFilter] = useState<WorkType>('book');
     const [searchQuery, setSearchQuery] = useState('');
+    const [isUploadFormOpen, setIsUploadFormOpen] = useState(false);
 
     const filteredWorks = mockWorks.filter(work => 
         work.workType === activeFilter &&
@@ -43,6 +45,12 @@ export default function MyWorksPage() {
 
     return (
         <DashboardLayout activeMenu="/dashboard/works">
+            {/* Upload Form Modal */}
+            <UploadWorkForm 
+                isOpen={isUploadFormOpen}
+                onClose={() => setIsUploadFormOpen(false)}
+            />
+
             {/* Header with Actions */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                 <div>
@@ -54,7 +62,10 @@ export default function MyWorksPage() {
                     </p>
                 </div>
                 
-                <button className="px-4 py-2 rounded-lg gradient-bg text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
+                <button 
+                    onClick={() => setIsUploadFormOpen(true)}
+                    className="px-4 py-2 rounded-lg gradient-bg text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+                >
                     <Plus className="w-5 h-5" />
                     Buat Karya Baru
                 </button>
@@ -104,6 +115,13 @@ export default function MyWorksPage() {
                         {...work}
                     />
                 ))}
+                {filteredWorks.length === 0 && (
+                    <div className="col-span-full text-center py-12">
+                        <p className="text-gray-500 dark:text-gray-400">
+                            Tidak ada karya ditemukan
+                        </p>
+                    </div>
+                )}
             </div>
         </DashboardLayout>
     );
