@@ -48,6 +48,9 @@
 .gradient-border {
   border-image: var(--gradient-primary);
   border-image-slice: 1;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 99999px;
 }
 
 /* Feature Card Colors */
