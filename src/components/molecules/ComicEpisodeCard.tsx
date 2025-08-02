@@ -1,0 +1,47 @@
+import Image from 'next/image';
+import Link from 'next/link';
+
+interface ComicEpisodeCardProps {
+    id: string;
+    chapterNumber: number;
+    title: string;
+    thumbnail: string;
+    description: string;
+}
+
+export default function ComicEpisodeCard({
+    id,
+    chapterNumber,
+    title,
+    thumbnail,
+    description
+}: ComicEpisodeCardProps) {
+    return (
+        <Link href={`/read/${id}`} className="group">
+            <div className="flex gap-6 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors">
+                {/* Thumbnail */}
+                <div className="relative w-32 h-48 rounded-lg overflow-hidden flex-shrink-0">
+                    <Image
+                        src={thumbnail}
+                        alt={title}
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 flex flex-col justify-center">
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                        Chapter {chapterNumber}
+                    </div>
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                        {title}
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                        {description}
+                    </p>
+                </div>
+            </div>
+        </Link>
+    );
+}
