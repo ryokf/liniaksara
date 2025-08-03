@@ -63,13 +63,6 @@ export default function Hero({ onOpen }: HeroProps) {
                         >
                             Start Adventure
                         </button>
-
-                        <button
-                            onClick={() => onOpen("login")}
-                            className="border border-gray-300 dark:border-gray-600 px-6 py-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition text-gray-700 dark:text-white"
-                        >
-                            Home
-                        </button>
                     </motion.div>
                 </motion.div>
 

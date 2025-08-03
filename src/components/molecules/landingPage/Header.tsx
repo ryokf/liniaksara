@@ -19,7 +19,7 @@ export default function Header({
                 <div className="max-w-7xl  mx-auto flex items-center justify-between h-20 px-6 lg:px-12">
                     <Logo />
 
-                    <NavMenu />
+                    {/* <NavMenu /> */}
 
                     {/* Desktop Actions */}
                     <div className="hidden md:flex items-center gap-x-4 pl-4 flex-shrink-0">

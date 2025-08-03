@@ -27,6 +27,12 @@ export default function Navbar() {
     const [searchCategory, setSearchCategory] = useState("Title");
     const [isScrolled, setIsScrolled] = useState(false);
 
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen(prev => !prev);
+    };
+
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 0);
@@ -96,7 +102,7 @@ export default function Navbar() {
                     </button> */}
 
 
-                    <div className="flex items-center gap-3 cursor-pointer">
+                    <div className="relative flex items-center gap-3 cursor-pointer" onClick={toggleDropdown}>
                         <span className="text-sm font-medium text-gray-800 dark:text-white hidden sm:block">
                             {user.name}
                         </span>
@@ -107,6 +113,14 @@ export default function Navbar() {
                                 <User size={18} className="text-gray-500" />
                             )}
                         </div>
+
+                        {isDropdownOpen && (
+                            <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 text-sm">
+                                <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</Link>
+                                <Link href="/settings" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</Link>
+                                <button className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Logout</button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
