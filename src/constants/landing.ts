@@ -7,13 +7,6 @@ import {
   faFilm,
   faShieldAlt,
   faInfinity,
-  faUserPlus,
-  faCompass,
-  faGlobe,
-  faImage,
-  faLock,
-  faRobot,
-  faUpload
 } from "@fortawesome/free-solid-svg-icons";
 
 export const Features = [

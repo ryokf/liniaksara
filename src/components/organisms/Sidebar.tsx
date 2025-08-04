@@ -1,12 +1,8 @@
 import {
     LayoutDashboard,
     Library,
-    Bell,
-    MessageSquare,
     UserCircle,
     Settings,
-    History,
-    Trophy
 } from 'lucide-react';
 import SidebarMenuItem from '../molecules/SidebarMenuItem';
 
