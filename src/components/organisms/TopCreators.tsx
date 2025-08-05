@@ -7,21 +7,24 @@ const mockCreators = [
         name: 'Luna Azki',
         description: 'Writer of introspective novels & magical realism.',
         imageUrl: '/images/creators/creator1.jpg',
-        worksCount: 12
+        worksCount: 12,
+        rank: 1
     },
     {
         id: '2',
         name: 'Jin Zen',
         description: 'Comic artist blending street culture & fantasy.',
         imageUrl: '/images/creators/creator2.jpg',
-        worksCount: 8
+        worksCount: 8,
+        rank: 2
     },
     {
         id: '3',
         name: 'Putri Jasmine',
         description: 'Drama screenwriter capturing Southeast Asian life.',
         imageUrl: '/images/creators/creator3.jpg',
-        worksCount: 5
+        worksCount: 5,
+        rank: 3
     }
 ];
 

@@ -12,7 +12,6 @@ interface WorkCardProps {
 }
 
 export default function WorkCard({
-    id,
     title,
     type,
     thumbnail,
