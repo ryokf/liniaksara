@@ -10,7 +10,7 @@ import DashboardLayout from '@/components/templates/DashboardLayout';
 
 // Komponen statistik card
 function StatCard({ icon: Icon, label, value, trend }: {
-    icon: any;
+    icon: React.ElementType;
     label: string;
     value: string;
     trend?: string;
@@ -87,7 +87,7 @@ export default function DashboardPage() {
                     Dashboard Overview
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400 mt-1">
-                    Welcome back! Here's what's happening with your content.
+                    Welcome back! Here&apos;s what&apos;s happening with your content.
                 </p>
             </header>
 

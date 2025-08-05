@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Bell, Moon, Sun, Globe, Shield, Key } from 'lucide-react';
+import { Bell, Sun, Globe, Shield } from 'lucide-react';
 import DashboardLayout from '@/components/templates/DashboardLayout';
 
 interface SettingsSectionProps {
     title: string;
     description: string;
-    icon: any;
+    icon: React.ElementType;
     children: React.ReactNode;
 }
 
