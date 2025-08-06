@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { User as SupabaseUser } from "@supabase/supabase-js";
 import supabase from "@/config/supabase";
 import LandingPage from "@/components/organisms/LandingPage";
 
@@ -80,10 +79,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setError(error as Error);
         }
     };
-
-    if(!user){
-        return <LandingPage></LandingPage>
-    }
 
     return (
         <AuthContext.Provider value={{ user, loading, error, signOut }}>

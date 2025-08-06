@@ -21,7 +21,6 @@ export default function LayoutClientWrapper({
 
   return (
     <>
-      {/* {showNavbar && <DashboardNavbar />} */}
       {children}
     </>
   );

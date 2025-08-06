@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-// import { Book, Image as ImageIcon, Film, Users } from 'lucide-react';
 import Navbar from '../molecules/Navbar';
 import FilterButton from '../atoms/FilterButton';
 import WorkCard from '../molecules/WorkCard';

@@ -13,16 +13,8 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-// Anda mungkin perlu mengambil data sesi untuk menampilkan username
-// import { useSession } from "next-auth/react";
 
 export default function Navbar() {
-    // Contoh state untuk data user, idealnya diambil dari useSession()
-    // const { data: session } = useSession();
-    // const user = {
-    //     name: "username",
-    //     image: "", // URL gambar profil user
-    // };
 
     const { user, loading, error, signOut } = useAuth();
     console.log(user);

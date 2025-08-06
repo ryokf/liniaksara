@@ -27,17 +27,18 @@ export default function Header({
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => onOpen('login')}
+
                         >
                             Login
                         </Button>
 
-                        <Button
-                            size="sm"
-                            onClick={() => onOpen('signup')}
-                        >
-                            Signup
-                        </Button>
+                        <a href="/register">
+                            <Button
+                                size="sm"
+                            >
+                                Signup
+                            </Button>
+                        </a>
                     </div>
 
                     {/* Mobile Menu Toggle */}
@@ -60,14 +61,14 @@ export default function Header({
 
                             <Button
                                 variant="outline"
-                                onClick={() => onOpen('login')}
+
                                 className="w-full"
                             >
                                 Login
                             </Button>
 
                             <Button
-                                onClick={() => onOpen('signup')}
+
                                 className="w-full"
                             >
                                 Signup
