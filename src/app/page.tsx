@@ -1,24 +1,20 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import LandingPage from "@/components/organisms/LandingPage";
-
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function RootPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { user, loading } = useAuth();
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      router.push("/home");
-    }
-  }, [status, router]);
-
-  if (status === "loading") {
+  if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
+  if (user) {
+    return redirect("/home");
+  }
+
   return <LandingPage />;
+
 }

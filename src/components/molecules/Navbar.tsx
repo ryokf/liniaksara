@@ -12,16 +12,20 @@ import {
     User,
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 // Anda mungkin perlu mengambil data sesi untuk menampilkan username
 // import { useSession } from "next-auth/react";
 
 export default function Navbar() {
     // Contoh state untuk data user, idealnya diambil dari useSession()
     // const { data: session } = useSession();
-    const user = {
-        name: "username",
-        image: "", // URL gambar profil user
-    };
+    // const user = {
+    //     name: "username",
+    //     image: "", // URL gambar profil user
+    // };
+
+    const { user, loading, error, signOut } = useAuth();
+    console.log(user);
 
     const [searchQuery, setSearchQuery] = useState("");
     const [searchCategory, setSearchCategory] = useState("Title");
@@ -104,11 +108,11 @@ export default function Navbar() {
 
                     <div className="relative flex items-center gap-3 cursor-pointer" onClick={toggleDropdown}>
                         <span className="text-sm font-medium text-gray-800 dark:text-white hidden sm:block">
-                            {user.name}
+                            {user?.displayName || "User"}
                         </span>
                         <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
-                            {user.image ? (
-                                <Image src={user.image} alt="Profil" width={32} height={32} />
+                            {user?.photo ? (
+                                <Image src={user.photo} alt="Profil" width={32} height={32} />
                             ) : (
                                 <User size={18} className="text-gray-500" />
                             )}
@@ -117,8 +121,8 @@ export default function Navbar() {
                         {isDropdownOpen && (
                             <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 text-sm">
                                 <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</Link>
-                                <Link href="/settings" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</Link>
-                                <button className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Logout</button>
+                                <Link href="/dashboard/settings" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</Link>
+                                <button onClick={signOut} className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Logout</button>
                             </div>
                         )}
                     </div>
