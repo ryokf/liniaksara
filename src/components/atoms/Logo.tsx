@@ -20,7 +20,7 @@ export default function Logo({
     return (
         <div className={`flex items-center space-x-3 flex-shrink-0 ${className}`}>
             <Image
-                src="/logo-inkura.png"
+                src="/logo.png"
                 alt="Logo Inkura"
                 width={sizeMap[size].img}
                 height={sizeMap[size].img}

@@ -10,7 +10,7 @@ interface HeroProps {
 export default function Hero({ onOpen }: HeroProps) {
     return (
         <motion.section
-            className="relative bg-white dark:bg-gray-950 overflow-hidden py-40"
+            className="relative bg-white dark:bg-gray-950 overflow-hidden py-10 md:py-40"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -73,7 +73,7 @@ export default function Hero({ onOpen }: HeroProps) {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.3 }}
                 >
-                    <div className="relative w-[450px] h-[450px] md:w-[400px] md:h-[400px]">
+                    <div className="relative w-[350px] aspect-square md:w-[400px] md:h-[400px]">
                         <Image
                             src="/hero.png"
                             alt="Maskot Inkur"

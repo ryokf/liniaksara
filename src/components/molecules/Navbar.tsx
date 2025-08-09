@@ -13,11 +13,11 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import BottomNav from './BottomNav';
 
 export default function Navbar() {
 
     const { user, loading, error, signOut } = useAuth();
-    console.log(user);
 
     const [searchQuery, setSearchQuery] = useState("");
     const [searchCategory, setSearchCategory] = useState("Title");
@@ -39,20 +39,25 @@ export default function Navbar() {
     }, []);
 
     return (
-        <header className={`w-full fixed top-0 left-0 z-50 transition-all ${isScrolled ? 'backdrop-blur-xl' : ''}`}>
-            <div className="max-w-[90rem] mx-auto px-6 py-2 flex items-center justify-between gap-8">
+        <>
+            {/* Desktop Navbar */}
+            <nav className={`w-full fixed top-0 left-0 z-50 transition-all hidden md:block bg-white dark:bg-gray-900 ${
+                isScrolled ? 'shadow-md' : ''
+            }`}>
+                <div className="max-w-[90rem] mx-auto px-6 py-2 flex items-center justify-between gap-8">
                 {/* Bagian Kiri: Logo & Navigasi Utama */}
                 <div className="flex items-center gap-8">
                     {/* Logo */}
                     <Link href="/home" className="flex items-center gap-3 flex-shrink-0">
                         <Image
-                            src="/logo-LiniAksara.png" // Menggunakan logo yang ada di proyek Anda
+                            src="/logo.png" // Menggunakan logo yang ada di proyek Anda
                             alt="LiniAksara Logo"
                             width={36}
                             height={36}
+                            className="hidden md:block"
                         />
                         {/* INKURA pada screenshot diganti dengan nama proyek Anda */}
-                        <span className="text-xl font-bold text-gray-800 dark:text-white hidden lg:block">
+                        <span className="text-xl font-bold text-gray-800 dark:text-white block">
                             LiniAksara
                         </span>
                     </Link>
@@ -120,6 +125,8 @@ export default function Navbar() {
                     </div>
                 </div>
             </div>
-        </header>
+        </nav>
+        <BottomNav />
+        </>
     );
 }

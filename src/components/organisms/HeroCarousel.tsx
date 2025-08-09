@@ -51,7 +51,7 @@ export default function HeroCarousel({ items }: HeroCarouselProps) {
 
     return (
         <div
-            className="relative"
+            className="relative hidden sm:block"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >

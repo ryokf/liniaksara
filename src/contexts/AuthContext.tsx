@@ -39,7 +39,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         photo: user.user_metadata?.picture,
                     });
                 }
-                console.log('Current user:', user);
             } catch (error) {
                 setError(error as Error);
             } finally {

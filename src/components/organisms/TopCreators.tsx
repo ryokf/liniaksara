@@ -30,7 +30,7 @@ const mockCreators = [
 
 export default function TopCreators() {
     return (
-        <section className="py-16">
+        <section className="py-16 sm:block hidden">
             <div className="max-w-7xl mx-auto px-6">
                 {/* Header */}
                 <div className="flex items-center gap-2 mb-8">

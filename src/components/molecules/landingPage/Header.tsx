@@ -24,13 +24,16 @@ export default function Header({
                     {/* Desktop Actions */}
                     <div className="hidden md:flex items-center gap-x-4 pl-4 flex-shrink-0">
 
-                        <Button
-                            variant="outline"
-                            size="sm"
+                        <a href="/login">
 
-                        >
-                            Login
-                        </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+
+                            >
+                                Login
+                            </Button>
+                        </a>
 
                         <a href="/register">
                             <Button
@@ -59,20 +62,24 @@ export default function Header({
 
                         <div className="flex flex-col gap-4 pt-4">
 
-                            <Button
-                                variant="outline"
+                            <a href="/login">
+                                <Button
+                                    variant="outline"
 
-                                className="w-full"
-                            >
-                                Login
-                            </Button>
+                                    className="w-full"
+                                >
+                                    Login
+                                </Button>
+                            </a>
 
-                            <Button
+                            <a href="/register">
+                                <Button
 
-                                className="w-full"
-                            >
-                                Signup
-                            </Button>
+                                    className="w-full"
+                                >
+                                    Signup
+                                </Button>
+                            </a>
                         </div>
                     </div>
                 )}

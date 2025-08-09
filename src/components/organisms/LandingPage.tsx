@@ -5,7 +5,7 @@ import Button from "../atoms/Button";
 import Hero from "../molecules/landingPage/Hero";
 import WhyLiniAksara from "../molecules/landingPage/WhyLiniAksara";
 import ContentShowcase from "../molecules/landingPage/ContentShowcase";
-import Footer from "../molecules/landingPage/Footer";
+import Footer from "../molecules/Footer";
 import FeaturedFeatures from "../molecules/landingPage/FeaturedFeatures";
 
 

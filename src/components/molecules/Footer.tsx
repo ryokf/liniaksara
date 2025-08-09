@@ -6,12 +6,12 @@ import { faInstagram, faTwitter, faDiscord } from "@fortawesome/free-brands-svg-
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 pt-16 pb-8 px-6 border-t border-gray-200 dark:border-white/10">
+    <footer className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 pt-16 pb-8 px-6 border-t border-gray-200 dark:border-white/10 hidden md:block">
       <div className="max-w-6xl mx-auto grid md:grid-cols-4 gap-12 text-sm">
         {/* Logo & Description */}
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <Image src="/logo-LiniAksara.png" alt="LiniAksara Logo" width={32} height={32} />
+            <Image src="/logo.png" alt="LiniAksara Logo" width={32} height={32} />
             <h4 className="text-xl font-bold text-gray-800 dark:text-white">LiniAksara</h4>
           </div>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">

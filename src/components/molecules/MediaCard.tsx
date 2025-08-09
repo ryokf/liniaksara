@@ -3,10 +3,10 @@ import UnsplashImage from '../atoms/UnsplashImage';
 
 export interface MediaItemProps {
     id: string;
-    type: 'comic' | 'novel' | 'movie';
+    type: string;
     title: string;
-    cover: string;
-    author?: string;
+    cover?: string;
+    author_name?: string;
     rating?: number;
     episodeCount?: number;
 }
@@ -16,7 +16,7 @@ export default function MediaCard({
     type,
     title,
     cover,
-    author,
+    author_name,
     rating,
     episodeCount
 }: MediaItemProps) {
@@ -41,9 +41,9 @@ export default function MediaCard({
                     {title}
                 </h3>
 
-                {author && (
+                {author_name && (
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                        by {author}
+                        by {author_name}
                     </p>
                 )}
 
