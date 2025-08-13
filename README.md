@@ -1,134 +1,93 @@
-Tentu, mari kita perbaiki masalah pada file README.md yang saya buat sebelumnya.
+# LiniAksara
 
-Berdasarkan screenshot yang Anda berikan, masalah utamanya adalah penggunaan HTML inline dan bare URL yang tidak sesuai dengan best practice atau linter Markdown (seperti markdownlint). Aturan ini ada untuk memastikan file Markdown tetap bersih, mudah dibaca, dan kompatibel di berbagai platform.
+LiniAksara adalah platform kreatif untuk menikmati dan mengelola konten lintas media: novel/komik, film/video, serta aktivitas komunitas kreator. Proyek ini dibangun dengan Next.js (App Router) dan terintegrasi dengan Supabase untuk autentikasi serta data.
 
-Berikut adalah versi perbaikan dari README.md yang mengatasi semua masalah tersebut:
+## Konsep Produk
 
-Lini Aksara 📚✨
-Sebuah Platform Ekosistem Kreatif Internasional untuk Karya Orisinal Tanpa AI.
-<br />
-Tempat bertemu bagi para kreator dan penikmat komik, novel, fanart, anime, dan drama.
+- Multi-konten: menyajikan berbagai jenis karya (novel/komik, film/video).
+- Pengalaman personal:
+  - Halaman beranda berisi carousel karya populer, rekomendasi, daftar lanjutkan menonton/membaca, dan kreator teratas.
+  - Perpustakaan pribadi (library) berdasarkan transaksi/aktivitas pengguna.
+- Komunitas kreator: menampilkan kreator populer dan karya mereka.
+- Detail konten kaya: halaman detail (contoh komik) menyajikan informasi, episode/season, dan aksi cepat (baca sekarang, simpan ke daftar).
 
-Saran: Ganti gambar ini dengan GIF yang mendemonstrasikan fitur-fitur utama aplikasi Anda agar lebih menarik!
+Struktur folder utama:
+- App Router di `src/app` untuk routing (beranda/home, comic, novel, movie, search, read, watch, dashboard/profile).
+- Komponen terstruktur (atoms, molecules, organisms, templates) di `src/components` untuk UI yang modular.
+- Layanan data di `src/services` untuk pemanggilan Supabase dan logika bisnis.
+- Konteks autentikasi di `src/contexts` untuk mengelola state user sisi client.
 
-📖 Tentang Proyek
-Lini Aksara lahir dari sebuah harapan: menjadi rumah bagi karya-karya yang lahir dari hati kreator untuk pembacanya. Di tengah maraknya konten yang dihasilkan oleh AI, Lini Aksara hadir sebagai platform ekosistem kreatif yang didedikasikan untuk karya orisinal buatan manusia.
+## Teknologi Utama
 
-Platform ini dirancang untuk menjadi wadah bagi berbagai format kreatif, memungkinkan kreator untuk mengunggah dan memonetisasi karya mereka, serta bagi pengguna untuk menemukan dan menikmati cerita-cerita baru yang berkualitas.
+- Next.js 15 (App Router) dengan React 19 dan dev server Turbopack.
+- Supabase:
+  - Auth di client dengan `@supabase/auth-helpers-nextjs`.
+  - Middleware untuk proteksi route dan redirect berbasis sesi di `src/middleware.ts`.
+- Tailwind CSS v4 untuk styling.
+- Next/Image untuk optimasi gambar dan remote image domain yang dikonfigurasi di `next.config.ts`.
+- Ikon: `lucide-react`, `react-icons`, dan FontAwesome React.
+- TypeScript untuk type-safety, dengan alias `@/*` (lihat `tsconfig.json`).
 
-✨ Fitur Utama
-Platform Multi-Konten: Mendukung berbagai jenis karya seperti Novel, Komik, dan Video/Series.
+File penting:
+- <mcfile name="next.config.ts" path="/Users/ryokhrisna/data/coding/liniaksara/next.config.ts"></mcfile>
+- <mcfile name="middleware.ts" path="/Users/ryokhrisna/data/coding/liniaksara/src/middleware.ts"></mcfile>
+- <mcfile name="supabase.ts" path="/Users/ryokhrisna/data/coding/liniaksara/src/config/supabase.ts"></mcfile>
+- <mcfile name="HomeTemplate.tsx" path="/Users/ryokhrisna/data/coding/liniaksara/src/components/templates/HomeTemplate.tsx"></mcfile>
+- <mcfile name="ComicDetailTemplate.tsx" path="/Users/ryokhrisna/data/coding/liniaksara/src/components/templates/ComicDetailTemplate.tsx"></mcfile>
 
-Beranda & Feed Dinamis: Tampilan beranda yang modern dengan Hero Carousel untuk konten unggulan dan feed dinamis yang terpisah untuk desktop dan mobile.
+## Fitur Utama
 
-Otentikasi Pengguna: Sistem pendaftaran dan login yang aman menggunakan Supabase Auth, termasuk login via Google.
+- Beranda:
+  - Hero carousel karya populer.
+  - Carousel kategori (Novel/Komik dan Movie/Show).
+  - Kreator teratas.
+  - Library pengguna bila tersedia.
+- Detail karya:
+  - Halaman detail komik dengan cover, rating, genre, info kreator/publisher, dan daftar episode per season.
+- Dashboard Profil:
+  - Form editing profil (UI/UX, belum terhubung ke penyimpanan profil penuh).
+- Proteksi route:
+  - Public routes: `/`, `/login`, `/register`.
+  - Pengguna tanpa sesi akan di-redirect ke `/` saat mengakses route terproteksi.
+  - Pengguna yang sudah login diarahkan ke `/home` jika mengunjungi `/login` atau `/register`.
 
-Dashboard Kreator: Halaman khusus bagi kreator untuk mengelola karya mereka (/dashboard/works), melihat statistik, dan mengatur profil.
+## Persiapan Lingkungan
 
-Formulir Unggah Karya: Modal interaktif untuk mengunggah karya baru, lengkap dengan pilihan tipe, kategori, dan pratinjau thumbnail.
+1. Pastikan Node.js LTS terbaru terpasang.
+2. Instal dependensi:
+   ```bash
+   npm install
+   ```
+3. Buat file `.env.local` di root proyek dan isi variabel berikut:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+   (Ganti dengan kredensial Supabase Anda)
+4. Opsional: Terapkan migrasi SQL jika menggunakan Supabase lokal:
+   - Jalankan file di `supabase/migrations/20230813_create_creator_stats.sql` untuk statistik kreator.
 
-Penemuan Konten: Halaman pencarian dengan fungsionalitas filter berdasarkan tipe konten, status, dan genre/tag.
+## Menjalankan Secara Lokal
 
-Pengalaman Membaca & Menonton: Viewer yang imersif dan minimalis untuk membaca novel/komik (ChapterViewer) dan menonton video (VideoViewer) dengan kontrol navigasi.
+- Mode pengembangan:
+  ```bash
+  npm run dev
+  ```
+  Buka http://localhost:3000 di browser.
 
-Profil Kreator & Sosial: Halaman profil publik untuk setiap kreator yang menampilkan karya, serta fitur untuk menampilkan kreator teratas.
+- Build dan production:
+  ```bash
+  npm run build
+  npm start
+  ```
 
-🚀 Tumpukan Teknologi
-Proyek ini dibangun menggunakan teknologi modern untuk memastikan performa, skalabilitas, dan pengalaman developer yang baik.
+- Linting:
+  ```bash
+  npm run lint
+  ```
 
-Frontend:
-
-Next.js 15 (dengan Turbopack)
-
-React 19
-
-TypeScript
-
-Tailwind CSS 4
-
-Backend as a Service (BaaS):
-
-Supabase: Digunakan untuk Otentikasi, Database (PostgreSQL), dan Storage.
-
-UI & Animasi:
-
-Framer Motion: Untuk animasi yang halus dan interaktif.
-
-Lucide React: Untuk ikonografi yang bersih dan konsisten.
-
-Font Awesome: Digunakan di beberapa bagian landing page.
-
-Deployment:
-
-Direkomendasikan di Vercel
-
-🔧 Instalasi & Setup Lokal
-Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal Anda.
-
-Prasyarat
-Node.js (v18.18.0 atau lebih baru)
-
-npm, yarn, atau pnpm
-
-Git
-
-Langkah-langkah
-Clone repositori ini:
-
-Bash
-
-git clone https://github.com/username-anda/nama-repo.git
-cd nama-repo
-Install dependensi:
-
-Bash
-
-npm install
-Setup Environment Variables:
-Buat file .env.local di root proyek dan tambahkan kredensial Supabase Anda.
-
-Code snippet
-
-NEXT_PUBLIC_SUPABASE_URL="URL_PROYEK_SUPABASE_ANDA"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="ANON_KEY_SUPABASE_ANDA"
-Anda bisa mendapatkan kunci ini dari dashboard proyek Supabase Anda di bagian Settings > API.
-
-Jalankan server pengembangan:
-
-Bash
-
-npm run dev
-Buka http://localhost:3000 di browser Anda.
-
-📂 Struktur Proyek
-Struktur folder proyek ini diorganisir mengikuti prinsip Atomic Design untuk mempermudah skalabilitas dan pemeliharaan.
-
-/src
-├── app/                # Routing, Halaman, dan Layout (Next.js App Router)
-├── components/
-│   ├── atoms/          # Komponen UI terkecil (Button, InputField, etc.)
-│   ├── molecules/      # Gabungan dari beberapa atom (AuthCard, Navbar, etc.)
-│   ├── organisms/      # Komponen kompleks (HeroCarousel, Sidebar, etc.)
-│   └── templates/      # Struktur halaman (HomeTemplate, DashboardLayout, etc.)
-├── config/             # Konfigurasi, seperti koneksi Supabase
-├── constants/          # Data statis atau konstanta (item menu, konten landing page, etc.)
-├── contexts/           # React Context Providers (misal: AuthContext)
-├── services/           # Logika untuk berinteraksi dengan API/backend (auth, workServices)
-└── types/              # Definisi tipe TypeScript (works, profile, etc.)
-🎯 Tantangan & Pembelajaran
-(Bagian ini sangat baik untuk diisi dengan jujur. Ini menunjukkan kemampuan problem-solving Anda kepada rekruter)
-
-Selama pengembangan proyek ini, beberapa tantangan menarik yang saya hadapi antara lain:
-
-Manajemen State Otentikasi: Mengimplementasikan AuthContext yang sinkron dengan Supabase Auth di seluruh aplikasi, termasuk di server components dan client components serta middleware, merupakan tantangan yang menarik untuk memastikan pengalaman pengguna yang mulus.
-
-Struktur Data Fleksibel: Merancang skema database di Supabase yang dapat menangani berbagai jenis karya (novel dengan teks, komik dengan array gambar) sambil tetap menjaga query agar tetap efisien.
-
-Optimasi Tampilan Mobile: Membuat komponen yang sepenuhnya terpisah (MobileFeed) atau adaptif (BottomNav) untuk memberikan pengalaman yang optimal di perangkat mobile, terutama untuk feed konten yang padat.
-
-[Tambahkan tantangan dan pembelajaran lain yang Anda alami di sini!]
-
-📞 Kontak
-[Nama Anda] - [emailanda@example.com]
-
-Tautan Proyek: https://github.com/username-anda/nama-repo
+Script yang tersedia (lihat `package.json`):
+- `dev`: next dev menggunakan Turbopack.
+- `build`: next build.
+- `start`: next start.
+- `lint`: next lint.

@@ -77,36 +77,20 @@ export const getPopularWorks = async (): Promise<Work[]> => {
     }
 }
 
-export const getPopularBooks = async (): Promise<Work[]> => {
+export const getPopularWorkByType = async (typeId: number): Promise<Work[]> => {
     try {
         const { data, error } = await supabase
             .from('works')
-            .select('*, work_type:work_types(*), profiles(*)')
-            .eq('work_type_id', 19) // Assuming 19 is the ID for books
+            .select('*')
+            .eq('work_type_id', typeId)
             .order('created_at', { ascending: false })
+            .limit(10);
 
         if (error) throw error;
 
         return data as Work[];
     } catch (error) {
-        console.error('Error fetching popular books:', error);
-        throw error;
-    }
-}
-
-export const getPopularVideos = async (): Promise<Work[]> => {
-    try {
-        const { data, error } = await supabase
-            .from('works')
-            .select('*, work_type:work_types(*), profiles(*)')
-            .eq('work_type_id', 20) // Assuming 20 is the ID for videos
-            .order('created_at', { ascending: false })
-
-        if (error) throw error;
-
-        return data as Work[];
-    } catch (error) {
-        console.error('Error fetching popular videos:', error);
+        console.error('Error fetching popular works by type:', error);
         throw error;
     }
 }

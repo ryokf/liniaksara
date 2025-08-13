@@ -26,7 +26,7 @@ export default function MediaCard(props: MediaItemProps) {
     console.log("MediaCard props:", props);
     return (
         <Link
-            href={`/${type}/${id}`}
+            href={`/${type.toLowerCase()}/${id}`}
             className="group relative flex-shrink-0 w-[200px] transition-transform duration-300 hover:scale-105"
         >
             <div className="relative w-full h-[280px] rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-shadow duration-300">

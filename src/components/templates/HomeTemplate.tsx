@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Work } from '@/types/works';
 import { WorkTransaction } from '@/types/workTransaction';
 import { User } from '@supabase/supabase-js';
-import { getPopularBooks, getPopularVideos, getPopularWorks } from '@/services/workServices';
+import { getPopularWorkByType, getPopularWorks } from '@/services/workServices';
 import { getWorkTransactions } from '@/services/WorkTransactionService';
 import { getUser } from '@/services/userServices';
 import { featuredContent } from '@/constants/featured';
@@ -16,8 +16,10 @@ export default function HomeTemplate() {
     const [popularWorks, setPopularWorks] = useState<Work[]>([]);
     const [library, setLibrary] = useState<WorkTransaction[]>([]);
     const [loading, setLoading] = useState(true);
-    const [popularBooks, setPopularBooks] = useState<Work[]>([]);
-    const [popularVideos, setPopularVideos] = useState<Work[]>([]);
+    const [popularNovels, setPopularNovels] = useState<Work[]>([]);
+    const [popularMovies, setPopularMovies] = useState<Work[]>([]);
+    const [popularComics, setPopularComics] = useState<Work[]>([]);
+    const [popularSeries, setPopularSeries] = useState<Work[]>([]);
     const [topCreators, setTopCreators] = useState<TopCreator[]>([]);
     const [user, setUser] = useState<User | null>(null);
 
@@ -37,23 +39,43 @@ export default function HomeTemplate() {
         console.log("User fetched:", user?.id);
     }
 
-    const fetchPopularBooks = async () => {
+    const fetchPopularNovels = async () => {
         try {
-            const books = await getPopularBooks();
-            setPopularBooks(books);
-            console.log("Popular books fetched:", books);
+            const novels = await getPopularWorkByType(19);
+            setPopularNovels(novels);
+            console.log("Popular novels fetched:", novels);
         } catch (error) {
-            console.error("Failed to fetch popular books:", error);
+            console.error("Failed to fetch popular novels:", error);
         }
     }
 
-    const fetchPopularVideos = async () => {
+    const fetchPopularMovies = async () => {
         try {
-            const videos = await getPopularVideos();
-            setPopularVideos(videos);
-            console.log("Popular videos fetched:", videos);
+            const movies = await getPopularWorkByType(20); // Assuming 20 is the ID for movies
+            setPopularMovies(movies);
+            console.log("Popular movies fetched:", movies);
         } catch (error) {
-            console.error("Failed to fetch popular videos:", error);
+            console.error("Failed to fetch popular movies:", error);
+        }
+    }
+
+    const fetchPopularComic = async () => {
+        try {
+            const comic = await getPopularWorkByType(22); // Assuming 21 is the ID for Comic
+            setPopularComics(comic);
+            console.log("Popular Comics fetched:", comic);
+        } catch (error) {
+            console.error("Failed to fetch popular Comics:", error);
+        }
+    }
+
+    const fetchPopularSeries = async () => {
+        try {
+            const series = await getPopularWorkByType(23); // Assuming 23 is the ID for Series
+            setPopularSeries(series);
+            console.log("Popular Series fetched:", series);
+        } catch (error) {
+            console.error("Failed to fetch popular Series:", error);
         }
     }
 
@@ -79,9 +101,11 @@ export default function HomeTemplate() {
     }
 
     useEffect(() => {
-        fetchPopularBooks();
+        fetchPopularComic();
+        fetchPopularNovels();
+        fetchPopularSeries();
         fetchPopularWorks();
-        fetchPopularVideos();
+        fetchPopularMovies();
         fetchTopCreators();
         fetchUser();
     }, []);
@@ -97,34 +121,54 @@ export default function HomeTemplate() {
     const popularWorksAsMediaItems = popularWorks.map(work => ({
         id: work.id,
         title: work.title,
-        subtitle: work.work_type?.type || "Work", 
+        subtitle: work.work_type?.type || "Work",
         description: work.description || "",
         image: work.cover || "",
         rating: "0"
     }));
 
-    const popularBooksAsMediaItems = popularBooks.map(book => ({
-        id: book.id,
-        type: book.work_type?.type || "Book",
-        title: book.title,
-        cover: book.cover || "",
-        author_name: book.profiles?.username || "Anonymous",
+    const popularNovelsAsMediaItems = popularNovels.map(novel => ({
+        id: novel.id,
+        type: novel.work_type?.type || "novel",
+        title: novel.title,
+        cover: novel.cover || "",
+        author_name: novel.profiles?.username || "Anonymous",
         rating: 0,
         episodeCount: 0
     }));
 
-    
-    const popularVideosAsMediaItems = popularVideos.map(video => ({
-        id: video.id,
-        type: video.work_type?.type || "Video",
-        title: video.title,
-        cover: video.cover || "",
-        author_name: video.profiles?.username || "Anonymous",
+    const popularComicsAsMediaItems = popularComics.map(comic => ({
+        id: comic.id,
+        type: comic.work_type?.type || "comic",
+        title: comic.title,
+        cover: comic.cover || "",
+        author_name: comic.profiles?.username || "Anonymous",
         rating: 0,
         episodeCount: 0
     }));
 
-    console.log("Popular videos as media items:", popularVideosAsMediaItems);
+    const popularSeriesAsMediaItems = popularSeries.map(series => ({
+        id: series.id,
+        type: series.work_type?.type || "Series",
+        title: series.title,
+        cover: series.cover || "",
+        author_name: series.profiles?.username || "Anonymous",
+        rating: 0,
+        episodeCount: 0
+    }));
+
+    const popularMovieAsMediaItems = popularMovies.map(movie => ({
+        id: movie.id,
+        type: movie.work_type?.type || "Movie",
+        title: movie.title,
+        cover: movie.cover || "",
+        author_name: movie.profiles?.username || "Anonymous",
+        rating: 0,
+        episodeCount: 0
+    }));
+
+    // const 
+
     // Map library items to MediaItemProps
     const libraryAsMediaItems = library.map(l => ({
         id: l.works.id,
@@ -160,13 +204,23 @@ export default function HomeTemplate() {
                         }
 
                         <MediaCarousel
-                        title="Popular Novel or Comics"
-                        items={popularBooksAsMediaItems}
+                            title="Popular Novel or Comics"
+                            items={popularNovelsAsMediaItems}
                         />
-                        
+
                         <MediaCarousel
-                        title="Popular Movies or Shows"
-                        items={popularVideosAsMediaItems}
+                            title="Popular Comics"
+                            items={popularComicsAsMediaItems}
+                        />
+
+                        <MediaCarousel
+                            title="Popular Movies"
+                            items={popularMovieAsMediaItems}
+                        />
+
+                        <MediaCarousel
+                            title="Popular Series"
+                            items={popularSeriesAsMediaItems}
                         />
                     </div>
 
