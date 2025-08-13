@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
       "liniaksara.com",
       "liniaksara.id",
       "liniaksara.org",
-      "images.unsplash.com",
+
       "f2a947fd743a.ngrok-free.app"
     ],
   },

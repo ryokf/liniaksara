@@ -41,7 +41,7 @@ export default function Navbar() {
     return (
         <>
             {/* Desktop Navbar */}
-            <nav className={`w-full fixed top-0 left-0 z-50 transition-all bg-transparent  ${ isScrolled ? 'backdrop-blur-xl' : ''}`}>
+            <nav className={`w-full fixed top-0 left-0 z-50 transition-all bg-transparent  ${ isScrolled ? 'backdrop-blur-xl !bg-black/20' : ''}`}>
                 <div className="max-w-[90rem] mx-auto px-6 py-4 flex items-center justify-between gap-8">
                 {/* Bagian Kiri: Logo & Navigasi Utama */}
                 <div className="flex items-center gap-8">

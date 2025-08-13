@@ -137,7 +137,7 @@ export default function HomeTemplate() {
     }));
 
     return (
-        <main className="min-h-screen bg-gray-50 dark:bg-gray-900 mt-16">
+        <main className="min-h-screen bg-gray-50 dark:bg-gray-900 mt-16 sm:mt-0">
             {/* Mobile Feed */}
 
             {/* Hero Section */}

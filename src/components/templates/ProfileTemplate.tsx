@@ -46,7 +46,7 @@ export default function ProfileTemplate({ profile, works }: ProfileTemplateProps
                     {/* Avatar */}
                     <div className="w-32 h-32 rounded-full overflow-hidden relative">
                         <Image
-                            src={"https://images.unsplash.com/photo-1752866109925-fa5821c5053d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
+                            src={user?.photo_url || "/images/default-avatar.svg"}
                             alt={profile.name}
                             fill
                             className="object-cover"

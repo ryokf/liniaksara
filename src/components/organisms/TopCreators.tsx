@@ -26,7 +26,7 @@ export default function TopCreators({ creators }: TopCreatorsProps) {
                             id={creator.id}
                             name={creator.name}
                             description={`${creator.sales} karya terjual`}
-                            imageUrl={creator.photo || '/images/default-avatar.png'}
+                            imageUrl={creator.photo || '/images/default-avatar.svg'}
                             worksCount={creator.worksCount}
                             rank={index + 1}
                         />

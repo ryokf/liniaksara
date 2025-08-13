@@ -1,10 +1,11 @@
-import UnsplashImage from '../atoms/UnsplashImage';
+import Image from 'next/image';
 
 interface HeroSlideProps {
     id: string;
     title: string;
     subtitle?: string;
     description: string;
+    image?: string;
     rating?: string;
     isActive: boolean;
     onWatch: () => void;
@@ -18,7 +19,8 @@ export default function HeroSlide({
     rating,
     isActive,
     onWatch,
-    onAdd
+    onAdd,
+    image
 }: HeroSlideProps) {
     return (
         <div
@@ -27,11 +29,17 @@ export default function HeroSlide({
         >
             {/* Background Image */}
             <div className="absolute inset-0">
-                <UnsplashImage
-                    query={``}
-                    fill
-                    className="object-cover "
-                />
+                {image ? (
+                    <Image
+                        src={image}
+                        alt={title}
+                        fill
+                        className="object-cover"
+                        priority
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gradient-to-r from-primary to-secondary" />
+                )}
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent" />
             </div>

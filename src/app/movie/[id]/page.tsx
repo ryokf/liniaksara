@@ -8,7 +8,7 @@ const mockMovieData = {
     duration: "24m per episode",
     rating: "4.8",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    coverImage: "https://images.unsplash.com/photo-1753808645481-070fba323120?q=80&w=2075&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    coverImage: "/images/default-cover.svg",
     genres: ["Action", "Adventure", "Fantasy"],
     cast: "John Doe, Jane Smith, Bob Wilson",
     director: "Christopher Nolan",

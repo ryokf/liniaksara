@@ -11,7 +11,7 @@ export default function ProfilePage() {
         username: 'johndoe',
         bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         email: 'john@example.com',
-        avatar: 'https://images.unsplash.com/photo-1752866109925-fa5821c5053d'
+        avatar: '/images/default-avatar.svg'
     });
 
     return (
