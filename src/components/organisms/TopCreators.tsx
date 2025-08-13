@@ -1,34 +1,12 @@
 import { Star } from 'lucide-react';
 import CreatorCard from '../molecules/CreatorCard';
+import { TopCreator } from '@/services/creatorService';
 
-const mockCreators = [
-    {
-        id: '1',
-        name: 'Luna Azki',
-        description: 'Writer of introspective novels & magical realism.',
-        imageUrl: '/images/creators/creator1.jpg',
-        worksCount: 12,
-        rank: 1
-    },
-    {
-        id: '2',
-        name: 'Jin Zen',
-        description: 'Comic artist blending street culture & fantasy.',
-        imageUrl: '/images/creators/creator2.jpg',
-        worksCount: 8,
-        rank: 2
-    },
-    {
-        id: '3',
-        name: 'Putri Jasmine',
-        description: 'Drama screenwriter capturing Southeast Asian life.',
-        imageUrl: '/images/creators/creator3.jpg',
-        worksCount: 5,
-        rank: 3
-    }
-];
+interface TopCreatorsProps {
+    creators: TopCreator[];
+}
 
-export default function TopCreators() {
+export default function TopCreators({ creators }: TopCreatorsProps) {
     return (
         <section className="py-16 sm:block hidden">
             <div className="max-w-7xl mx-auto px-6">
@@ -36,16 +14,21 @@ export default function TopCreators() {
                 <div className="flex items-center gap-2 mb-8">
                     <Star className="w-8 h-8 text-yellow-400" fill="currentColor" />
                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                        Featured Creators
+                        Top Creators of the Month
                     </h2>
                 </div>
 
                 {/* Grid of Creator Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {mockCreators.map((creator) => (
+                    {creators.map((creator, index) => (
                         <CreatorCard
                             key={creator.id}
-                            {...creator}
+                            id={creator.id}
+                            name={creator.name}
+                            description={`${creator.sales} karya terjual`}
+                            imageUrl={creator.photo || '/images/default-avatar.png'}
+                            worksCount={creator.worksCount}
+                            rank={index + 1}
                         />
                     ))}
                 </div>

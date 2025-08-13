@@ -2,46 +2,38 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { UserCheck } from "lucide-react";
+import { UserCheck, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getTopCreators } from "@/services/creatorService";
 
 interface Creator {
     id: string;
     name: string;
     username: string;
     photo?: string;
-    followers: number;
+    sales: number;
+    worksCount: number;
     isVerified?: boolean;
 }
 
 export default function TopCreatorScroll() {
-    // Mock data - nanti bisa diganti dengan data dari API
-    const creators: Creator[] = [
-        {
-            id: "1",
-            name: "Tere Liye",
-            username: "tereliye",
-            photo: "/creators/tere.jpg",
-            followers: 15000,
-            isVerified: true
-        },
-        {
-            id: "2",
-            name: "Dee Lestari",
-            username: "deelestari",
-            photo: "/creators/dee.jpg",
-            followers: 12000,
-            isVerified: true
-        },
-        {
-            id: "3",
-            name: "Andrea Hirata",
-            username: "andreahirata",
-            photo: "/creators/andrea.jpg",
-            followers: 10000,
-            isVerified: true
-        },
-        // Tambahkan creator lainnya...
-    ];
+    const [creators, setCreators] = useState<Creator[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTopCreators = async () => {
+            try {
+                const data = await getTopCreators(10);
+                setCreators(data);
+            } catch (error) {
+                console.error('Failed to fetch top creators:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTopCreators();
+    }, []);
 
     return (
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 mb-4">
@@ -49,7 +41,15 @@ export default function TopCreatorScroll() {
             
             {/* Scrollable container */}
             <div className="overflow-x-auto flex gap-4 pb-4 scrollbar-hide">
-                {creators.map((creator) => (
+                {loading ? (
+                    <div className="flex items-center justify-center w-full py-8">
+                        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                    </div>
+                ) : creators.length === 0 ? (
+                    <div className="flex items-center justify-center w-full py-8 text-gray-500">
+                        No creators found
+                    </div>
+                ) : creators.map((creator) => (
                     <div
                         key={creator.id}
                         className="flex-shrink-0 w-[250px] bg-gray-50 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700"
@@ -61,13 +61,17 @@ export default function TopCreatorScroll() {
                                     {creator.photo ? (
                                         <Image
                                             src={creator.photo}
-                                            alt={creator.name}
+                                            alt={creator.name?.trim() ? `Profile picture of ${creator.name}` : `Profile picture of @${creator.username}`}
                                             width={48}
                                             height={48}
                                             className="object-cover"
                                         />
                                     ) : (
-                                        <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary text-lg">
+                                        <div
+                                            className="w-full h-full bg-primary/20 flex items-center justify-center text-primary text-lg"
+                                            role="img"
+                                            aria-label={creator.name?.trim() ? `Placeholder avatar for ${creator.name}` : `Placeholder avatar for @${creator.username}`}
+                                        >
                                             {creator.name[0]}
                                         </div>
                                     )}
@@ -88,7 +92,7 @@ export default function TopCreatorScroll() {
                                     @{creator.username}
                                 </p>
                                 <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                    {creator.followers.toLocaleString()} followers
+                                    {creator.sales.toLocaleString()} karya terjual
                                 </p>
                             </div>
                         </div>
@@ -102,7 +106,7 @@ export default function TopCreatorScroll() {
                         </Link>
                     </div>
                 ))}
-            </div>
+                </div>
         </div>
     );
 }

@@ -1,33 +1,28 @@
+import { useEffect, useState } from 'react';
+import { Work } from '@/types/works';
+import { WorkTransaction } from '@/types/workTransaction';
+import { User } from '@supabase/supabase-js';
+import { getPopularBooks, getPopularVideos, getPopularWorks } from '@/services/workServices';
+import { getWorkTransactions } from '@/services/WorkTransactionService';
+import { getUser } from '@/services/userServices';
 import { featuredContent } from '@/constants/featured';
 import HeroCarousel from '../organisms/HeroCarousel';
 import MediaCarousel from '../organisms/MediaCarousel';
 import TopCreators from '../organisms/TopCreators';
 import MobileFeed from './MobileFeed';
-import { useEffect, useState } from 'react';
-import { Comic } from '@/types/comic';
-import { getLatestComics } from '@/services/comicService';
-import { Work } from '@/types/works';
-// import { latestComics, latestNovels, latestMovies } from '@/constants/media';
-import TopCreatorScroll from '../organisms/TopCreatorMobile';
+import { getTopCreators, TopCreator } from '@/services/creatorService';
 
 export default function HomeTemplate() {
-    const [popularWorks, setPopularWorks] = useState<Work[]>([]); // Placeholder for popular works
-    const [latestComics, setLatestComics] = useState<Comic[]>([]);
-    // const [latestNovels, setLatestNovels] = useState<any[]>([]);
-    // const [latestMovies, setLatestMovies] = useState<any[]>([]);
-
-    const fetchComics = async () => {
-        try {
-            const comics = await getLatestComics(6);
-            setLatestComics(comics);
-        } catch (error) {
-            console.error("Failed to fetch comics:", error);
-        }
-    }
+    const [popularWorks, setPopularWorks] = useState<Work[]>([]);
+    const [library, setLibrary] = useState<WorkTransaction[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [popularBooks, setPopularBooks] = useState<Work[]>([]);
+    const [popularVideos, setPopularVideos] = useState<Work[]>([]);
+    const [topCreators, setTopCreators] = useState<TopCreator[]>([]);
+    const [user, setUser] = useState<User | null>(null);
 
     const fetchPopularWorks = async () => {
         try {
-            const { getPopularWorks } = await import('@/services/WorkService');
             const works = await getPopularWorks();
             setPopularWorks(works);
             console.log("Popular works fetched:", works);
@@ -36,68 +31,146 @@ export default function HomeTemplate() {
         }
     }
 
+    const fetchUser = async () => {
+        const user = await getUser();
+        setUser(user || null);
+        console.log("User fetched:", user?.id);
+    }
+
+    const fetchPopularBooks = async () => {
+        try {
+            const books = await getPopularBooks();
+            setPopularBooks(books);
+            console.log("Popular books fetched:", books);
+        } catch (error) {
+            console.error("Failed to fetch popular books:", error);
+        }
+    }
+
+    const fetchPopularVideos = async () => {
+        try {
+            const videos = await getPopularVideos();
+            setPopularVideos(videos);
+            console.log("Popular videos fetched:", videos);
+        } catch (error) {
+            console.error("Failed to fetch popular videos:", error);
+        }
+    }
+
+    const fetchWorkTransactions = async (buyerId: string | null | undefined) => {
+        try {
+            if (!buyerId) throw new Error("Buyer ID is required");
+            const library = await getWorkTransactions(buyerId);
+            setLibrary(library);
+            console.log("Work transactions fetched:", library);
+        } catch (error) {
+            console.error("Failed to fetch work transactions:", error);
+        }
+    }
+
+    const fetchTopCreators = async () => {
+        try {
+            const creators = await getTopCreators();
+            setTopCreators(creators);
+            console.log("Top creators fetched:", creators);
+        } catch (error) {
+            console.error("Failed to fetch top creators:", error);
+        }
+    }
+
     useEffect(() => {
-        fetchComics();
+        fetchPopularBooks();
         fetchPopularWorks();
+        fetchPopularVideos();
+        fetchTopCreators();
+        fetchUser();
     }, []);
 
-    // Map Comic[] to MediaItemProps[]
-    const latestComicsAsMediaItems = latestComics.map(comic => ({
-        id: comic.id,
-        type: comic.work_type?.type || 'comic',
-        title: comic.title,
-        cover: comic.cover,
-        author_name: comic.author.username,
-        rating: 0, // TODO: Implement rating system
-        episodeCount: comic.parts?.length || 0,
-    }));
+    useEffect(() => {
+        if (user) {
+            fetchWorkTransactions(user.id);
+        }
+    }, [user]);
+
+    console.log("Top creators:", topCreators);
 
     const popularWorksAsMediaItems = popularWorks.map(work => ({
         id: work.id,
         title: work.title,
-        subtitle: "Popular Movie", // Shorten description for subtitle
-        description: work.description ?? "",
-        image: work.cover ?? "",
-        rating: "13+"
+        subtitle: work.work_type?.type || "Work", 
+        description: work.description || "",
+        image: work.cover || "",
+        rating: "0"
+    }));
+
+    const popularBooksAsMediaItems = popularBooks.map(book => ({
+        id: book.id,
+        type: book.work_type?.type || "Book",
+        title: book.title,
+        cover: book.cover || "",
+        author_name: book.profiles?.username || "Anonymous",
+        rating: 0,
+        episodeCount: 0
+    }));
+
+    
+    const popularVideosAsMediaItems = popularVideos.map(video => ({
+        id: video.id,
+        type: video.work_type?.type || "Video",
+        title: video.title,
+        cover: video.cover || "",
+        author_name: video.profiles?.username || "Anonymous",
+        rating: 0,
+        episodeCount: 0
+    }));
+
+    console.log("Popular videos as media items:", popularVideosAsMediaItems);
+    // Map library items to MediaItemProps
+    const libraryAsMediaItems = library.map(l => ({
+        id: l.works.id,
+        type: l.works.work_types?.type || 'unknown',
+        title: l.works.title || 'Untitled',
+        cover: l.works.cover || '',
+        author_name: l.works.profiles.username || 'Anonymous',
+        rating: 0,
+        episodeCount: 0
     }));
 
     return (
-        <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <main className="min-h-screen bg-gray-50 dark:bg-gray-900 mt-16">
             {/* Mobile Feed */}
-            <MobileFeed />
 
             {/* Hero Section */}
             <section className="relative">
                 <HeroCarousel items={popularWorksAsMediaItems} />
             </section>
+            <MobileFeed />
 
             {/* Content Sections */}
             <section className="relative pb-12">
                 <div className="space-y-8">
                     <div className="hidden sm:block">
-                        {/* <MediaCarousel
-                        title="Next Watch or Read"
-                        items={latestWorksAsMediaItems}
-                        /> */}
+                        {
+                            libraryAsMediaItems.length > 0 && (
+                                <MediaCarousel
+                                    title="Next in your library"
+                                    items={libraryAsMediaItems}
+                                />
+                            )
+                        }
 
                         <MediaCarousel
-                            title="Latest Comics"
-                            items={latestComicsAsMediaItems}
-                        />
-
-                        {/* <MediaCarousel
-                        title="Latest Novels"
-                        items={latestNovels}
+                        title="Popular Novel or Comics"
+                        items={popularBooksAsMediaItems}
                         />
                         
                         <MediaCarousel
-                        title="Latest Movies"
-                        items={latestMovies}
-                        /> */}
+                        title="Popular Movies or Shows"
+                        items={popularVideosAsMediaItems}
+                        />
                     </div>
 
-                    <TopCreators />
-                    <TopCreatorScroll></TopCreatorScroll>
+                    <TopCreators creators={topCreators} />
 
                     <div className="w-3/5 h-80 gradient-bg mx-auto mt-8 rounded-3xl sm:flex flex-col justify-center items-center hidden">
                         <h1 className='text-white font-bold text-4xl mb-4'>Take LiniAksara With You</h1>

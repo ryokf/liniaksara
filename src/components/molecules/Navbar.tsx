@@ -41,7 +41,7 @@ export default function Navbar() {
     return (
         <>
             {/* Desktop Navbar */}
-            <nav className={`w-full fixed top-0 left-0 z-50 transition-all bg-transparent hidden md:block ${ isScrolled ? 'backdrop-blur-xl' : ''}`}>
+            <nav className={`w-full fixed top-0 left-0 z-50 transition-all bg-transparent  ${ isScrolled ? 'backdrop-blur-xl' : ''}`}>
                 <div className="max-w-[90rem] mx-auto px-6 py-4 flex items-center justify-between gap-8">
                 {/* Bagian Kiri: Logo & Navigasi Utama */}
                 <div className="flex items-center gap-8">
@@ -52,7 +52,6 @@ export default function Navbar() {
                             alt="LiniAksara Logo"
                             width={36}
                             height={36}
-                            className="hidden md:block"
                         />
                         {/* INKURA pada screenshot diganti dengan nama proyek Anda */}
                         <span className="text-xl font-bold text-gray-800 dark:text-white block">
@@ -101,7 +100,7 @@ export default function Navbar() {
                     </button> */}
 
 
-                    <div className="relative flex items-center gap-3 cursor-pointer" onClick={toggleDropdown}>
+                    <div className="relative items-center gap-3 cursor-pointer hidden sm:flex" onClick={toggleDropdown}>
                         <span className="text-sm font-medium text-gray-800 dark:text-white hidden sm:block">
                             {user?.displayName || "User"}
                         </span>

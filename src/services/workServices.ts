@@ -59,3 +59,54 @@ export const getLatestOnePageWorks = async () => {
         parts_count: work.parts?.[0]?.count || 0
     })) as Work[];
 }
+
+export const getPopularWorks = async (): Promise<Work[]> => {
+    try {
+        const { data, error } = await supabase
+            .from('works')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(4);
+
+        if (error) throw error;
+
+        return data as Work[];
+    } catch (error) {
+        console.error('Error fetching popular works:', error);
+        throw error;
+    }
+}
+
+export const getPopularBooks = async (): Promise<Work[]> => {
+    try {
+        const { data, error } = await supabase
+            .from('works')
+            .select('*, work_type:work_types(*), profiles(*)')
+            .eq('work_type_id', 19) // Assuming 19 is the ID for books
+            .order('created_at', { ascending: false })
+
+        if (error) throw error;
+
+        return data as Work[];
+    } catch (error) {
+        console.error('Error fetching popular books:', error);
+        throw error;
+    }
+}
+
+export const getPopularVideos = async (): Promise<Work[]> => {
+    try {
+        const { data, error } = await supabase
+            .from('works')
+            .select('*, work_type:work_types(*), profiles(*)')
+            .eq('work_type_id', 20) // Assuming 20 is the ID for videos
+            .order('created_at', { ascending: false })
+
+        if (error) throw error;
+
+        return data as Work[];
+    } catch (error) {
+        console.error('Error fetching popular videos:', error);
+        throw error;
+    }
+}

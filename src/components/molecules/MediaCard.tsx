@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import UnsplashImage from '../atoms/UnsplashImage';
 
 export interface MediaItemProps {
@@ -11,27 +12,40 @@ export interface MediaItemProps {
     episodeCount?: number;
 }
 
-export default function MediaCard({
-    id,
-    type,
-    title,
-    cover,
-    author_name,
-    rating,
-    episodeCount
-}: MediaItemProps) {
+export default function MediaCard(props: MediaItemProps) {
+    // Validasi dan default values
+    const {
+        id,
+        type = 'unknown',
+        title = 'Untitled',
+        cover,
+        author_name,
+        rating,
+        episodeCount
+    } = props;
+
+    console.log("MediaCard props:", props);
     return (
         <Link
             href={`/${type}/${id}`}
             className="group relative flex-shrink-0 w-[200px] transition-transform duration-300 hover:scale-105"
         >
             <div className="relative w-full h-[280px] rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-shadow duration-300">
-                <UnsplashImage
-                    query={`${type} ${title}`}
-                    alt={title}
-                    fill
-                    className="object-cover"
-                />
+                {cover ? (
+                    <Image
+                        src={cover}
+                        alt={title}
+                        fill
+                        className="object-cover"
+                    />
+                ) : (
+                    <UnsplashImage
+                        query={`${type} ${title}`}
+                        alt={title}
+                        fill
+                        className="object-cover"
+                    />
+                )}
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>

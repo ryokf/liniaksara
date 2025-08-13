@@ -23,6 +23,9 @@ export interface Work {
     genres?: Genre[];
     work_type?: WorkType;
     parts?: Part[];
+    profiles?: {
+        username: string;
+    };
 }
 
 export interface WorkGenre {

@@ -10,7 +10,7 @@ export default function CreatorAvatar({ imageUrl, alt }: CreatorAvatarProps) {
         <div className="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden">
             <Image
                 src={imageUrl}
-                alt={alt}
+                alt={alt?.trim() ? alt : "Profile picture of the creator"}
                 width={112}
                 height={112}
                 className="w-full h-full object-cover"
