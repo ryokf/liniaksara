@@ -4,6 +4,7 @@ import Badge from '../atoms/Badge';
 import InfoSection from '../molecules/InfoSection';
 import ChapterItem from '../molecules/ChapterItem';
 import Navbar from '../molecules/Navbar';
+import { WorkGenre } from '@/types/works';
 
 interface Chapter {
     id: string;
@@ -18,7 +19,7 @@ interface NovelDetailTemplateProps {
     rating: string;
     description: string;
     coverImage: string;
-    genres: string[];
+    genres: WorkGenre[];
     author: string;
     publisher: string;
     chapters: Chapter[];
@@ -36,6 +37,8 @@ export default function NovelDetailTemplate({
     publisher,
     chapters
 }: NovelDetailTemplateProps) {
+    console.log("genres", genres);
+
     return (
         <main className="min-h-screen bg-white dark:bg-gray-900">
             <Navbar />
@@ -131,8 +134,8 @@ export default function NovelDetailTemplate({
                                 </h3>
                                 <div className="flex flex-wrap gap-2">
                                     {genres.map((genre) => (
-                                        <Badge key={genre} variant="secondary">
-                                            {genre}
+                                        <Badge key={genre?.genres?.genre} variant="secondary">
+                                            {genre?.genres?.genre}
                                         </Badge>
                                     ))}
                                 </div>

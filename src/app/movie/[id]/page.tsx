@@ -1,59 +1,56 @@
+import { notFound } from 'next/navigation';
+import { getWorkDetail, getRelatedWorks, getWorkParts } from '@/services/workDetailService';
 import MovieDetailTemplate from '@/components/templates/MovieDetailTemplate';
+import { WorkDetail, MoviePart } from '@/types/workDetail';
 
-// Mock data - nanti bisa diganti dengan data dari API
-const mockMovieData = {
-    title: "Judul Anime",
-    category: "Anime & Drama",
-    releaseDate: "12 Desember 2024",
-    duration: "24m per episode",
-    rating: "4.8",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    coverImage: "/images/default-cover.svg",
-    genres: ["Action", "Adventure", "Fantasy"],
-    cast: "John Doe, Jane Smith, Bob Wilson",
-    director: "Christopher Nolan",
-    studio: "Studio Ghibli",
-    seasons: [
-        {
-            number: 1,
-            episodes: [
-                {
-                    id: "1",
-                    seasonNumber: 1,
-                    episodeNumber: 1,
-                    title: "Bagian 1: judul bagian",
-                    thumbnail: "/images/movies/ep1.jpg",
-                    duration: "24:00",
-                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore."
-                },
-                {
-                    id: "2",
-                    seasonNumber: 1,
-                    episodeNumber: 2,
-                    title: "Bagian 2: judul bagian",
-                    thumbnail: "/images/movies/ep2.jpg",
-                    duration: "24:00",
-                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore."
-                }
-            ]
-        },
-        {
-            number: 2,
-            episodes: [
-                {
-                    id: "3",
-                    seasonNumber: 2,
-                    episodeNumber: 1,
-                    title: "Bagian 1: judul bagian",
-                    thumbnail: "/images/movies/ep3.jpg",
-                    duration: "24:00",
-                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore."
-                }
-            ]
-        }
-    ]
-};
+interface PageProps {
+    params: {
+        id: string;
+    };
+}
 
-export default function MovieDetailPage() {
-    return <MovieDetailTemplate {...mockMovieData} />;
+export default async function MovieDetailPage({ params }: PageProps) {
+    const work = await getWorkDetail(params.id);
+    if (!work) notFound();
+
+    // Fetch parts and related works in parallel
+    const [parts, relatedWorks] = await (Promise.all([
+        getWorkParts(params.id),
+        getRelatedWorks(work.author.id, params.id)
+    ]) as unknown as [MoviePart[], WorkDetail[]]);
+
+    // Sort parts by part order
+    const sortedParts = parts.sort((a, b) => a.part_order - b.part_order);
+
+    // Transform data for the template
+    const movieData = {
+        title: work.title,
+        category: 'Movie',
+        releaseDate: new Date(work.created_at).toLocaleDateString(),
+        rating: '0', // TODO: Implement rating system
+        description: work.description || '',
+        coverImage: work.cover || '/images/default-cover.svg',
+        price: work.price || 0,
+        // Adapt to MovieDetailTemplate expected shape: { genres: { genre: string } }
+        genres: work.work_genres,
+        director: work.author?.username || 'Unknown',
+        episodes: sortedParts.map((part) => ({
+            id: part.id.toString(),
+            partOrder: part.part_order,
+            title: part.title,
+            thumbnail: part.thumbnail || '/images/default-cover.svg',
+            duration: part.duration ? `${Math.floor(part.duration / 60)}m ${part.duration % 60}s` : 'Unknown',
+            isFree: part.is_free,
+        })),
+        relatedWorks: relatedWorks.map((relatedWork) => ({
+            id: relatedWork.id,
+            title: relatedWork.title,
+            cover: relatedWork.cover || '/images/default-cover.svg',
+            director: relatedWork.author?.username || 'Unknown',
+            type: 'Movie',
+            price: relatedWork.price || 0,
+        })),
+    };
+
+    return <MovieDetailTemplate {...movieData} />;
 }

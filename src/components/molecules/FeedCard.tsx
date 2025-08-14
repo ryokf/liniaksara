@@ -9,7 +9,7 @@ import { Work } from "@/types/works";
 export default function FeedCard({ work }: { work: Work }) {
     const router = useRouter();
 
-    console.log(work);
+
 
     return (
         <div className="bg-whitedark:bg-gray-900 border-b dark:border-gray-800">

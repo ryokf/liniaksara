@@ -2,8 +2,9 @@ import Image from 'next/image';
 import { Bookmark, Play, Star } from 'lucide-react';
 import Badge from '../atoms/Badge';
 import InfoSection from '../molecules/InfoSection';
-import ComicSeasonSection from '../organisms/ComicSeasonSection';
 import Navbar from '../molecules/Navbar';
+import ComicEpisodeCard from '../molecules/ComicEpisodeCard';
+import { WorkGenre } from '@/types/works';
 
 interface ComicDetailTemplateProps {
     title: string;
@@ -12,19 +13,15 @@ interface ComicDetailTemplateProps {
     rating: string;
     description: string;
     coverImage: string;
-    genres: string[];
-    artist: string;
+    genres: WorkGenre[];
     author: string;
     publisher: string;
-    seasons: Array<{
-        number: number;
-        episodes: Array<{
-            id: string;
-            chapterNumber: number;
-            title: string;
-            thumbnail: string;
-            description: string;
-        }>;
+    chapters: Array<{
+        id: string;
+        chapterNumber?: number;
+        title: string;
+        thumbnail?: string;
+        description?: string;
     }>;
 }
 
@@ -36,11 +33,12 @@ export default function ComicDetailTemplate({
     description,
     coverImage,
     genres,
-    artist,
     author,
     publisher,
-    seasons
+    chapters
 }: ComicDetailTemplateProps) {
+    console.log("genres", genres);
+
     return (
         <main className="min-h-screen bg-white dark:bg-gray-900">
             <Navbar />
@@ -112,12 +110,8 @@ export default function ComicDetailTemplate({
                     <div className="lg:col-span-2 space-y-12">
                         {/* Episodes */}
                         <div className="space-y-8">
-                            {seasons.map((season) => (
-                                <ComicSeasonSection
-                                    key={season.number}
-                                    seasonNumber={season.number}
-                                    episodes={season.episodes}
-                                />
+                            {chapters.map((chapter) => (
+                                <ComicEpisodeCard key={chapter.id} {...chapter} />
                             ))}
                         </div>
                     </div>
@@ -132,8 +126,8 @@ export default function ComicDetailTemplate({
                                 </h3>
                                 <div className="flex flex-wrap gap-2">
                                     {genres.map((genre) => (
-                                        <Badge key={genre} variant="secondary">
-                                            {genre}
+                                        <Badge key={genre?.genres?.genre} variant="secondary">
+                                            {genre?.genres?.genre}
                                         </Badge>
                                     ))}
                                 </div>
@@ -141,7 +135,6 @@ export default function ComicDetailTemplate({
 
                             {/* Additional Info */}
                             <div className="space-y-6">
-                                <InfoSection label="Artist" value={artist} />
                                 <InfoSection label="Author" value={author} />
                                 <InfoSection label="Publisher" value={publisher} />
                             </div>

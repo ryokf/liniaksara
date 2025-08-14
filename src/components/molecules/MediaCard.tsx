@@ -23,7 +23,7 @@ export default function MediaCard(props: MediaItemProps) {
         episodeCount
     } = props;
 
-    console.log("MediaCard props:", props);
+
     return (
         <Link
             href={`/${type.toLowerCase()}/${id}`}

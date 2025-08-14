@@ -81,7 +81,7 @@ export const getPopularWorkByType = async (typeId: number): Promise<Work[]> => {
     try {
         const { data, error } = await supabase
             .from('works')
-            .select('*')
+            .select('*, work_types(*), profiles(*)')
             .eq('work_type_id', typeId)
             .order('created_at', { ascending: false })
             .limit(10);

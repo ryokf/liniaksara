@@ -13,12 +13,12 @@ export const signInWithGoogle = async () => {
     if (error) {
         console.error('Login error:', error);
     } else {
-        console.log('User logged in:', data);
+
     }
 };
 
 export const registerWithEmail = async (name: string, email: string, password: string): Promise<void> => {
-    console.log(name, email, password);
+
     const { data, error }: AuthResponse = await supabase.auth.signUp({
         email,
         password,
@@ -30,7 +30,7 @@ export const registerWithEmail = async (name: string, email: string, password: s
     if (error) {
         console.error("Registrasi gagal:", error.message);
     } else {
-        console.log("Registrasi berhasil:", data);
+
     }
 };
 
@@ -43,6 +43,6 @@ export const loginWithEmail = async (email: string, password: string): Promise<v
     if (error) {
         console.error("Login gagal:", error.message);
     } else {
-        console.log("Login berhasil:", data);
+
     }
 };

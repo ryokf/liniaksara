@@ -5,7 +5,6 @@ import { User } from '@supabase/supabase-js';
 import { getPopularWorkByType, getPopularWorks } from '@/services/workServices';
 import { getWorkTransactions } from '@/services/WorkTransactionService';
 import { getUser } from '@/services/userServices';
-import { featuredContent } from '@/constants/featured';
 import HeroCarousel from '../organisms/HeroCarousel';
 import MediaCarousel from '../organisms/MediaCarousel';
 import TopCreators from '../organisms/TopCreators';
@@ -27,7 +26,6 @@ export default function HomeTemplate() {
         try {
             const works = await getPopularWorks();
             setPopularWorks(works);
-            console.log("Popular works fetched:", works);
         } catch (error) {
             console.error("Failed to fetch popular works:", error);
         }
@@ -36,14 +34,12 @@ export default function HomeTemplate() {
     const fetchUser = async () => {
         const user = await getUser();
         setUser(user || null);
-        console.log("User fetched:", user?.id);
     }
 
     const fetchPopularNovels = async () => {
         try {
             const novels = await getPopularWorkByType(19);
             setPopularNovels(novels);
-            console.log("Popular novels fetched:", novels);
         } catch (error) {
             console.error("Failed to fetch popular novels:", error);
         }
@@ -53,7 +49,6 @@ export default function HomeTemplate() {
         try {
             const movies = await getPopularWorkByType(20); // Assuming 20 is the ID for movies
             setPopularMovies(movies);
-            console.log("Popular movies fetched:", movies);
         } catch (error) {
             console.error("Failed to fetch popular movies:", error);
         }
@@ -63,7 +58,6 @@ export default function HomeTemplate() {
         try {
             const comic = await getPopularWorkByType(22); // Assuming 21 is the ID for Comic
             setPopularComics(comic);
-            console.log("Popular Comics fetched:", comic);
         } catch (error) {
             console.error("Failed to fetch popular Comics:", error);
         }
@@ -73,7 +67,6 @@ export default function HomeTemplate() {
         try {
             const series = await getPopularWorkByType(23); // Assuming 23 is the ID for Series
             setPopularSeries(series);
-            console.log("Popular Series fetched:", series);
         } catch (error) {
             console.error("Failed to fetch popular Series:", error);
         }
@@ -84,7 +77,6 @@ export default function HomeTemplate() {
             if (!buyerId) throw new Error("Buyer ID is required");
             const library = await getWorkTransactions(buyerId);
             setLibrary(library);
-            console.log("Work transactions fetched:", library);
         } catch (error) {
             console.error("Failed to fetch work transactions:", error);
         }
@@ -94,7 +86,6 @@ export default function HomeTemplate() {
         try {
             const creators = await getTopCreators();
             setTopCreators(creators);
-            console.log("Top creators fetched:", creators);
         } catch (error) {
             console.error("Failed to fetch top creators:", error);
         }
@@ -116,7 +107,7 @@ export default function HomeTemplate() {
         }
     }, [user]);
 
-    console.log("Top creators:", topCreators);
+
 
     const popularWorksAsMediaItems = popularWorks.map(work => ({
         id: work.id,

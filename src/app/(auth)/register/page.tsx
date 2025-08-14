@@ -7,14 +7,14 @@ import InputField from '@/components/atoms/InputField';
 import Button from '@/components/atoms/Button';
 import SocialButton from '@/components/atoms/SocialButton';
 import Divider from '@/components/atoms/Divider';
-import { signInWithGoogle } from '@/services/auth';
+import { signInWithGoogle } from '@/services/authServices';
 import AuthCard from '@/components/molecules/AuthCard';
 import supabase from '@/config/supabase';
 
 export default function RegisterPage() {
     const getUser = useCallback(async () => {
         const { data: { user } } = await supabase.auth.getUser();
-        console.log('Current user:', user);
+
     }, []);
 
     useEffect(() => {
@@ -56,7 +56,7 @@ export default function RegisterPage() {
         }
 
         // Handle registration logic here
-        console.log('Register with:', formData);
+
     };
 
     const handleSocialLogin = (provider: string) => {

@@ -31,6 +31,7 @@ export interface Work {
 export interface WorkGenre {
     work_id: string;  // UUID
     genre_id: number;
+    genres?: Genre;
 }
 
 export interface Part {

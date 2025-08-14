@@ -3,10 +3,10 @@ import Link from 'next/link';
 
 interface ComicEpisodeCardProps {
     id: string;
-    chapterNumber: number;
+    chapterNumber?: number;
     title: string;
-    thumbnail: string;
-    description: string;
+    thumbnail?: string;
+    description?: string;
 }
 
 export default function ComicEpisodeCard({
@@ -16,13 +16,14 @@ export default function ComicEpisodeCard({
     thumbnail,
     description
 }: ComicEpisodeCardProps) {
+    const imgSrc = thumbnail ?? 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/axl1r8AAAAASUVORK5CYII=';
     return (
         <Link href={`/read/${id}`} className="group">
             <div className="flex gap-6 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors">
                 {/* Thumbnail */}
                 <div className="relative w-32 h-48 rounded-lg overflow-hidden flex-shrink-0">
                     <Image
-                        src={thumbnail}
+                        src={imgSrc}
                         alt={title}
                         fill
                         className="object-cover"

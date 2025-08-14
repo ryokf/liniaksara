@@ -2,32 +2,35 @@ import Image from 'next/image';
 import { Bookmark, Play, Star } from 'lucide-react';
 import Badge from '../atoms/Badge';
 import InfoSection from '../molecules/InfoSection';
-import SeasonSection from '../organisms/SeasonSection';
+import MovieEpisodeCard from '../molecules/MovieEpisodeCard';
 import Navbar from '../molecules/Navbar';
+import { WorkGenre } from '@/types/works';
 
 interface MovieDetailTemplateProps {
     title: string;
     category: string;
     releaseDate: string;
-    duration: string;
     rating: string;
     description: string;
     coverImage: string;
-    genres: string[];
-    cast: string;
+    price: number;
+    genres: WorkGenre[];
     director: string;
-    studio: string;
-    seasons: Array<{
-        number: number;
-        episodes: Array<{
-            id: string;
-            seasonNumber: number;
-            episodeNumber: number;
-            title: string;
-            thumbnail: string;
-            duration: string;
-            description: string;
-        }>;
+    episodes: Array<{
+        id: string;
+        partOrder: number;
+        title: string;
+        thumbnail: string;
+        duration: string;
+        isFree: boolean;
+    }>;
+    relatedWorks: Array<{
+        id: string;
+        title: string;
+        cover: string;
+        director: string;
+        type: string;
+        price: number;
     }>;
 }
 
@@ -35,15 +38,14 @@ export default function MovieDetailTemplate({
     title,
     category,
     releaseDate,
-    duration,
     rating,
     description,
     coverImage,
+    price,
     genres,
-    cast,
     director,
-    studio,
-    seasons
+    episodes,
+    relatedWorks
 }: MovieDetailTemplateProps) {
     return (
         <main className="min-h-screen bg-white dark:bg-gray-900">
@@ -82,8 +84,6 @@ export default function MovieDetailTemplate({
                             <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm">
                                 <span>{releaseDate}</span>
                                 <span>•</span>
-                                <span>{duration}</span>
-                                <span>•</span>
                                 <span className="flex items-center gap-1">
                                     <Star className="w-4 h-4 text-yellow-400" fill="currentColor" />
                                     {rating}
@@ -119,13 +119,20 @@ export default function MovieDetailTemplate({
 
                         {/* Episodes */}
                         <div className="space-y-8">
-                            {seasons.map((season) => (
-                                <SeasonSection
-                                    key={season.number}
-                                    seasonNumber={season.number}
-                                    episodes={season.episodes}
-                                />
-                            ))}
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Episodes</h2>
+                            <div className="grid gap-4">
+                                {episodes.map((episode) => (
+                                    <MovieEpisodeCard
+                                        key={episode.id}
+                                        id={episode.id}
+                                        title={episode.title}
+                                        episodeNumber={episode.partOrder}
+                                        thumbnail={episode.thumbnail}
+                                        duration={episode.duration}
+                                        isFree={episode.isFree}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
 
@@ -137,8 +144,8 @@ export default function MovieDetailTemplate({
                                 <h3 className="text-lg font-semibold mb-4">Genres</h3>
                                 <div className="flex flex-wrap gap-2">
                                     {genres.map((genre) => (
-                                        <Badge key={genre} variant="secondary">
-                                            {genre}
+                                        <Badge key={genre?.genres?.genre} variant="secondary">
+                                            {genre?.genres?.genre}
                                         </Badge>
                                     ))}
                                 </div>
@@ -146,9 +153,8 @@ export default function MovieDetailTemplate({
 
                             {/* Additional Info */}
                             <div className="space-y-6">
-                                <InfoSection label="Cast" value={cast} />
                                 <InfoSection label="Director" value={director} />
-                                <InfoSection label="Studio" value={studio} />
+                                <InfoSection label="Price" value={price === 0 ? "Free" : `Rp ${price.toLocaleString()}`} />
                             </div>
                         </div>
                     </div>

@@ -34,7 +34,7 @@ export default function LandingPage() {
     };
 
     const onOpen = (type: "login" | "signup") => {
-        console.log(`Opening ${type} modal`);
+
     };
 
     return (

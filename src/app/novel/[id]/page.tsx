@@ -1,45 +1,36 @@
+import { notFound } from 'next/navigation';
+import { getWorkDetail, getWorkParts } from '@/services/workDetailService';
 import NovelDetailTemplate from '@/components/templates/NovelDetailTemplate';
 
-// Mock data - nanti bisa diganti dengan data dari API
-const mockNovelData = {
-    title: "Judul Novel",
-    category: "Novel",
-    releaseDate: "12 Desember 2024",
-    rating: "4.8",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    coverImage: "/images/novels/cover.jpg",
-    genres: ["Romance", "Drama", "Slice of Life"],
-    author: "John Doe",
-    publisher: "Gramedia",
-    chapters: [
-        {
-            id: "1",
-            chapterNumber: 1,
-            title: "judul bab"
-        },
-        {
-            id: "2",
-            chapterNumber: 2,
-            title: "judul bab"
-        },
-        {
-            id: "3",
-            chapterNumber: 3,
-            title: "judul bab"
-        },
-        {
-            id: "4",
-            chapterNumber: 4,
-            title: "judul bab"
-        },
-        {
-            id: "5",
-            chapterNumber: 5,
-            title: "judul bab"
-        }
-    ]
-};
+interface PageProps {
+    params: {
+        id: string;
+    };
+}
 
-export default function NovelDetailPage() {
-    return <NovelDetailTemplate {...mockNovelData} />;
+export default async function NovelDetailPage({ params }: PageProps) {
+    const work = await getWorkDetail(params.id);
+    if (!work) notFound();
+
+    // Fetch chapters
+    const chapters = await getWorkParts(params.id);
+
+    const novelData = {
+        title: work.title,
+        category: work.workType?.type || "Novel",
+        releaseDate: new Date(work.created_at).toLocaleDateString(),
+        rating: "0", // TODO: Implement rating system
+        description: work.description || "",
+        coverImage: work.cover || "/images/default-cover.svg",
+        genres:  work.work_genres,
+        author: work.author?.username || "Unknown",
+        publisher: "Lini Aksara",
+        chapters: chapters.map((chapter, index) => ({
+            id: chapter.id,
+            chapterNumber: index + 1,
+            title: chapter.title
+        }))
+    };
+
+    return <NovelDetailTemplate {...novelData} />;
 }

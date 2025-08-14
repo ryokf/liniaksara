@@ -66,8 +66,8 @@ export default function HeroCarousel({ items }: HeroCarouselProps) {
                             <HeroSlide
                                 {...item}
                                 isActive
-                                onWatch={() => console.log('Watch:', item.title)}
-                                onAdd={() => console.log('Add to list:', item.title)}
+                                onWatch={() => {}}
+                                onAdd={() => {}}
                             />
                         </div>
                     ))}

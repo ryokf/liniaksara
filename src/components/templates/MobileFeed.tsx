@@ -20,7 +20,7 @@ export default function MobileFeed() {
     const fetchWorks = async () => {
         try {
             const latestWorks = await getLatestOnePageWorks();
-            console.log(latestWorks);
+
             setWorks(latestWorks);
         } catch (error) {
             console.error("Failed to fetch works:", error);
@@ -37,7 +37,7 @@ export default function MobileFeed() {
     const fetchUser = async () => {
         const user = await getUser();
         setUser(user || null);
-        console.log("User fetched:", user?.id);
+
     }
     
     useEffect(() => {
@@ -55,7 +55,7 @@ export default function MobileFeed() {
             if (!buyerId) throw new Error("Buyer ID is required");
             const library = await getWorkTransactions(buyerId);
             setLibrary(library);
-            console.log("Work transactions fetched:", library);
+
         } catch (error) {
             console.error("Failed to fetch work transactions:", error);
         }
@@ -71,7 +71,7 @@ export default function MobileFeed() {
         episodeCount: 0,
     }));
 
-    console.log("Library as media items:", libraryAsMediaItems);
+
     
     if (loading) {
         return (

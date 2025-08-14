@@ -39,11 +39,11 @@ export default function LoginPage() {
     }
     
     // Handle login logic here
-    console.log('Login with:', formData);
+
   };
 
   const handleSocialLogin = (provider: string) => {
-    console.log(`Login with ${provider}`);
+
     // Handle social login logic here
   };
 
