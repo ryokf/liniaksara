@@ -3,14 +3,16 @@ import { ArrowRight } from 'lucide-react';
 
 interface ChapterItemProps {
     id: string;
+    workId: string;
+    type: 'novel' | 'comic';
     chapterNumber: number;
     title: string;
 }
 
-export default function ChapterItem({ id, chapterNumber, title }: ChapterItemProps) {
+export default function ChapterItem({ id, workId, type, chapterNumber, title }: ChapterItemProps) {
     return (
         <Link 
-            href={`/read/${id}`}
+            href={`/read/${type}/${workId}/${id}`}
             className="flex items-center justify-between p-4 rounded-xl bg-white dark:bg-gray-800 hover:shadow-lg dark:hover:shadow-primary/5 transition-all hover:-translate-y-0.5 group"
         >
             <div className="flex items-center gap-4">

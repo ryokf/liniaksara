@@ -18,6 +18,8 @@ interface ComicDetailTemplateProps {
     publisher: string;
     chapters: Array<{
         id: string;
+        workId: string;
+        type: string;
         chapterNumber?: number;
         title: string;
         thumbnail?: string;

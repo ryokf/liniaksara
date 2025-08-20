@@ -13,6 +13,7 @@ interface Chapter {
 }
 
 interface NovelDetailTemplateProps {
+    id: string;
     title: string;
     category: string;
     releaseDate: string;
@@ -26,6 +27,7 @@ interface NovelDetailTemplateProps {
 }
 
 export default function NovelDetailTemplate({
+    id,
     title,
     category,
     releaseDate,
@@ -117,7 +119,11 @@ export default function NovelDetailTemplate({
                                 {chapters.map((chapter) => (
                                     <ChapterItem
                                         key={chapter.id}
-                                        {...chapter}
+                                        id={chapter.id}
+                                        workId={id}
+                                        type="novel"
+                                        chapterNumber={chapter.chapterNumber}
+                                        title={chapter.title}
                                     />
                                 ))}
                             </div>

@@ -1,8 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { type } from '../../../node_modules/next/dist/compiled/webpack/bundle5';
 
 interface ComicEpisodeCardProps {
     id: string;
+    workId: string;
+    type: string;
     chapterNumber?: number;
     title: string;
     thumbnail?: string;
@@ -11,6 +14,8 @@ interface ComicEpisodeCardProps {
 
 export default function ComicEpisodeCard({
     id,
+    workId,
+    type,
     chapterNumber,
     title,
     thumbnail,
@@ -18,7 +23,8 @@ export default function ComicEpisodeCard({
 }: ComicEpisodeCardProps) {
     const imgSrc = thumbnail ?? 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/axl1r8AAAAASUVORK5CYII=';
     return (
-        <Link href={`/read/${id}`} className="group">
+        
+        <Link href={`/read/${type}/${workId}/${id}`} className="group">
             <div className="flex gap-6 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors">
                 {/* Thumbnail */}
                 <div className="relative w-32 h-48 rounded-lg overflow-hidden flex-shrink-0">

@@ -16,6 +16,7 @@ export default async function NovelDetailPage({ params }: PageProps) {
     const chapters = await getWorkParts(params.id);
 
     const novelData = {
+        id: work.id,
         title: work.title,
         category: work.workType?.type || "Novel",
         releaseDate: new Date(work.created_at).toLocaleDateString(),

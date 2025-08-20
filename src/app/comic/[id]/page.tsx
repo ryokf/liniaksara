@@ -9,25 +9,6 @@ interface PageProps {
     };
 }
 
-interface Season {
-    number: number;
-    episodes: Array<{
-        id: string;
-        chapterNumber: number;
-        title: string;
-        thumbnail: string;
-        description: string;
-    }>;
-}
-
-interface Episode {
-    id: string;
-    season_number?: number;
-    episode_number: number;
-    title: string;
-    thumbnail?: string;
-    description?: string;
-}
 
 export default async function ComicDetailPage({ params }: PageProps) {
     const work = await getWorkDetail(params.id);
@@ -53,6 +34,8 @@ export default async function ComicDetailPage({ params }: PageProps) {
         publisher: work.publisher || "Lini Aksara",
         chapters: chapters.map(chapter => ({
             id: chapter.id,
+            workId: work.id,
+            type: "comic",
             // chapterNumber: chapter.episode_number,
             title: chapter.title
         })),
