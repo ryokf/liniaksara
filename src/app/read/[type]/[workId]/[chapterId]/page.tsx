@@ -76,16 +76,16 @@ interface WorkResponse {
     work_type: WorkType;
 }
 
-function isValidWorkResponse(data: any): data is WorkResponse {
-    return (
-        typeof data === 'object' &&
-        typeof data.id === 'string' &&
-        typeof data.title === 'string' &&
-        typeof data.work_type === 'object' &&
-        typeof data.work_type.id === 'number' &&
-        typeof data.work_type.type === 'string'
-    );
-}
+// function isValidWorkResponse(data: any): data is WorkResponse {
+//     return (
+//         typeof data === 'object' &&
+//         typeof data.id === 'string' &&
+//         typeof data.title === 'string' &&
+//         typeof data.work_type === 'object' &&
+//         typeof data.work_type.id === 'number' &&
+//         typeof data.work_type.type === 'string'
+//     );
+// }
 
 export default function ReadPage({
     params
@@ -121,10 +121,20 @@ export default function ReadPage({
                 if (workError || !workData) { setError("NOT_FOUND"); return; }
                 console.log('Chapter:', chapterId, 'Work:', workId);
 
-                // Verify work type matches the URL
-                if (workData.work_type?.type?.toLowerCase() !== type) { setError("NOT_FOUND"); return; }
+                // Normalize work_type to a single object (Supabase may return an array)
+                const wt = Array.isArray(workData.work_type) ? workData.work_type[0] : workData.work_type;
+                if (!wt) { setError("NOT_FOUND"); return; }
 
-                setWork(workData);
+                const normalizedWork: Work = {
+                    id: workData.id,
+                    title: workData.title,
+                    work_type: wt as WorkType,
+                };
+
+                // Verify work type matches the URL
+                if (normalizedWork.work_type?.type?.toLowerCase() !== type) { setError("NOT_FOUND"); return; }
+
+                setWork(normalizedWork);
 
                 // Fetch current chapter
                 const { data: partData, error: partError } = await supabase
