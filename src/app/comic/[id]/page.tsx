@@ -1,3 +1,4 @@
+export const runtime = 'nodejs';
 import { notFound } from 'next/navigation';
 import { getWorkDetail, getRelatedWorks, getWorkParts } from '@/services/workDetailService';
 import ComicDetailTemplate from '@/components/templates/ComicDetailTemplate';
@@ -18,21 +19,19 @@ interface RelatedWorkData {
     rating: string;
 }
 
-interface PageProps {
-    params: {
-        id: string;
-    };
-    searchParams?: { [key: string]: string | string[] | undefined };
-}
-
-export default async function ComicDetailPage({ params }: PageProps) {
-    const work = await getWorkDetail(params.id);
+export default async function ComicDetailPage({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params;
+    const work = await getWorkDetail(id);
     if (!work) notFound();
 
     // Fetch episodes and related works in parallel
     const [parts, relatedWorks] = await Promise.all([
-        getWorkParts(params.id),
-        getRelatedWorks(work.author?.id || '', params.id)
+        getWorkParts(id),
+        getRelatedWorks(work.author?.id || '', id)
     ]);
 
     // Transform parts to chapters
