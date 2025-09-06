@@ -16,6 +16,12 @@ interface ComicDetailTemplateProps {
     genres: WorkGenre[];
     author: string;
     publisher: string;
+    relatedWorks?: Array<{
+        id: string;
+        title: string;
+        cover: string;
+        rating: string;
+    }>;
     chapters: Array<{
         id: string;
         workId: string;
