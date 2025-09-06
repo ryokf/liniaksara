@@ -1,12 +1,13 @@
 import { notFound } from 'next/navigation';
 import { getWorkDetail, getRelatedWorks, getWorkParts } from '@/services/workDetailService';
 import ComicDetailTemplate from '@/components/templates/ComicDetailTemplate';
-import { Part } from '@/types/works';
+import { Part, Genre } from '@/types/works';
 
-interface PageProps {
+type PageProps = {
     params: {
         id: string;
     };
+    searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 
@@ -17,17 +18,37 @@ export default async function ComicDetailPage({ params }: PageProps) {
     // Fetch episodes and related works in parallel
     const [parts, relatedWorks] = await Promise.all([
         getWorkParts(params.id),
-        getRelatedWorks(work.author.id, params.id)
+        getRelatedWorks(work.author?.id || '', params.id)
     ]);
 
-    const chapters = await getWorkParts(params.id);
+    // Transform genres to match the expected type
+    const transformedGenres = work.genres?.map((genre: Genre) => ({
+        id: genre.id,
+        genre: genre.genre
+    })) || [];
 
     const comicData = {
-        title: work.title,
+        title: work.title || "",
         category: work.workType?.type || "Comic",
         releaseDate: new Date(work.created_at).toLocaleDateString(),
-        rating: work.rating?.toString() || "0",
-        description: work.description,
+        rating: "0", // Update this based on your rating system
+        description: work.description || "",
+        coverImage: work.cover || "/images/default-cover.svg",
+        genres: transformedGenres,
+        author: work.author?.username || "Unknown",
+        publisher: "Self Published", // Update this if you have publisher info
+        chapters: parts.map(part => ({
+            id: part.id,
+            workId: part.work_id,
+            type: "chapter",
+            title: part.title || `Chapter ${part.part_number || 0}`
+        })),
+        relatedWorks: relatedWorks.map(related => ({
+            id: related.id,
+            title: related.title || "",
+            cover: related.cover || "/images/default-cover.svg",
+            rating: "0" // Update this based on your rating system
+        }))
         coverImage: work.cover || "/images/default-cover.svg",
         genres: work.work_genres ?? [],
         author: work.author.name,
