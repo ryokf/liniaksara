@@ -16,8 +16,10 @@ interface Part {
     id: string;
     work_id: string;
     title: string;
-    part_number: number;
+    part_order: number;
     description?: string;
+    thumbnail?: string;
+    content_url?: string;
     created_at: string;
     updated_at: string;
 }

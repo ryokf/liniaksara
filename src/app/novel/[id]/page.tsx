@@ -16,6 +16,16 @@ export default async function NovelDetailPage({
   // Fetch chapters
   const chapters = await getWorkParts(id);
 
+  // Transform genres to match WorkGenre interface
+  const genres = work.work_genres?.map(wg => ({
+    work_id: wg.work_id,
+    genre_id: wg.genre_id,
+    genres: {
+      id: wg.genres?.id || 0,
+      genre: wg.genres?.name || ''  // Convert 'name' to 'genre'
+    }
+  })) || [];
+
   const novelData = {
     id: work.id,
     title: work.title,
@@ -24,7 +34,7 @@ export default async function NovelDetailPage({
     rating: "0", // TODO: Implement rating system
     description: work.description || "",
     coverImage: work.cover || "/images/default-cover.svg",
-    genres: work.work_genres ?? [],
+    genres,
     author: work.author?.username || "Unknown",
     publisher: "Lini Aksara",
     chapters: chapters.map((chapter, index) => ({

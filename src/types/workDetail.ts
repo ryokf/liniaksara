@@ -7,10 +7,17 @@ export interface WorkDetail extends Work {
     workType?: WorkType;
 }
 
-export interface MoviePart extends Part {
+export interface MoviePart {
+    id: string;
+    work_id: string;
+    title: string;
+    part_order: number;
+    thumbnail?: string;
+    created_at: string;
     content_url?: string;
     duration?: number;
     is_free: boolean;
+    description?: string;
 }
 
 export interface Episode {
