@@ -10,7 +10,7 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 // Using specific version that matches the worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
-interface PDFViewerComponentProps {
+interface PDFViewerProps {
     url: string;
     title?: string;
     chapterNumber?: number;
@@ -20,7 +20,7 @@ interface PDFViewerComponentProps {
     onBack?: () => void;
 }
 
-const PDFViewerComponent: React.FC<PDFViewerComponentProps> = ({
+const PDFViewerComponent: React.FC<PDFViewerProps> = ({
     url,
     title,
     chapterNumber,

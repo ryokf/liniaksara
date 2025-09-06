@@ -13,20 +13,23 @@ interface PDFViewerProps {
     onBack?: () => void;
 }
 
-const DynamicPDFViewer = dynamic(
-  () => import('./PDFViewerComponent'),
-  { 
+const DynamicPDFViewer = dynamic<PDFViewerProps>(() => {
+    return new Promise((resolve) => {
+        import('./PDFViewerComponent').then((mod) => {
+            resolve(mod.default);
+        });
+    });
+}, {
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 w-full h-full bg-black flex items-center justify-center">
-        <div className="text-white">Loading PDF viewer...</div>
-      </div>
+        <div className="fixed inset-0 w-full h-full bg-black flex items-center justify-center">
+            <div className="text-white">Loading PDF viewer...</div>
+        </div>
     )
-  }
-);
+});
 
 const PDFViewer: React.FC<PDFViewerProps> = (props) => {
-  return <DynamicPDFViewer {...props} />;
+    return <DynamicPDFViewer {...props} />;
 };
 
 export default PDFViewer;
