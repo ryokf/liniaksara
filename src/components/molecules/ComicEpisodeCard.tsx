@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { type } from '../../../node_modules/next/dist/compiled/webpack/bundle5';
 
 interface ComicEpisodeCardProps {
     id: string;
