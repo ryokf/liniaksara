@@ -3,23 +3,21 @@ import { notFound } from 'next/navigation';
 import { getWorkDetail, getRelatedWorks, getWorkParts } from '@/services/workDetailService';
 import MovieDetailTemplate from '@/components/templates/MovieDetailTemplate';
 import { WorkDetail, MoviePart } from '@/types/workDetail';
-import { WorkGenre, Genre } from '@/types/works';
+import { WorkGenre } from '@/types/works';
 
-interface PageProps {
-    params: {
-        id: string;
-    };
-    searchParams?: { [key: string]: string | string[] | undefined };
-}
-
-export default async function MovieDetailPage({ params }: PageProps) {
-    const work = await getWorkDetail(params.id);
+export default async function MovieDetailPage({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params;
+    const work = await getWorkDetail(id);
     if (!work) notFound();
 
     // Fetch parts and related works in parallel
     const [parts, relatedWorks] = await Promise.all([
-        getWorkParts(params.id),
-        getRelatedWorks(work.author?.id || '', params.id)
+        getWorkParts(id),
+        getRelatedWorks(work.author?.id || '', id)
     ]);
 
     // Transform and sort parts
