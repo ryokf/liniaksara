@@ -17,12 +17,18 @@ const nextConfig: NextConfig = {
     "localhost:3000",
     "98e51a95d389.ngrok-free.app",
   ],
+  transpilePackages: ['react-pdf', 'pdfjs-dist'],
   webpack: (config, { isServer }) => {
-    // Canvas is required by pdf.js but it's not needed on client-side
     if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        canvas: false,
+        encoding: false
+      };
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        canvas: false
+        canvas: false,
+        encoding: false
       };
     }
     return config;
