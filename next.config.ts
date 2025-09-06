@@ -18,13 +18,14 @@ const nextConfig: NextConfig = {
     "98e51a95d389.ngrok-free.app",
   ],
   webpack: (config, { isServer }) => {
-    // Canvas handling
+    // Canvas is required by pdf.js but it's not needed on client-side
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        canvas: false,
+        canvas: false
       };
     }
+    return config;
 
     return config;
   },
