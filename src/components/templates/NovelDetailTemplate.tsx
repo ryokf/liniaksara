@@ -140,8 +140,11 @@ export default function NovelDetailTemplate({
                                 </h3>
                                 <div className="flex flex-wrap gap-2">
                                     {genres.map((genre) => (
-                                        <Badge key={genre?.genres?.genre} variant="secondary">
-                                            {genre?.genres?.genre}
+                                        <Badge 
+                                            key={`${genre.work_id}-${genre.genre_id}`} 
+                                            variant="secondary"
+                                        >
+                                            {genre?.genres?.genre || 'Unknown Genre'}
                                         </Badge>
                                     ))}
                                 </div>
