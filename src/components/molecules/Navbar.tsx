@@ -42,7 +42,6 @@ export default function Navbar() {
     }, []);
 
     const signOutHandle = async () => {
-        window.location.href = '/';
         await signOut();
     }
 
