@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getSession()
 
     // List of public routes that don't require authentication
-    const publicRoutes = ['/', '/login', '/register']
+    const publicRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password']
     const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname)
 
     // If user is logged in and trying to access root path, redirect to /home
