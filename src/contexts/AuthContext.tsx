@@ -35,7 +35,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const getInitialSession = async () => {
             try {
                 const { data: { user } } = await supabase.auth.getUser();
-                console.log(user);
                 if (user) {
                     setUserLogin({
                         id: user.id,
@@ -84,7 +83,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const signOut = async () => {
         try {
-            router.replace("/login");
             setUserLogin(null);
             const { error } = await supabase.auth.signOut();
             if (error) throw error;

@@ -19,8 +19,6 @@ import { useRouter } from "next/router";
 export default function Navbar() {
 
     const { userLogin, loading, error, signOut } = useAuth();
-    console.log(userLogin);
-
     
     const [searchQuery, setSearchQuery] = useState("");
     const [searchCategory, setSearchCategory] = useState("Title");
@@ -43,6 +41,7 @@ export default function Navbar() {
 
     const signOutHandle = async () => {
         await signOut();
+        location.href = '/login';
     }
 
     return (

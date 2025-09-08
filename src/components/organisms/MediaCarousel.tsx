@@ -17,8 +17,6 @@ export default function MediaCarousel({ title, items }: MediaCarouselProps) {
     const carouselRef = useRef<HTMLDivElement>(null);
     const x = useMotionValue(0);
 
-
-
     const ITEMS_PER_PAGE = 5;
     const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
 

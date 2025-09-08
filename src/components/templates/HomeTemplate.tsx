@@ -179,20 +179,21 @@ export default function HomeTemplate() {
             <section className="relative">
                 <HeroCarousel items={popularWorksAsMediaItems} />
             </section>
+            
+            {
+                libraryAsMediaItems.length > 0 && (
+                    <MediaCarousel
+                        title="Next in your library"
+                        items={libraryAsMediaItems}
+                    />
+                )
+            }
             <MobileFeed />
 
             {/* Content Sections */}
             <section className="relative pb-12">
                 <div className="space-y-8">
                     <div className="hidden sm:block">
-                        {
-                            libraryAsMediaItems.length > 0 && (
-                                <MediaCarousel
-                                    title="Next in your library"
-                                    items={libraryAsMediaItems}
-                                />
-                            )
-                        }
 
                         <MediaCarousel
                             title="Popular Novel or Comics"

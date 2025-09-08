@@ -83,10 +83,10 @@ export default function MobileFeed() {
 
     return (
         <div className="sm:hidden">
-            <MediaCarousel
+            {/* <MediaCarousel
                 title="Next in your library"
                 items={libraryAsMediaItems}
-            />
+            /> */}
             <div className="divide-y divide-gray-200 dark:divide-gray-800">
                 {works.map((work) => (
                     <FeedCard key={work.id} work={work} />
