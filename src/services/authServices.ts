@@ -6,43 +6,77 @@ interface AuthResponse {
 }
 
 export const signInWithGoogle = async () => {
-    const { data, error }: AuthResponse = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
     });
 
     if (error) {
         console.error('Login error:', error);
-    } else {
-
+        return { data: null, error: error.message };
     }
+
+    return { data, error: null };
 };
 
-export const registerWithEmail = async (name: string, email: string, password: string): Promise<void> => {
+export const registerWithEmail = async (username: string, email: string, password: string) => {
+    try {
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: { display_name: username }
+            }
+        });
 
-    const { data, error }: AuthResponse = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-            data: { display_name: name } // Simpan display name di metadata
+        if (error) {
+            throw new Error(error.message);
         }
-    });
 
-    if (error) {
-        console.error("Registrasi gagal:", error.message);
-    } else {
+        // Create profile in profiles table
+        // const { error: profileError } = await supabase
+        //     .from('profiles')
+        //     .insert([
+        //         {
+        //             id: data.user?.id,
+        //             username: username,
+        //             email: email,
+        //         }
+        //     ]);
 
+        // if (profileError) {
+        //     throw new Error(profileError.message);
+        // }
+
+        return { data, error: null };
+    } catch (error) {
+        if (error instanceof Error) {
+            return { data: null, error: error.message };
+        }
+        return { data: null, error: 'An unexpected error occurred' };
     }
 };
 
-export const loginWithEmail = async (email: string, password: string): Promise<void> => {
-    const { data, error }: AuthResponse = await supabase.auth.signInWithPassword({
-        email,
-        password,
-    });
+export const loginWithEmail = async (email: string, password: string) => {
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
 
-    if (error) {
-        console.error("Login gagal:", error.message);
-    } else {
+        if (error) {
+            throw new Error(error.message);
+        }
 
+        // Redirect to /home on successful login
+        if (typeof window !== 'undefined') {
+            window.location.href = '/home';
+        }
+
+        return { data, error: null };
+    } catch (error) {
+        if (error instanceof Error) {
+            return { data: null, error: error.message };
+        }
+        return { data: null, error: 'An unexpected error occurred' };
     }
 };

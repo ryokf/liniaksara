@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
 interface HeroProps {
     onOpen: (type: "login" | "signup") => void;
@@ -57,12 +59,12 @@ export default function Hero({ onOpen }: HeroProps) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.4 }}
                     >
-                        <button
-                            onClick={() => onOpen("signup")}
+                        <Link
+                            href="/register"
                             className="flex items-center justify-center gap-2 btn-primary px-6 py-3 rounded-full shadow-lg"
                         >
                             Start Adventure
-                        </button>
+                        </Link>
                     </motion.div>
                 </motion.div>
 

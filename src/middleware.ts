@@ -23,9 +23,14 @@ export async function middleware(request: NextRequest) {
     const publicRoutes = ['/', '/login', '/register']
     const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname)
 
+    // If user is logged in and trying to access root path, redirect to /home
+    if (session && request.nextUrl.pathname === '/') {
+        return NextResponse.redirect(new URL('/home', request.url))
+    }
+
     // If the user is not logged in and trying to access a protected route
     if (!session && !isPublicRoute) {
-        return NextResponse.redirect(new URL('/', request.url))
+        return NextResponse.redirect(new URL('/login', request.url))
     }
 
     // If the user is logged in and trying to access login/register pages
