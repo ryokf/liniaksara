@@ -65,6 +65,14 @@ export default function RegisterPage() {
                 return;
             }
 
+            // Reset all errors and form data on success
+            setErrors({});
+            setFormData({
+                username: '',
+                email: '',
+                password: '',
+                confirmPassword: ''
+            });
             setShowConfirmationPopup(true);
         } catch (error) {
             setErrors({ auth: 'Terjadi kesalahan saat registrasi' });
