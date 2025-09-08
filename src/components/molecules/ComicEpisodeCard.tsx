@@ -21,6 +21,8 @@ export default function ComicEpisodeCard({
     description
 }: ComicEpisodeCardProps) {
     const imgSrc = thumbnail ?? 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/axl1r8AAAAASUVORK5CYII=';
+    
+    console.log(type)
     return (
         
         <Link href={`/read/${type}/${workId}/${id}`} className="group">

@@ -38,7 +38,7 @@ export default async function ComicDetailPage({
     const chapters: ChapterData[] = parts.map(part => ({
         id: String(part.id),
         workId: part.work_id,
-        type: "chapter",
+        type: "comic",
         title: part.title
     }));
 

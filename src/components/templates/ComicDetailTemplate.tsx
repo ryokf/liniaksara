@@ -45,8 +45,6 @@ export default function ComicDetailTemplate({
     publisher,
     chapters
 }: ComicDetailTemplateProps) {
-    console.log("genres", genres);
-
     return (
         <main className="min-h-screen bg-white dark:bg-gray-900">
             <Navbar />
