@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Navbar from '../molecules/Navbar';
 import FilterButton from '../atoms/FilterButton';
@@ -9,9 +9,9 @@ import WorkCard from '../molecules/WorkCard';
 type WorkType = 'book' | 'image' | 'video';
 
 interface UserProfile {
-    name: string;
+    username: string;
     bio: string;
-    avatar: string;
+    photo_url: string;
     worksCount: number;
     followersCount: number;
     followingCount: number;
@@ -21,7 +21,7 @@ interface Work {
     id: string;
     title: string;
     type: string;
-    workType: WorkType;
+    workType?: "novel" | "comic" | "one page" | "series" | "movie";
     thumbnail: string;
     date: string;
     href: string;
@@ -34,8 +34,30 @@ interface ProfileTemplateProps {
 
 export default function ProfileTemplate({ profile, works }: ProfileTemplateProps) {
     const [activeFilter, setActiveFilter] = useState<WorkType>('book');
+    const [filteredWorks, setFilteredWorks] = useState<Work[]>(works);
 
-    const filteredWorks = works.filter(work => work.workType === activeFilter);
+    const filterWorks = (type: string = 'book') => {
+        if (type === 'book') {
+            const filtered = works.filter(work => work.type === 'Novel' || work.type === 'Comic');
+            setFilteredWorks(filtered);
+        } else if (type === 'image') {
+            const filtered = works.filter(work => work.type === 'One Page');
+            setFilteredWorks(filtered);
+        } else if (type === 'video') {
+            const filtered = works.filter(work => work.type === 'Series' || work.type === 'Movie');
+            setFilteredWorks(filtered);
+        } 
+    };
+
+    useEffect(() => {
+        filterWorks();
+    }, []);
+
+    const handleFilterClick = (type: WorkType) => {
+        console.log('Filter clicked:', type);
+        setActiveFilter(type);
+        filterWorks(type);
+    };
 
     return (
         <main className="min-h-screen bg-white dark:bg-gray-900 mt-14">
@@ -46,8 +68,8 @@ export default function ProfileTemplate({ profile, works }: ProfileTemplateProps
                     {/* Avatar */}
                     <div className="w-32 h-32 rounded-full overflow-hidden relative">
                         <Image
-                            src={profile.avatar || "/images/default-avatar.svg"}
-                            alt={profile.name}
+                            src={profile.photo_url || "/images/default-avatar.svg"}
+                            alt={profile.username}
                             fill
                             className="object-cover"
                         />
@@ -56,7 +78,7 @@ export default function ProfileTemplate({ profile, works }: ProfileTemplateProps
                     {/* User Info */}
                     <div className="space-y-4">
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                            {profile.name}
+                            {profile.username}
                         </h1>
                         <p className="text-gray-600 dark:text-gray-300 max-w-lg">
                             {profile.bio}
@@ -86,25 +108,25 @@ export default function ProfileTemplate({ profile, works }: ProfileTemplateProps
                 </div>
 
                 {/* Filters */}
-                <hr className='mt-8 border-t border-gray-200 dark:border-gray-700'/>
+                <hr className='mt-8 border-t border-gray-200 dark:border-gray-700' />
                 <div className="flex justify-center gap-4 my-4">
                     <FilterButton
                         type="book"
                         isActive={activeFilter === 'book'}
-                        onClick={() => setActiveFilter('book')}
+                        onClick={() => handleFilterClick('book')}
                     />
                     <FilterButton
                         type="image"
                         isActive={activeFilter === 'image'}
-                        onClick={() => setActiveFilter('image')}
+                        onClick={() => handleFilterClick('image')}
                     />
                     <FilterButton
                         type="video"
                         isActive={activeFilter === 'video'}
-                        onClick={() => setActiveFilter('video')}
+                        onClick={() => handleFilterClick('video')}
                     />
                 </div>
-                <hr className='mb-8 border-t border-gray-200 dark:border-gray-700'/>
+                <hr className='mb-8 border-t border-gray-200 dark:border-gray-700' />
 
                 {/* Works Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">

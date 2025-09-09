@@ -1,15 +1,11 @@
+'use client';
 import ProfileTemplate from '@/components/templates/ProfileTemplate';
+import { getUserProfile } from '@/services/profileService';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 type WorkType = 'book' | 'image' | 'video';
 
-const mockProfile = {
-    name: "Nama kreator",
-    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-    avatar: "/images/avatars/creator.jpg",
-    worksCount: 20,
-    followersCount: 20,
-    followingCount: 20
-};
 
 const mockWorks = [
     {
@@ -51,10 +47,40 @@ const mockWorks = [
 ];
 
 export default function ProfilePage() {
+    const [profile, setProfile] = useState<Awaited<ReturnType<typeof getUserProfile>> | null>(null);
+    const [works, setWorks] = useState();
+
+    const { username } = useParams<{ username: string }>();
+
+    const fetchProfile = async () => {
+        try {
+            const data = await getUserProfile(username);
+            setProfile(data);
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+        }
+    }
+
+    useEffect(() => {
+        fetchProfile();
+    }, [username]);
+
+    if (!profile) {
+        return <div />;
+    }
+
     return (
         <ProfileTemplate 
-            profile={mockProfile}
-            works={mockWorks}
+            profile={profile}
+            works={profile.works.map(work => ({
+                id: work.id,
+                title: work.title,
+                type: work.work_type?.type || "Work",
+                workType: work.work_type?.type === "Novel" ? "book" : work.work_type?.type === "Komik" ? "book" : work.work_type?.type === "Illustration" ? "image" : work.work_type?.type === "Series" ? "video" : "book",
+                thumbnail: work.cover || "/images/default-cover.jpg",
+                date: new Date(work.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
+                href: `/${work.work_type?.type?.toLowerCase() || "work"}/${work.id}`
+            }))}
         />
     );
 }
