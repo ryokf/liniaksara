@@ -31,11 +31,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 
     useEffect(() => {
+        let mounted = true;
+
         // Get initial session
         const getInitialSession = async () => {
             try {
                 const { data: { user } } = await supabase.auth.getUser();
-                if (user) {
+                if (mounted && user) {
                     setUserLogin({
                         id: user.id,
                         email: user.email!,
@@ -43,11 +45,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         photo: user.user_metadata?.picture,
                     });
                 }
-
             } catch (error) {
-                setError(error as Error);
+                if (mounted) {
+                    setError(error as Error);
+                }
             } finally {
-                setLoading(false);
+                if (mounted) {
+                    setLoading(false);
+                }
             }
         };
 
@@ -55,7 +60,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (event, session) => {
+            (event, session) => {
+                if (!mounted) return;
+
                 if (session?.user) {
                     setUserLogin({
                         id: session.user.id,
@@ -63,23 +70,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         displayName: session.user.user_metadata?.full_name || session.user.user_metadata?.display_name,
                         photo: session.user.user_metadata?.picture,
                     });
-                    
-                    // If at root path, redirect to /home
-                    if (window.location.pathname === '/') {
-                        router.push('/home');
-                    }
                 } else {
                     setUserLogin(null);
                 }
                 setLoading(false);
-
             }
         );
 
         return () => {
+            mounted = false;
             subscription.unsubscribe();
         };
-    }, [router]);
+    }, []);
+
+    // Separate effect for navigation
+    useEffect(() => {
+        if (userLogin && window.location.pathname === '/') {
+            router.push('/home');
+        }
+    }, [userLogin, router]);
 
     const signOut = async () => {
         try {

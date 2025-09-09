@@ -37,21 +37,24 @@ export default function VideoViewer({
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
-        video.addEventListener('ended', handleEnded);
+
+        const onVideoEnded = () => {
+            setShowNextEpisode(true);
+            setShowControls(true);
+            setIsPlaying(false);
+            if (video) {
+                setProgress(100);
+                setCurrentTime(formatTime(video.duration || 0));
+            }
+        };
+
+        video.addEventListener('ended', onVideoEnded);
         return () => {
-            video.removeEventListener('ended', handleEnded);
+            video.removeEventListener('ended', onVideoEnded);
         };
     }, []);
 
-    const handleEnded = () => {
-        setShowNextEpisode(true);
-        setShowControls(true);
-        setIsPlaying(false);
-        if (videoRef.current) {
-            setProgress(100);
-            setCurrentTime(formatTime(videoRef.current.duration || 0));
-        }
-    };
+
 
     const togglePlay = () => {
         if (videoRef.current) {
@@ -149,7 +152,8 @@ export default function VideoViewer({
                     onTimeUpdate={handleTimeUpdate}
                     onLoadedMetadata={handleLoadedMetadata}
                     poster={episode?.thumbnail_url}
-                    onEnded={handleEnded}
+                    // Event handler moved to useEffect
+                    
                 />
 
                 {/* Video Controls */}

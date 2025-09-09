@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: [
     "localhost:3000",
     "98e51a95d389.ngrok-free.app",
+    "722a2a26a666.ngrok-free.app",
   ],
   transpilePackages: ['react-pdf', 'pdfjs-dist'],
   webpack: (config, { isServer }) => {
