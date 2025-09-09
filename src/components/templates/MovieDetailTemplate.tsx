@@ -123,6 +123,7 @@ export default function MovieDetailTemplate({
                             <div className="grid gap-4">
                                 {episodes.map((episode) => (
                                     <MovieEpisodeCard
+                                        workId={episode.work_id}
                                         key={episode.id}
                                         id={episode.id}
                                         title={episode.title}

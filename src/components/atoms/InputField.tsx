@@ -2,7 +2,6 @@ import React from 'react';
 
 interface InputFieldProps {
   id: string;
-  name: string;
   label: string;
   type: string;
   placeholder?: string;
@@ -15,7 +14,6 @@ interface InputFieldProps {
 
 export default function InputField({
   id,
-  name,
   label,
   type,
   placeholder,
@@ -35,7 +33,6 @@ export default function InputField({
       </label>
       <input
         id={id}
-        name={name}
         type={type}
         placeholder={placeholder}
         value={value}

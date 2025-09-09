@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
     Play, 
     Pause, 
@@ -10,24 +11,18 @@ import {
     SkipForward,
     List
 } from 'lucide-react';
+import { Episode } from '@/types/episode';
+import NextEpisodeOverlay from './NextEpisodeOverlay';
+import '@/styles/video-player.css';
 
 interface VideoViewerProps {
-    videoUrl: string;
-    title: string;
-    episodeNumber: number;
-    onNavigateEpisode?: (direction: 'prev' | 'next') => void;
-    hasNextEpisode?: boolean;
-    hasPrevEpisode?: boolean;
+    episode: Episode;
 }
 
 export default function VideoViewer({
-    videoUrl,
-    title,
-    episodeNumber,
-    onNavigateEpisode,
-    hasNextEpisode = false,
-    hasPrevEpisode = false,
+    episode
 }: VideoViewerProps) {
+    const router = useRouter();
     const videoRef = useRef<HTMLVideoElement>(null);
     const progressRef = useRef<HTMLDivElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -36,6 +31,27 @@ export default function VideoViewer({
     const [showControls, setShowControls] = useState(true);
     const [currentTime, setCurrentTime] = useState('0:00');
     const [duration, setDuration] = useState('0:00');
+    const [showNextEpisode, setShowNextEpisode] = useState(false);
+
+    // Register ended handler and cleanup
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+        video.addEventListener('ended', handleEnded);
+        return () => {
+            video.removeEventListener('ended', handleEnded);
+        };
+    }, []);
+
+    const handleEnded = () => {
+        setShowNextEpisode(true);
+        setShowControls(true);
+        setIsPlaying(false);
+        if (videoRef.current) {
+            setProgress(100);
+            setCurrentTime(formatTime(videoRef.current.duration || 0));
+        }
+    };
 
     const togglePlay = () => {
         if (videoRef.current) {
@@ -84,17 +100,20 @@ export default function VideoViewer({
     };
 
     const handleFullscreen = () => {
-        if (videoRef.current) {
+        const container = videoRef.current?.parentElement;
+        if (container) {
             if (document.fullscreenElement) {
                 document.exitFullscreen();
             } else {
-                videoRef.current.requestFullscreen();
+                container.requestFullscreen();
             }
         }
     };
 
+    console.log("episode:", episode);
+
     return (
-        <div className="min-h-screen bg-black flex flex-col">
+        <div className="min-h-screen bg-black flex flex-col w-full">
             {/* Top Navigation */}
             <nav className={`
                 fixed top-0 left-0 right-0 z-50 transition-transform duration-300
@@ -105,19 +124,12 @@ export default function VideoViewer({
                         <div className="flex items-center justify-between h-16">
                             <div className="flex items-center gap-4">
                                 <h1 className="text-white font-medium">
-                                    {title}
+                                    {episode?.title || episode?.work?.title || 'Loading...'}
                                 </h1>
                                 <span className="text-gray-400">
-                                    Episode {episodeNumber}
+                                    Episode {episode?.part_order || '-'}
                                 </span>
                             </div>
-
-                            <button 
-                                className="p-2 text-gray-400 hover:text-white transition-colors"
-                                title="Episodes List"
-                            >
-                                <List size={20} />
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -125,17 +137,19 @@ export default function VideoViewer({
 
             {/* Video Container */}
             <div 
-                className="flex-1 relative flex items-center justify-center bg-black"
+                className="flex-1 w-full relative flex items-center justify-center bg-black"
                 onMouseMove={() => setShowControls(true)}
                 onMouseLeave={() => setShowControls(false)}
             >
                 <video
                     ref={videoRef}
-                    src={videoUrl}
-                    className="max-h-screen w-full"
+                    src={episode?.content_url}
+                    className="max-h-screen w-screen"
                     onClick={togglePlay}
                     onTimeUpdate={handleTimeUpdate}
                     onLoadedMetadata={handleLoadedMetadata}
+                    poster={episode?.thumbnail_url}
+                    onEnded={handleEnded}
                 />
 
                 {/* Video Controls */}
@@ -167,21 +181,23 @@ export default function VideoViewer({
                             </button>
 
                             {/* Skip Buttons */}
-                            <button 
-                                onClick={() => onNavigateEpisode?.('prev')}
-                                disabled={!hasPrevEpisode}
-                                className="text-white hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <SkipBack size={24} />
-                            </button>
+                            {episode?.previous_part_id && episode?.work_id && (
+                                <button 
+                                    onClick={() => router.push(`/watch/${episode.work_id}/${episode.previous_part_id}`)}
+                                    className="text-white hover:text-primary transition-colors"
+                                >
+                                    <SkipBack size={24} />
+                                </button>
+                            )}
                             
-                            <button 
-                                onClick={() => onNavigateEpisode?.('next')}
-                                disabled={!hasNextEpisode}
-                                className="text-white hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <SkipForward size={24} />
-                            </button>
+                            {episode?.next_part_id && episode?.work_id && (
+                                <button 
+                                    onClick={() => router.push(`/watch/${episode.work_id}/${episode.next_part_id}`)}
+                                    className="text-white hover:text-primary transition-colors"
+                                >
+                                    <SkipForward size={24} />
+                                </button>
+                            )}
 
                             {/* Volume */}
                             <button 
@@ -215,6 +231,17 @@ export default function VideoViewer({
                         </div>
                     </div>
                 </div>
+
+                {/* Next Episode Overlay */}
+                {showNextEpisode && episode?.next_part_id && (
+                    <NextEpisodeOverlay
+                        nextEpisodeId={episode.next_part_id}
+                        workId={episode.work_id}
+                        title={`${episode.work?.title} - Episode ${Number(episode.part_order) + 1}`}
+                        thumbnailUrl={episode.thumbnail_url}
+                        onDismiss={() => setShowNextEpisode(false)}
+                    />
+                )}
             </div>
         </div>
     );

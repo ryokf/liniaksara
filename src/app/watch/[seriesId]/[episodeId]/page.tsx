@@ -1,70 +1,81 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import VideoViewer from "@/components/molecules/VideoViewer";
 import { useEffect, useState } from "react";
-
-interface Episode {
-    id: string;
-    title: string;
-    videoUrl: string;
-    episodeNumber: number;
-}
+import { Episode } from "@/types/episode";
+import { getVideoEpisodeById } from "@/services/videoService";
 
 export default function WatchPage() {
     const params = useParams();
+    const router = useRouter();
     const [episode, setEpisode] = useState<Episode | null>(null);
-    const [hasNextEpisode, setHasNextEpisode] = useState(false);
-    const [hasPrevEpisode, setHasPrevEpisode] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        // Di sini Anda akan mengambil data episode dari API
-        // Contoh data statis untuk demonstrasi
         const fetchEpisode = async () => {
             try {
-                // Ganti dengan panggilan API yang sebenarnya
-                const mockEpisode = {
-                    id: params.episodeId as string,
-                    title: "Series Title",
-                    videoUrl: "https://example.com/video.mp4",
-                    episodeNumber: 1
-                };
+                if (!params.episodeId) return;
                 
-                setEpisode(mockEpisode);
-                // Cek keberadaan episode sebelum/sesudah
-                setHasNextEpisode(true); // Sesuaikan dengan logika Anda
-                setHasPrevEpisode(false);
-            } catch (error) {
-                console.error("Error fetching episode:", error);
+                setLoading(true);
+                const data = await getVideoEpisodeById(params.episodeId as string);
+                console.log("Fetched episode data:", data);
+                if (!data) {
+                    throw new Error('Episode tidak ditemukan');
+                }
+                
+                // Validasi tipe konten adalah video
+                if (![23, 20].includes(data.work?.work_type_id || 0)) {
+                    throw new Error('Konten ini bukan video');
+                }
+                
+                setEpisode(data);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Terjadi kesalahan');
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchEpisode();
-    }, [params.episodeId, params.seriesId]);
+    }, [params.episodeId]);
 
-    const handleNavigateEpisode = (direction: 'prev' | 'next') => {
-        // Implementasi navigasi episode
-        const currentEpisodeNumber = episode?.episodeNumber || 1;
-        const newEpisodeNumber = direction === 'next' 
-            ? currentEpisodeNumber + 1 
-            : currentEpisodeNumber - 1;
-        
-        // Redirect ke episode baru
-        window.location.href = `/watch/${params.seriesId}/${newEpisodeNumber}`;
-    };
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="loading loading-spinner loading-lg"></div>
+            </div>
+        );
+    }
 
-    if (!episode) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    if (error || !episode) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <div className="text-error text-2xl mb-4">
+                    {error || 'Episode tidak ditemukan'}
+                </div>
+                <button 
+                    className="btn btn-primary"
+                    onClick={() => router.back()}
+                >
+                    Kembali
+                </button>
+            </div>
+        );
     }
 
     return (
-        <VideoViewer
-            videoUrl={episode.videoUrl}
-            title={episode.title}
-            episodeNumber={episode.episodeNumber}
-            onNavigateEpisode={handleNavigateEpisode}
-            hasNextEpisode={hasNextEpisode}
-            hasPrevEpisode={hasPrevEpisode}
-        />
+        <div className="min-h-screen bg-black">
+            <div className="max-w-7xl mx-auto">
+                <div className="mb-4">
+                    <VideoViewer episode={episode} />
+                </div>
+                <div className="bg-base-300 p-4 rounded-lg">
+                    <h1 className="text-xl font-bold mb-2">{episode.title || `Episode ${episode.part_order}`}</h1>
+                    <p className="text-gray-400">{episode.description}</p>
+                </div>
+            </div>
+        </div>
     );
 }

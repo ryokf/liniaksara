@@ -47,6 +47,7 @@ export default async function MovieDetailPage({
 
     // Transform data for the template
     const movieData = {
+        workId: work.id,
         title: work.title,
         category: 'Movie',
         releaseDate: new Date(work.created_at).toLocaleDateString(),
