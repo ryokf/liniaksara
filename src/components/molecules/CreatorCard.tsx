@@ -36,7 +36,7 @@ export default function CreatorCard({ id, name, description, imageUrl, worksCoun
                 </p>
 
                 <Link 
-                    href={`/creator/${id}`}
+                    href={`/profile/${name}`}
                     className="px-6 py-2 rounded-full text-sm font-medium text-white gradient-bg transition-opacity hover:opacity-90"
                 >
                     View Profile
