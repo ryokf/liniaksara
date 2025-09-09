@@ -9,6 +9,8 @@ export interface WorkType {
     icon?: string;
 }
 
+export type WorkMediaType = 'book' | 'video' | 'image';
+
 export interface Work {
     id: string;  // UUID
     author_id: string;  // UUID
