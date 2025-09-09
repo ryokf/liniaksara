@@ -21,10 +21,16 @@ export default function Navbar() {
     const { userLogin, loading, error, signOut } = useAuth();
     
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchCategory, setSearchCategory] = useState("Title");
     const [isScrolled, setIsScrolled] = useState(false);
-    
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!searchQuery.trim()) return;
+        
+        // Redirect to search page with query
+        window.location.href = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
+    };
     
     const toggleDropdown = () => {
         setIsDropdownOpen(prev => !prev);
@@ -81,18 +87,23 @@ export default function Navbar() {
 
                 {/* Bagian Tengah: Search Bar */}
                 <div className="flex-1 max-w-xl hidden md:flex">
-                    <div className="relative w-full">
-                        <input
-                            type="text"
-                            placeholder={`Search ${searchCategory.toLowerCase()}...`}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-full focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition"
-                        />
-                        <button className="absolute inset-y-0 right-0 flex items-center justify-center w-10 h-full text-white rounded-r-full gradient-bg hover:opacity-90 transition">
-                            <Search size={18} />
-                        </button>
-                    </div>
+                    <form onSubmit={handleSearch} className="w-full">
+                        <div className="relative w-full">
+                            <input
+                                type="text"
+                                placeholder="Cari karya..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-full focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition"
+                            />
+                            <button 
+                                type="submit"
+                                className="absolute inset-y-0 right-0 flex items-center justify-center w-10 h-full text-white rounded-r-full gradient-bg hover:opacity-90 transition"
+                            >
+                                <Search size={18} />
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 {/* Bagian Kanan: Ikon & Profil Pengguna */}
