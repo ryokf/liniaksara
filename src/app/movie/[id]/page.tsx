@@ -59,11 +59,12 @@ export default async function MovieDetailPage({
         director: work.author?.username || 'Unknown',
         episodes: sortedParts.map((part) => ({
             id: part.id.toString(),
-            partOrder: part.part_order,
+            work_id: part.work_id,
+            part_order: part.part_order,
             title: part.title,
             thumbnail: part.thumbnail || '/images/default-cover.svg',
             duration: part.duration ? `${Math.floor(part.duration / 60)}m ${part.duration % 60}s` : 'Unknown',
-            isFree: part.is_free,
+            is_free: part.is_free,
         })),
         relatedWorks: relatedWorks.map((relatedWork) => ({
             id: relatedWork.id,

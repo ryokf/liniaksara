@@ -35,7 +35,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const getInitialSession = async () => {
             try {
                 const { data: { user } } = await supabase.auth.getUser();
-                console.log(user);
                 if (user) {
                     setUserLogin({
                         id: user.id,
@@ -64,6 +63,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         displayName: session.user.user_metadata?.full_name || session.user.user_metadata?.display_name,
                         photo: session.user.user_metadata?.picture,
                     });
+                    
+                    // If at root path, redirect to /home
+                    if (window.location.pathname === '/') {
+                        router.push('/home');
+                    }
                 } else {
                     setUserLogin(null);
                 }
@@ -75,12 +79,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return () => {
             subscription.unsubscribe();
         };
-    }, []);
+    }, [router]);
 
     const signOut = async () => {
         try {
             setUserLogin(null);
-            router.push("/");
             const { error } = await supabase.auth.signOut();
             if (error) throw error;
         } catch (error) {

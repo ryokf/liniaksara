@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { loginWithEmail, signInWithGoogle } from '@/services/authServices';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 import AuthCard from '@/components/molecules/AuthCard';
 import InputField from '@/components/atoms/InputField';
@@ -25,36 +26,49 @@ export default function LoginPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Simple validation
     const newErrors: Record<string, string> = {};
     if (!formData.email) newErrors.email = 'Email diperlukan';
     if (!formData.password) newErrors.password = 'Password diperlukan';
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    
-    // Handle login logic here
 
+    try {
+      const { data, error } = await loginWithEmail(formData.email, formData.password);
+
+      if (error) {
+        setErrors({ auth: error });
+        return;
+      }
+
+      // Redirect to dashboard after successful login
+      window.location.href = '/';
+    } catch (error) {
+      setErrors({ auth: 'Terjadi kesalahan saat login' });
+    }
   };
 
   const handleSocialLogin = (provider: string) => {
-
-    // Handle social login logic here
+    if (provider === 'google') {
+      signInWithGoogle();
+    }
   };
 
   return (
-    <AuthCard 
-      title="Masuk ke Akun Anda" 
+    <AuthCard
+      title="Masuk ke Akun Anda"
       subtitle="Masukkan kredensial Anda untuk melanjutkan"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <InputField
           id="email"
+          name="email"
           label="Email"
           type="email"
           placeholder="nama@example.com"
@@ -64,9 +78,10 @@ export default function LoginPage() {
           error={errors.email}
           className="mb-4"
         />
-        
+
         <InputField
           id="password"
+          name="password"
           label="Password"
           type="password"
           placeholder="••••••••"
@@ -75,47 +90,47 @@ export default function LoginPage() {
           required
           error={errors.password}
         />
-        
+
         <div className="flex justify-end">
-          <Link 
-            href="/forgot-password" 
+          <Link
+            href="/forgot-password"
             className="text-sm text-primary-1 hover:underline"
           >
             Lupa password?
           </Link>
         </div>
-        
-        <Button 
-          type="submit" 
-          variant="primary" 
+
+        {errors.auth && (
+          <div className="text-red-500 text-sm text-center mb-4">
+            {errors.auth}
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          variant="primary"
           className="w-full gradient-bg hover:shadow-glow-strong transition-all duration-500"
         >
           Masuk
         </Button>
-        
+
         <Divider text="atau" />
-        
+
         <div className="space-y-3">
           <SocialButton
             icon={<FaGoogle className="text-lg" />}
             provider="Google"
             onClick={() => handleSocialLogin('google')}
           />
-          
-          <SocialButton
-            icon={<FaGithub className="text-lg" />}
-            provider="GitHub"
-            onClick={() => handleSocialLogin('github')}
-          />
         </div>
       </form>
-      
+
       <div className="mt-6 text-center text-sm">
         <span className="text-gray-600 dark:text-gray-400">
           Belum punya akun?{' '}
         </span>
-        <Link 
-          href="/register" 
+        <Link
+          href="/register"
           className="text-primary-1 hover:underline font-medium"
         >
           Daftar sekarang

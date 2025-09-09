@@ -7,6 +7,7 @@ import Navbar from '../molecules/Navbar';
 import { WorkGenre } from '@/types/works';
 
 interface MovieDetailTemplateProps {
+    workId: string;
     title: string;
     category: string;
     releaseDate: string;
@@ -18,11 +19,12 @@ interface MovieDetailTemplateProps {
     director: string;
     episodes: Array<{
         id: string;
-        partOrder: number;
+        work_id: string;
+        part_order: number;
         title: string;
         thumbnail: string;
         duration: string;
-        isFree: boolean;
+        is_free: boolean;
     }>;
     relatedWorks: Array<{
         id: string;
@@ -35,6 +37,7 @@ interface MovieDetailTemplateProps {
 }
 
 export default function MovieDetailTemplate({
+    workId,
     title,
     category,
     releaseDate,
@@ -47,6 +50,7 @@ export default function MovieDetailTemplate({
     episodes,
     relatedWorks
 }: MovieDetailTemplateProps) {
+    console.log("workId:", workId);
     return (
         <main className="min-h-screen bg-white dark:bg-gray-900">
             <Navbar></Navbar>
@@ -123,14 +127,14 @@ export default function MovieDetailTemplate({
                             <div className="grid gap-4">
                                 {episodes.map((episode) => (
                                     <MovieEpisodeCard
-                                        workId={episode.work_id}
                                         key={episode.id}
                                         id={episode.id}
+                                        workId={workId}
                                         title={episode.title}
-                                        episodeNumber={episode.partOrder}
+                                        episodeNumber={episode.part_order}
                                         thumbnail={episode.thumbnail}
                                         duration={episode.duration}
-                                        isFree={episode.isFree}
+                                        isFree={episode.is_free}
                                     />
                                 ))}
                             </div>

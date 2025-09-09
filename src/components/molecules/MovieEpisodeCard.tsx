@@ -5,6 +5,7 @@ import Badge from '../atoms/Badge';
 
 interface MovieEpisodeCardProps {
     id: string;
+    workId: string;
     episodeNumber: number;
     title: string;
     thumbnail: string;
@@ -14,6 +15,7 @@ interface MovieEpisodeCardProps {
 
 export default function MovieEpisodeCard({
     id,
+    workId,
     episodeNumber,
     title,
     thumbnail,
@@ -21,7 +23,7 @@ export default function MovieEpisodeCard({
     isFree
 }: MovieEpisodeCardProps) {
     return (
-        <Link href={`/watch/${id}`} className="group">
+        <Link href={`/watch/${workId}/${id}`} className="group">
             <div className="flex gap-6 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors">
                 {/* Thumbnail */}
                 <div className="relative w-48 h-32 rounded-lg overflow-hidden flex-shrink-0">
