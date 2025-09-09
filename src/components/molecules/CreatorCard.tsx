@@ -14,9 +14,11 @@ export default function CreatorCard({ id, name, description, imageUrl, worksCoun
     return (
         <div className="group relative rounded-2xl">
             <div className="absolute top-0 right-0 mt-3 mr-3 ">
-                <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full ${rank <= 3 ? ['bg-yellow-400', 'bg-gray-300', 'bg-yellow-700'][rank - 1] : 'bg-gray-500'} text-white font-semibold shadow-md`}>
-                    #{rank}
-                </span>
+                {rank > 0 && (
+                    <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full ${rank <= 3 ? ['bg-yellow-400', 'bg-gray-300', 'bg-yellow-700'][rank - 1] : 'bg-gray-500'} text-white font-semibold shadow-md`}>
+                        #{rank}
+                    </span>
+                )}
             </div>
             <div className="flex flex-col items-center p-6 rounded-2xl bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-lg dark:hover:shadow-primary/5 hover:-translate-y-1">
                 <CreatorAvatar imageUrl={imageUrl} alt={name} />

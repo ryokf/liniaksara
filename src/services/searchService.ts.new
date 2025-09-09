@@ -1,0 +1,68 @@
+import supabase from '@/config/supabase';
+import { Work } from '@/types/works';
+
+export type SearchType = 'works' | 'users';
+
+export interface SearchResults {
+  works: Work[];
+  users: any[];
+  type: SearchType;
+}
+
+export async function searchWorks(query: string) {
+    if (!query) return [];
+    const { data, error } = await supabase
+        .from('works')
+        .select(`
+            *,
+            work_type:work_types(*),
+            profiles:author_id(
+                username,
+                full_name,
+                avatar_url
+            )
+        `)
+        .eq('is_draft', false)
+        .or(`title.ilike.%${query}%,description.ilike.%${query}%`);
+
+    if (error) throw error;
+    return data;
+}
+
+export async function searchUsers(query: string) {
+    if (!query) return [];
+    
+    const { data, error } = await supabase
+        .from('profiles')
+        .select(`
+            *,
+            works (
+                id,
+                title,
+                cover,
+                work_type:work_types(*)
+            )
+        `)
+        .or(`username.ilike.%${query}%,full_name.ilike.%${query}%`)
+        .limit(20);
+        
+    if (error) throw error;
+    return data;
+}
+
+export async function search(query: string, type: SearchType = 'works'): Promise<SearchResults> {
+    if (!query) return { works: [], users: [], type };
+
+    try {
+        if (type === 'works') {
+            const works = await searchWorks(query);
+            return { works, users: [], type };
+        } else {
+            const users = await searchUsers(query);
+            return { works: [], users, type };
+        }
+    } catch (error) {
+        console.error('Search error:', error);
+        throw error;
+    }
+}

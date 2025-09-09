@@ -1,6 +1,13 @@
 import supabase from '@/config/supabase';
-import { Work } from '@/types/works';
-import { PostgrestError } from '@supabase/supabase-js';
+import { Work } from '@/types/wor                            works!author_id (
+                    id,
+                    title,
+                    cover,
+                    work_type:work_types!work_type_id(
+                        id,
+                        name
+                    )
+                )
 
 export type SearchType = 'works' | 'users';
 
@@ -38,16 +45,12 @@ export async function searchWorks(query: string): Promise<Work[]> {
                 author:profiles!author_id(
                     id,
                     username,
-                    photo_url
+                    full_name,
+                    avatar_url
                 )
             `)
-            .ilike('title', `%${query}%`)
-
-            console.log('Search query:', query);
-            console.log('Supabase response data:', data);
-            console.log('Supabase response error:', error);
-            
-            // .eq('is_draft', false)
+            .eq('is_draft', false)
+            .or(`title.ilike.%${query}%,description.ilike.%${query}%`);
 
         if (error) {
             console.error('Error searching works:', error);
@@ -67,27 +70,22 @@ export async function searchUsers(query: string): Promise<SearchUser[]> {
     try {
         const { data, error } = await supabase
             .from('profiles')
-            .select(`
-                id,
-                username,
-                photo_url
-            `)
-            .ilike('username', `%${query}%`)
-            // .limit(20);
+            .select(`*`)
+            .or(`username.ilike.%${query}%,full_name.ilike.%${query}%`)
+            .limit(20);
 
         if (error) {
             console.error('Error searching users:', error);
             throw new Error(`Failed to search users: ${error.message}`);
         }
         
-        const transformedData = data?.map(user => ({
-            id: user.id,
-            username: user.username,
-            full_name: user.username,
-            photo_url: user.photo_url,
-        })) || [];
-
-        return transformedData;
+        return (data?.map(user => ({
+            ...user,
+            works: user.works?.map((work: Work) => ({
+                ...work,
+                work_type: work.work_type?.[0]
+            }))
+        })) || []) as SearchUser[];
     } catch (err) {
         console.error('Error in searchUsers:', err);
         throw err;
@@ -107,7 +105,8 @@ export async function search(query: string, type: SearchType = 'works'): Promise
         }
     } catch (error) {
         console.error('Search error:', error);
-        const message = error instanceof Error ? error.message : 'Unknown error occurred';
-        throw new Error(`Failed to perform search: ${message}`);
+        // Membuat pesan error yang lebih informatif
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        throw new Error(`Failed to perform search: ${errorMessage}`);
     }
 }
