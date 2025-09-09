@@ -6,80 +6,85 @@ import { useEffect, useState } from 'react';
 
 type WorkType = 'book' | 'image' | 'video';
 
-
-const mockWorks = [
-    {
-        id: "1",
-        title: "React Project Practical Tutorial",
-        type: "Novel",
-        workType: "book" as WorkType,
-        thumbnail: "/images/works/novel1.jpg",
-        date: "15 september 2024",
-        href: "/novel/1"
-    },
-    {
-        id: "2",
-        title: "React Project Practical Tutorial",
-        type: "Komik",
-        workType: "book" as WorkType,
-        thumbnail: "/images/works/comic1.jpg",
-        date: "15 september 2024",
-        href: "/comic/1"
-    },
-    {
-        id: "3",
-        title: "Beautiful Landscape",
-        type: "Illustration",
-        workType: "image" as WorkType,
-        thumbnail: "/images/works/art1.jpg",
-        date: "15 september 2024",
-        href: "/art/1"
-    },
-    {
-        id: "4",
-        title: "Adventure Series",
-        type: "Series",
-        workType: "video" as WorkType,
-        thumbnail: "/images/works/video1.jpg",
-        date: "15 september 2024",
-        href: "/video/1"
-    }
-];
-
 export default function ProfilePage() {
     const [profile, setProfile] = useState<Awaited<ReturnType<typeof getUserProfile>> | null>(null);
-    const [works, setWorks] = useState();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     const { username } = useParams<{ username: string }>();
 
-    const fetchProfile = async () => {
-        try {
-            const data = await getUserProfile(username);
-            setProfile(data);
-        } catch (error) {
-            console.error("Error fetching profile:", error);
-        }
-    }
-
     useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                setLoading(true);
+                const data = await getUserProfile(username);
+                setProfile(data);
+                setError(null);
+            } catch (err) {
+                console.error('Error fetching profile:', err);
+                setError('Terjadi kesalahan saat mengambil data profil');
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchProfile();
     }, [username]);
 
-    if (!profile) {
-        return <div />;
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="loading loading-spinner loading-lg"></div>
+            </div>
+        );
     }
+
+    if (error || !profile) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center">
+                <h1 className="text-2xl font-bold mb-4">
+                    {error || 'Profil tidak ditemukan'}
+                </h1>
+                <p className="text-gray-500">
+                    Pengguna dengan username &quot;{username}&quot; tidak ditemukan
+                </p>
+            </div>
+        );
+    }
+
+    const getWorkType = (type: string | undefined): 'book' | 'image' | 'video' => {
+        if (!type) return 'image';
+        const lowerType = type.toLowerCase();
+        if (lowerType === 'novel' || lowerType === 'comic' || lowerType === 'komik') {
+            return 'book';
+        } else if (lowerType === 'video' || lowerType === 'series') {
+            return 'video';
+        }
+        return 'image';
+    };
 
     return (
         <ProfileTemplate 
-            profile={profile}
+            profile={{
+                username: profile.username,
+                bio: profile.bio || '',
+                photo_url: profile.photo_url || '/images/default-avatar.svg',
+                worksCount: profile.works.length,
+                followersCount: profile.followers_count,
+                followingCount: profile.following_count
+            }}
             works={profile.works.map(work => ({
                 id: work.id,
                 title: work.title,
-                type: work.work_type?.type || "Work",
-                workType: work.work_type?.type === "Novel" ? "book" : work.work_type?.type === "Komik" ? "book" : work.work_type?.type === "Illustration" ? "image" : work.work_type?.type === "Series" ? "video" : "book",
-                thumbnail: work.cover || "/images/default-cover.jpg",
-                date: new Date(work.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
-                href: `/${work.work_type?.type?.toLowerCase() || "work"}/${work.id}`
+                type: work.work_type?.type || 'Work',
+                workType: getWorkType(work.work_type?.type),
+                thumbnail: work.cover || '/images/default-cover.svg',
+                date: new Date(work.created_at).toLocaleDateString('id-ID', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }),
+                href: `/${work.work_type?.type?.toLowerCase() || 'work'}/${work.id}`
             }))}
         />
     );

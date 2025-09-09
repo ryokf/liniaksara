@@ -21,7 +21,7 @@ interface Work {
     id: string;
     title: string;
     type: string;
-    workType?: "novel" | "comic" | "one page" | "series" | "movie";
+    workType: 'book' | 'image' | 'video';
     thumbnail: string;
     date: string;
     href: string;
@@ -36,17 +36,9 @@ export default function ProfileTemplate({ profile, works }: ProfileTemplateProps
     const [activeFilter, setActiveFilter] = useState<WorkType>('book');
     const [filteredWorks, setFilteredWorks] = useState<Work[]>(works);
 
-    const filterWorks = (type: string = 'book') => {
-        if (type === 'book') {
-            const filtered = works.filter(work => work.type === 'Novel' || work.type === 'Comic');
-            setFilteredWorks(filtered);
-        } else if (type === 'image') {
-            const filtered = works.filter(work => work.type === 'One Page');
-            setFilteredWorks(filtered);
-        } else if (type === 'video') {
-            const filtered = works.filter(work => work.type === 'Series' || work.type === 'Movie');
-            setFilteredWorks(filtered);
-        } 
+    const filterWorks = (type: WorkType = 'book') => {
+        const filtered = works.filter(work => work.workType === type);
+        setFilteredWorks(filtered);
     };
 
     useEffect(() => {
