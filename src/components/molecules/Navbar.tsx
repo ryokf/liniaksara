@@ -54,10 +54,15 @@ export default function Navbar() {
                     {/* Logo */}
                     <Link href="/home" className="flex items-center gap-3 flex-shrink-0">
                         <Image
-                            src="/logo.png" // Menggunakan logo yang ada di proyek Anda
+                            src="/logo.png"
                             alt="LiniAksara Logo"
                             width={36}
                             height={36}
+                            className="w-9 h-auto"
+                            style={{
+                                width: "auto",
+                                height: "auto"
+                            }}
                         />
                         {/* INKURA pada screenshot diganti dengan nama proyek Anda */}
                         <span className="text-xl font-bold text-gray-800 dark:text-white block">
@@ -112,7 +117,7 @@ export default function Navbar() {
                         </span>
                         <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
                             {userLogin?.photo ? (
-                                <Image src={userLogin.photo} alt="Profil" width={32} height={32} />
+                                <Image src={userLogin.photo} alt="Profil" width={32} height={32} priority />
                             ) : (
                                 <User size={18} className="text-gray-500" />
                             )}

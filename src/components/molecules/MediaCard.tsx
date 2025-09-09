@@ -38,6 +38,7 @@ export default function MediaCard(props: MediaItemProps) {
                         alt={title}
                         fill
                         className="object-cover"
+                        sizes='200px'
                     />
                 ) : (
                     <div className="w-full h-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">

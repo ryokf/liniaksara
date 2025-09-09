@@ -11,7 +11,17 @@ export default function Footer() {
         {/* Logo & Description */}
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <Image src="/logo.png" alt="LiniAksara Logo" width={32} height={32} />
+            <Image
+              src="/logo.png"
+              alt="LiniAksara Logo"
+              width={36}
+              height={36}
+              className="w-9 h-auto"
+              style={{
+                width: "auto",
+                height: "auto"
+              }}
+            />
             <h4 className="text-xl font-bold text-gray-800 dark:text-white">LiniAksara</h4>
           </div>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
