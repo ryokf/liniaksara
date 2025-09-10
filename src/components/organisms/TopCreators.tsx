@@ -24,7 +24,7 @@ export default function TopCreators({ creators }: TopCreatorsProps) {
                         <CreatorCard
                             key={creator.id}
                             id={creator.id}
-                            name={creator.name}
+                            name={creator.username}
                             description={`${creator.sales} karya terjual`}
                             imageUrl={creator.photo || '/images/default-avatar.svg'}
                             worksCount={creator.worksCount}
