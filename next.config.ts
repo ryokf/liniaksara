@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
       "fastly.picsum.photos",
       "f2a947fd743a.ngrok-free.app",
       "unpkg.com",
+      "ktmvcsnuvbvqytahrcli.supabase.co"
     ],
   },
   allowedDevOrigins: [
