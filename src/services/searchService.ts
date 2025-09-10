@@ -8,7 +8,7 @@ export interface SearchUser {
     id: string;
     username: string;
     full_name?: string;
-    avatar_url?: string;
+    photo_url?: string;
     works?: Array<{
         id: string;
         title: string;

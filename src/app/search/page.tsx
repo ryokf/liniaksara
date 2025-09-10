@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { search, SearchType, SearchResults } from '@/services/searchService';
 import MediaCard from '@/components/molecules/MediaCard';
@@ -10,7 +10,7 @@ import { Work } from '@/types/works';
 import Navbar from '@/components/molecules/Navbar';
 import CreatorCard from '@/components/molecules/CreatorCard';
 
-export default function SearchPage() {
+function SearchContent() {
     const searchParams = useSearchParams();
     const query = searchParams.get('q') || '';
     const type = (searchParams.get('type') as SearchType) || 'works';
@@ -41,7 +41,6 @@ export default function SearchPage() {
 
     return (
         <>
-            <Navbar />
             {query && (
                 <div className="max-w-7xl mx-auto px-6 mt-20">
                     <div className="flex items-center justify-between mb-4">
@@ -153,7 +152,7 @@ export default function SearchPage() {
                                     id={user.id}
                                     name={user.username}
                                     description={user.full_name || ''}
-                                    imageUrl={user.avatar_url || '/images/default-avatar.svg'}
+                                    imageUrl={user.photo_url || '/images/default-avatar.svg'}
                                     worksCount={user.works?.length || 0}
                                     rank={0} // Karena ini hasil pencarian, tidak perlu ranking
                                 />
@@ -168,6 +167,23 @@ export default function SearchPage() {
                     )}
                 </div>
             )}
+        </>
+    );
+}
+
+export default function SearchPage() {
+    return (
+        <>
+            <Navbar />
+            <Suspense
+                fallback={
+                    <div className="max-w-7xl mx-auto px-6 mt-20">
+                        <div className="loading loading-spinner loading-lg" />
+                    </div>
+                }
+            >
+                <SearchContent />
+            </Suspense>
         </>
     );
 }
