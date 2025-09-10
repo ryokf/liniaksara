@@ -65,15 +65,12 @@ export default function MyWorksPage() {
         { label: 'Novel', value: 'novel' },
         { label: 'Komik', value: 'comic' },
         { label: 'Film', value: 'movie' },
-        { label: 'One Page', value: 'one page' },
-        { label: 'Series', value: 'series' }
     ];
 
     const filteredWorks = useMemo(() => {
         return works
             // Apply search filter
             .filter((work) => {
-                console.log(work);
                 const matchesSearch = work.title.toLowerCase().includes(searchQuery.toLowerCase());
                 const matchesStatus = statusFilter === 'all' 
                     ? true 
