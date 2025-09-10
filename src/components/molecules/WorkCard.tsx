@@ -22,7 +22,7 @@ export default function WorkCard({
         <Link href={href} className="group">
             <div className="space-y-3">
                 {/* Thumbnail */}
-                <div className="aspect-video relative rounded-xl overflow-hidden">
+                <div className={`${type === 'Movie' || type === 'Series' ? 'aspect-video' : 'aspect-[3/4]'} relative rounded-xl overflow-hidden`}>
                     <Image
                         src={thumbnail}
                         alt={title}
