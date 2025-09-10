@@ -78,7 +78,7 @@ export default function MediaCarousel({ title, items }: MediaCarouselProps) {
                             className="flex space-x-5"
                         >
                             {items.map((item) => (
-                                <MediaCard key={item.id} {...item} />
+                                <MediaCard key={item.id} {...item} className='!w-[200px]' />
                             ))}
                         </motion.div>
                     </div>

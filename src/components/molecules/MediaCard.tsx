@@ -9,6 +9,7 @@ export interface MediaItemProps {
     author_name?: string;
     rating?: number;
     episodeCount?: number;
+    className?: string;
 }
 
 export default function MediaCard(props: MediaItemProps) {
@@ -20,7 +21,8 @@ export default function MediaCard(props: MediaItemProps) {
         cover,
         author_name,
         rating,
-        episodeCount
+        episodeCount,
+        className = '',
     } = props;
 
     // console.log('MediaCard props:', props);
@@ -29,7 +31,7 @@ export default function MediaCard(props: MediaItemProps) {
     return (
         <Link
             href={`/${type.toLowerCase()}/${id}`}
-            className="group relative flex-shrink-0 w-full md:w-[200px] transition-transform duration-300 hover:scale-105"
+            className={`group relative flex-shrink-0 w-full md:w-[200px] transition-transform duration-300 hover:scale-105 ${className}`}
         >
             <div className="relative w-full h-[280px] rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-shadow duration-300">
                 {cover ? (

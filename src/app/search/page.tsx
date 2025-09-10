@@ -42,6 +42,46 @@ export default function SearchPage() {
     return (
         <>
             <Navbar />
+            {query && (
+                <div className="max-w-7xl mx-auto px-6 mt-20">
+                    <div className="flex items-center justify-between mb-4">
+                        <h1 className="text-2xl font-bold">
+                            Hasil Pencarian untuk &quot;{query}&quot;
+                        </h1>
+                    </div>
+                    <div className="flex my-4 text-sm">
+                        <button
+                            onClick={() => {
+                                const params = new URLSearchParams(window.location.search);
+                                params.set('type', 'works');
+                                window.location.search = params.toString();
+                            }}
+                            className={`px-3 py-2 rounded-full transition-all ${
+                                type === 'works'
+                                ? 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
+                                : 'bg-primary text-white'
+                            }`}
+                        >
+                            Karya{type === 'works' && results.works.length > 0 ? ` (${results.works.length})` : ''}
+                        </button>
+                        <button
+                            onClick={() => {
+                                const params = new URLSearchParams(window.location.search);
+                                params.set('type', 'users');
+                                window.location.search = params.toString();
+                            }}
+                            className={`px-3 py-2 rounded-full transition-all ${
+                                type === 'users'
+                                ? 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
+                                    : 'bg-primary text-white'
+                            }`}
+                        >
+                            Pengguna{type === 'users' && results.users.length > 0 ? ` (${results.users.length})` : ''}
+                        </button>
+                    </div>
+                    <hr className='border-t border-gray-200 dark:border-gray-700 mb-6' />
+                </div>
+            )}
             {query == '' && (
                 <div className="max-w-screen mx-auto px-4 py-8 mt-20">
                     <h1 className="text-2xl font-bold mb-4">Cari Karya atau Pengguna</h1>
@@ -71,12 +111,6 @@ export default function SearchPage() {
             )}
             {query && (
                 <div className="container mx-auto px-4 py-8 mt-10 md:mt-20 max-w-6xl">
-                    <div className="flex items-center justify-between mb-4">
-                        <h1 className="text-2xl font-bold">
-                            Hasil Pencarian untuk &quot;{query}&quot;
-                        </h1>
-                    </div>
-
 
                     {loading && (
                         <div className="flex justify-center items-center min-h-[200px]">
