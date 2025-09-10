@@ -63,8 +63,8 @@ export default function Navbar() {
                         <Image
                             src="/logo.png"
                             alt="LiniAksara Logo"
-                            width={36}
-                            height={36}
+                            width={32}
+                            height={32}
                             className="w-9 h-auto"
                             style={{
                                 width: "auto",

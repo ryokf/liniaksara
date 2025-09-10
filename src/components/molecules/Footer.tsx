@@ -6,7 +6,7 @@ import { faInstagram, faTwitter, faDiscord } from "@fortawesome/free-brands-svg-
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 pt-16 pb-8 px-6 border-t border-gray-200 dark:border-white/10 hidden md:block">
+    <footer className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 pt-16 pb-8 px-6 border-t border-gray-200 dark:border-white/10 block">
       <div className="max-w-6xl mx-auto grid md:grid-cols-4 gap-12 text-sm">
         {/* Logo & Description */}
         <div>

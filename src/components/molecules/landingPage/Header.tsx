@@ -58,11 +58,11 @@ export default function Header({
                 {/* Mobile Menu */}
                 {isMenuOpen && (
                     <div className="md:hidden px-6 pb-4 bg-white dark:bg-gray-900">
-                        <NavMenu mobile />
+                        {/* <NavMenu mobile /> */}
 
-                        <div className="flex flex-col gap-4 pt-4">
+                        <div className="flex w-full gap-4 pt-4">
 
-                            <a href="/login">
+                            <a href="/login" className='w-full'>
                                 <Button
                                     variant="outline"
 
@@ -72,7 +72,7 @@ export default function Header({
                                 </Button>
                             </a>
 
-                            <a href="/register">
+                            <a href="/register" className='w-full'>
                                 <Button
 
                                     className="w-full"

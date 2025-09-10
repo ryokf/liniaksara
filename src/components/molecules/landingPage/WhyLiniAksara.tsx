@@ -19,7 +19,7 @@ export default function WhyLiniAksara() {
                     Why <span className="gradient-text">LiniAksara</span>?
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {WhyLiniAksaraItems.map((item, index) => (
                         <motion.div
                             key={index}
