@@ -133,7 +133,7 @@ export default function MyWorksPage() {
                     </div>
                     <button
                         onClick={() => setIsUploadFormOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 gradient-bg text-white rounded-lg hover:opacity-90 transition-opacity"
                     >
                         <Plus size={20} />
                         <span>Tambah Karya</span>
@@ -200,6 +200,7 @@ export default function MyWorksPage() {
                                 thumbnail={work.cover || '/images/default-cover.svg'}
                                 date={new Date(work.created_at).toLocaleDateString()}
                                 status={work.is_draft ? 'draft' : 'published'}
+                                className='aspect-square'
                             />
                         ))}
                     </div>

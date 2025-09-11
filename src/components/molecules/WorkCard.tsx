@@ -4,11 +4,11 @@ import Link from 'next/link';
 import Badge from '../atoms/Badge';
 
 const resolveThumbnail = (src?: string) => {
-  if (!src || typeof src !== 'string') return '/images/default-cover.svg';
-  // Allow absolute http(s), data, blob, or root-relative paths
-  if (/^(https?:|data:|blob:)/i.test(src) || src.startsWith('/')) return src;
-  // Fallback to default placeholder if it's a relative or invalid URL
-  return '/images/default-cover.svg';
+    if (!src || typeof src !== 'string') return '/images/default-cover.svg';
+    // Allow absolute http(s), data, blob, or root-relative paths
+    if (/^(https?:|data:|blob:)/i.test(src) || src.startsWith('/')) return src;
+    // Fallback to default placeholder if it's a relative or invalid URL
+    return '/images/default-cover.svg';
 };
 
 interface WorkCardProps {
@@ -18,6 +18,7 @@ interface WorkCardProps {
     date: string;
     href: string;
     status?: 'draft' | 'published';
+    className?: string;
 }
 
 export default function WorkCard({
@@ -26,14 +27,15 @@ export default function WorkCard({
     thumbnail,
     date,
     href,
-    status
+    status,
+    className
 }: WorkCardProps) {
     return (
         <div className="group">
             <Link href={href}>
                 <div className="space-y-3">
                     {/* Thumbnail */}
-                    <div className={`${type === 'Movie' || type === 'Series' ? 'aspect-video' : 'aspect-[3/4]'} relative rounded-xl overflow-hidden`}>
+                    <div className={`${className} relative rounded-xl overflow-hidden`}>
                         <Image
                             src={resolveThumbnail(thumbnail)}
                             alt={title}
@@ -41,11 +43,10 @@ export default function WorkCard({
                             className="object-cover transition-transform group-hover:scale-105"
                         />
                         {status && (
-                            <div className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${
-                                status === 'draft' 
-                                    ? 'bg-yellow-100 text-yellow-800' 
+                            <div className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${status === 'draft'
+                                    ? 'bg-yellow-100 text-yellow-800'
                                     : 'bg-green-100 text-green-800'
-                            }`}>
+                                }`}>
                                 {status === 'draft' ? 'Draft' : 'Published'}
                             </div>
                         )}

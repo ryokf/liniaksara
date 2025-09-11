@@ -5,6 +5,7 @@ import {
     Settings,
 } from 'lucide-react';
 import SidebarMenuItem from '../molecules/SidebarMenuItem';
+import Image from 'next/image';
 
 interface SidebarProps {
     activeMenu: string;
@@ -60,12 +61,12 @@ export default function Sidebar({ activeMenu, isOpen, onClose }: SidebarProps) {
         <>
             {/* Mobile Backdrop */}
             {isOpen && (
-                <div 
-                    className="fixed inset-0 bg-black/50 lg:hidden" 
+                <div
+                    className="fixed inset-0 bg-black/50 lg:hidden"
                     onClick={onClose}
                 />
             )}
-            
+
             <aside className={`
                 w-64 fixed left-0 top-0 h-screen bg-white dark:bg-gray-900 
                 border-r border-gray-200 dark:border-gray-800 z-40
@@ -76,10 +77,19 @@ export default function Sidebar({ activeMenu, isOpen, onClose }: SidebarProps) {
             `}>
                 {/* Logo */}
                 <div className="px-6 py-8 flex items-center justify-between">
-                    <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                        LiniAksara
-                    </h1>
-                    <button 
+                    <div className="flex items-center gap-3">
+
+                        <Image
+                            src="/logo.png"
+                            alt="LiniAksara Logo"
+                            width={32}
+                            height={32}
+                        />
+                        <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                            LiniAksara
+                        </h1>
+                    </div>
+                    <button
                         onClick={onClose}
                         className="lg:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                     >

@@ -173,6 +173,7 @@ export default function ProfileTemplate({ profile, works }: ProfileTemplateProps
                         {filteredWorks.map((work) => (
                             <WorkCard
                                 key={work.id}
+                                className={work.type === 'Movie' || work.type === 'Series' ? 'aspect-video' : 'aspect-[3/4]'}
                                 {...work}
                             />
                         ))}
