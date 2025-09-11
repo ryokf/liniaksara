@@ -19,6 +19,7 @@ export interface Work {
     title: string;
     description?: string;
     cover?: string;
+    price?: number;  // in smallest currency unit, e.g., cents
     is_draft: boolean;
     created_at: string;  // ISO timestamp
     // Optional relations

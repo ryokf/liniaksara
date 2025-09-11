@@ -7,6 +7,7 @@ export async function uploadWork(
         description: string;
         workTypeId: number;
         authorId: string;
+        price: string;
         cover?: File;
         isDraft?: boolean;
     },
@@ -32,6 +33,7 @@ export async function uploadWork(
                 description: workData.description,
                 work_type_id: workData.workTypeId,
                 author_id: workData.authorId,
+                price: workData.price ? parseInt(workData.price) : 0,
                 cover: "https://ktmvcsnuvbvqytahrcli.supabase.co/storage/v1/object/public/work-cover/" + coverUrl,
                 is_draft: workData.isDraft ?? true
             })

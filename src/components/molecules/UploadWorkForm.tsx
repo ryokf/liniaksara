@@ -24,7 +24,8 @@ export default function UploadWorkForm({ isOpen, onClose, onSuccess }: UploadWor
         title: '',
         description: '',
         workTypeId: 0,
-        isDraft: true
+        isDraft: true,
+        price: ''
     });
 
     useEffect(() => {
@@ -65,6 +66,21 @@ export default function UploadWorkForm({ isOpen, onClose, onSuccess }: UploadWor
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+
+        // Special handling for workTypeId so the state stays numeric and we can react to One Page type
+        if (name === 'workTypeId') {
+            const id = Number(value);
+            const nextType = workTypes.find(t => t.id === id)?.type?.toLowerCase();
+            setFormData(prev => ({
+                ...prev,
+                workTypeId: id,
+                // If switching to One Page, ensure price is cleared/ignored
+                ...(nextType === 'one page' ? { price: '' } : {})
+            }));
+            return;
+        }
+
+        // Default handler
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
@@ -73,13 +89,18 @@ export default function UploadWorkForm({ isOpen, onClose, onSuccess }: UploadWor
             title: '',
             description: '',
             workTypeId: workTypes[0]?.id || 0,
-            isDraft: true
+            isDraft: true,
+            price: ''
         });
         setCoverFile(null);
         setContentFile(null);
         setPreviewUrl(null);
         setError('');
     };
+
+    // Determine selected work type and whether it is a One Page (free)
+    const selectedWorkType = workTypes.find(t => t.id === Number(formData.workTypeId));
+    const isOnePage = (selectedWorkType?.type || '').toLowerCase() === 'one page';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -99,9 +120,11 @@ export default function UploadWorkForm({ isOpen, onClose, onSuccess }: UploadWor
         try {
             await uploadWork({
                 ...formData,
+                // Enforce free price for One Page type
+                price: isOnePage ? '0' : formData.price,
                 authorId: userLogin.id,
                 cover: coverFile ?? undefined
-            },);
+            });
 
             resetForm();
             onSuccess?.();
@@ -194,6 +217,45 @@ export default function UploadWorkForm({ isOpen, onClose, onSuccess }: UploadWor
                                     </option>
                                 ))}
                             </select>
+                        </div>
+
+                        {/* Price */}
+                        <div className={`${isOnePage ? 'hidden' : ''}`}>
+                            <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Harga
+                            </label>
+                            <input
+                                type="number"
+                                id="price"
+                                name="price"
+                                value={formData.price}
+                                onChange={handleInputChange}
+                                className={` w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary/50 disabled:opacity-50`}
+                                placeholder={isOnePage ? "Tipe One Page selalu gratis" : "Masukkan harga karya"}
+                                min="0"
+                                disabled={isOnePage}
+                                title={isOnePage ? "Harga dinonaktifkan untuk tipe One Page" : undefined}
+                            />
+                            {isOnePage && (
+                                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                    Tipe <span className="font-medium">One Page</span> bersifat gratis. Field harga dinonaktifkan.
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Draft or Published */}
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="isDraft"
+                                name="isDraft"
+                                checked={formData.isDraft}
+                                onChange={(e) => setFormData(prev => ({ ...prev, isDraft: e.target.checked }))}
+                                className="h-4 w-4 text-primary border-gray-300 rounded"
+                            />
+                            <label htmlFor="isDraft" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Simpan sebagai Draft
+                            </label>
                         </div>
 
                         {/* Cover Upload */}
