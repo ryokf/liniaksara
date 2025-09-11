@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Plus, Search, Loader2 } from 'lucide-react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { Plus, Search, Loader2, LayoutGrid, List } from 'lucide-react';
 import DashboardLayout from '@/components/templates/DashboardLayout';
+import { useInView } from 'react-intersection-observer';
 import WorkCard from '@/components/molecules/WorkCard';
+import WorkListItem from '@/components/molecules/WorkListItem';
 import UploadWorkForm from '@/components/molecules/UploadWorkForm';
 import FilterDropdown from '@/components/molecules/FilterDropdown';
 import { getUserWorks } from '@/services/myWorkService';
@@ -20,30 +22,51 @@ export default function MyWorksPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [isUploadFormOpen, setIsUploadFormOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Filtering and sorting states
+    // Pagination and filtering states
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);
     const [sortBy, setSortBy] = useState<SortOption>('newest');
     const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
     const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+    const { ref: loadMoreRef, inView } = useInView({
+        threshold: 0.5,
+        triggerOnce: false
+    });
 
-    const loadWorks = useCallback(async () => {
+    const loadWorks = useCallback(async (page: number = 1, isLoadMore: boolean = false) => {
         if (!userLogin) return;
         try {
-            setIsLoading(true);
-            const userWorks = await getUserWorks(userLogin.id);
-            setWorks(userWorks);
+            if (isLoadMore) {
+                setIsLoadingMore(true);
+            } else {
+                setIsLoading(true);
+            }
+
+            const { works: newWorks, count } = await getUserWorks(userLogin.id, page);
+            
+            if (isLoadMore) {
+                setWorks(prev => [...prev, ...newWorks]);
+            } else {
+                setWorks(newWorks);
+            }
+            
+            setTotalCount(count);
             setError(null);
         } catch (err) {
             console.error('Error loading works:', err);
             setError('Failed to load your works. Please try again later.');
         } finally {
             setIsLoading(false);
+            setIsLoadingMore(false);
         }
     }, [userLogin]);
 
     useEffect(() => {
-        loadWorks();
+        loadWorks(1);
     }, [loadWorks]);
 
     // Filter and sort options
@@ -103,6 +126,24 @@ export default function MyWorksPage() {
             });
     }, [works, searchQuery, statusFilter, typeFilter, sortBy]);
 
+    // Handle lazy loading when the load more trigger is in view
+    useEffect(() => {
+        if (inView && !isLoadingMore && works.length < totalCount) {
+            // Add a small delay to make the loading more visible
+            const timer = setTimeout(() => {
+                setCurrentPage(prev => prev + 1);
+                loadWorks(currentPage + 1, true);
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [inView, isLoadingMore, works.length, totalCount, currentPage, loadWorks]);
+
+    // Reset to first page when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+        loadWorks(1);
+    }, [searchQuery, statusFilter, typeFilter, sortBy, loadWorks]);
+
     const getWorkLink = (work: Work) => {
         switch (work.work_type?.type?.toLowerCase()) {
             case 'novel':
@@ -154,26 +195,52 @@ export default function MyWorksPage() {
                         />
                     </div>
 
-                    {/* Filters */}
-                    <div className="flex flex-wrap gap-4">
-                        <FilterDropdown
-                            label="Urutkan"
-                            options={sortOptions}
-                            value={sortBy}
-                            onChange={(value) => setSortBy(value as SortOption)}
-                        />
-                        <FilterDropdown
-                            label="Status"
-                            options={statusOptions}
-                            value={statusFilter}
-                            onChange={(value) => setStatusFilter(value as StatusFilter)}
-                        />
-                        <FilterDropdown
-                            label="Tipe"
-                            options={typeOptions}
-                            value={typeFilter}
-                            onChange={(value) => setTypeFilter(value as TypeFilter)}
-                        />
+                    {/* Filters and View Toggle */}
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div className="flex flex-wrap gap-4">
+                            <FilterDropdown
+                                label="Urutkan"
+                                options={sortOptions}
+                                value={sortBy}
+                                onChange={(value) => setSortBy(value as SortOption)}
+                            />
+                            <FilterDropdown
+                                label="Status"
+                                options={statusOptions}
+                                value={statusFilter}
+                                onChange={(value) => setStatusFilter(value as StatusFilter)}
+                            />
+                            <FilterDropdown
+                                label="Tipe"
+                                options={typeOptions}
+                                value={typeFilter}
+                                onChange={(value) => setTypeFilter(value as TypeFilter)}
+                            />
+                        </div>
+                        <div className="flex gap-2 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+                            <button
+                                onClick={() => setViewMode('grid')}
+                                className={`p-2 rounded ${
+                                    viewMode === 'grid'
+                                        ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400'
+                                        : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'
+                                }`}
+                                title="Tampilan Grid"
+                            >
+                                <LayoutGrid size={20} />
+                            </button>
+                            <button
+                                onClick={() => setViewMode('list')}
+                                className={`p-2 rounded ${
+                                    viewMode === 'list'
+                                        ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400'
+                                        : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'
+                                }`}
+                                title="Tampilan List"
+                            >
+                                <List size={20} />
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -190,20 +257,48 @@ export default function MyWorksPage() {
                         <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
                     </div>
                 ) : filteredWorks.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {filteredWorks.map((work) => (
-                            <WorkCard
-                                key={work.id}
-                                href={getWorkLink(work)}
-                                title={work.title}
-                                type={getWorkType(work)}
-                                thumbnail={work.cover || '/images/default-cover.svg'}
-                                date={new Date(work.created_at).toLocaleDateString()}
-                                status={work.is_draft ? 'draft' : 'published'}
-                                className='aspect-square'
-                            />
-                        ))}
-                    </div>
+                    <>
+                        {viewMode === 'grid' ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {works.map((work: Work) => (
+                                    <WorkCard
+                                        key={work.id}
+                                        href={getWorkLink(work)}
+                                        title={work.title}
+                                        type={getWorkType(work)}
+                                        thumbnail={work.cover || '/images/default-cover.svg'}
+                                        date={new Date(work.created_at).toLocaleDateString()}
+                                        status={work.is_draft ? 'draft' : 'published'}
+                                        className='aspect-square'
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {works.map((work: Work) => (
+                                    <WorkListItem
+                                        key={work.id}
+                                        href={getWorkLink(work)}
+                                        title={work.title}
+                                        type={getWorkType(work)}
+                                        thumbnail={work.cover || '/images/default-cover.svg'}
+                                        date={new Date(work.created_at).toLocaleDateString()}
+                                        status={work.is_draft ? 'draft' : 'published'}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                        
+                        {/* Load More Trigger */}
+                        {works.length < totalCount && (
+                            <div 
+                                ref={loadMoreRef}
+                                className="flex justify-center items-center py-8"
+                            >
+                                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                         {searchQuery || statusFilter !== 'all' || typeFilter !== 'all'
