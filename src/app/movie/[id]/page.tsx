@@ -47,16 +47,19 @@ export default async function MovieDetailPage({
 
     // Transform data for the template
     const movieData = {
+        id: work.id,
         workId: work.id,
         title: work.title,
         category: 'Movie',
         releaseDate: new Date(work.created_at).toLocaleDateString(),
+        authorId: work.author?.id || '',
         rating: '0', // TODO: Implement rating system
         description: work.description || '',
         coverImage: work.cover || '/images/default-cover.svg',
         price: work.price || 0,
         genres,
         director: work.author?.username || 'Unknown',
+        directorId: work.author?.id || '',
         episodes: sortedParts.map((part) => ({
             id: part.id.toString(),
             work_id: part.work_id,

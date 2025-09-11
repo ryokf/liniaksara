@@ -34,8 +34,10 @@ export default async function NovelDetailPage({
     rating: "0", // TODO: Implement rating system
     description: work.description || "",
     coverImage: work.cover || "/images/default-cover.svg",
+    price: work.price?.toString() || "0",
     genres,
     author: work.author?.username || "Unknown",
+    authorId: work.author?.id || "",
     publisher: "Lini Aksara",
     chapters: chapters.map((chapter, index) => ({
       id: chapter.id,

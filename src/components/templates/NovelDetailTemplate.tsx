@@ -1,10 +1,15 @@
+'use client';
+
 import Image from 'next/image';
-import { Bookmark, Play, Star } from 'lucide-react';
+import { Star, Edit, Trash2, Plus, Play, Bookmark } from 'lucide-react';
 import Badge from '../atoms/Badge';
 import InfoSection from '../molecules/InfoSection';
 import ChapterItem from '../molecules/ChapterItem';
 import Navbar from '../molecules/Navbar';
 import { WorkGenre } from '@/types/works';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface Chapter {
     id: string;
@@ -20,10 +25,12 @@ interface NovelDetailTemplateProps {
     rating: string;
     description: string;
     coverImage: string;
+    price: string;
     genres: WorkGenre[];
     author: string;
-    publisher: string;
+    authorId: string;
     chapters: Chapter[];
+    publisher: string;
 }
 
 export default function NovelDetailTemplate({
@@ -34,13 +41,47 @@ export default function NovelDetailTemplate({
     rating,
     description,
     coverImage,
+    price,
     genres,
     author,
+    authorId,
+    chapters,
     publisher,
-    chapters
 }: NovelDetailTemplateProps) {
-    console.log("genres", genres);
+    const { userLogin } = useAuth();
+    const router = useRouter();
+    const [isDeleting, setIsDeleting] = useState(false);
 
+    const isAuthor = userLogin && userLogin.id === authorId;
+    console.log(userLogin, authorId)
+
+    console.log(isAuthor)
+
+    const handleEdit = () => {
+        router.push(`/dashboard/works/edit/${id}`);
+    };
+
+    const handleDelete = async () => {
+        if (!confirm('Apakah Anda yakin ingin menghapus karya ini?')) {
+            return;
+        }
+
+        try {
+            setIsDeleting(true);
+            // await deleteWork(id);
+            router.push('/dashboard/works');
+            router.refresh();
+        } catch (error) {
+            console.error('Error deleting work:', error);
+            alert('Gagal menghapus karya. Silakan coba lagi.');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleAddPart = () => {
+        router.push(`/dashboard/works/parts/add/${id}`);
+    };
     return (
         <main className="min-h-screen bg-white dark:bg-gray-900">
             <Navbar />
@@ -69,10 +110,12 @@ export default function NovelDetailTemplate({
                                 <Badge variant="primary">{category}</Badge>
                             </div>
 
-                            {/* Title */}
-                            <h1 className="text-4xl font-bold text-white">
-                                {title}
-                            </h1>
+                            {/* Title and Actions */}
+                            <div className="flex items-start justify-between gap-4">
+                                <h1 className="text-4xl font-bold text-white">
+                                    {title}
+                                </h1>
+                            </div>
 
                             {/* Meta Info */}
                             <div className="flex items-center gap-4 text-gray-300 text-sm">
@@ -91,14 +134,37 @@ export default function NovelDetailTemplate({
 
                             {/* Action Buttons */}
                             <div className="flex flex-wrap gap-4 pt-4">
-                                <button className="px-8 py-3 rounded-full gradient-bg text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
-                                    <Play className="w-5 h-5" fill="currentColor" />
-                                    Baca Sekarang
-                                </button>
-                                <button className="px-8 py-3 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors flex items-center gap-2">
-                                    <Bookmark className="w-5 h-5" />
-                                    Tambah ke List
-                                </button>
+                                {isAuthor ? (
+                                    <>
+                                        <button
+                                            onClick={handleEdit}
+                                            className="px-8 py-3 rounded-full gradient-bg text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+                                            disabled={isDeleting}
+                                        >
+                                            <Edit className="w-5 h-5" />
+                                            Edit Karya
+                                        </button>
+                                        <button
+                                            onClick={handleDelete}
+                                            className="px-8 py-3 rounded-full bg-red-600 text-white font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
+                                            disabled={isDeleting}
+                                        >
+                                            <Trash2 className="w-5 h-5" />
+                                            {isDeleting ? 'Menghapus...' : 'Hapus Karya'}
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button className="px-8 py-3 rounded-full gradient-bg text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
+                                            <Play className="w-5 h-5" fill="currentColor" />
+                                            Baca Sekarang
+                                        </button>
+                                        <button className="px-8 py-3 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors flex items-center gap-2">
+                                            <Bookmark className="w-5 h-5" />
+                                            Tambah ke List
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -126,6 +192,16 @@ export default function NovelDetailTemplate({
                                         title={chapter.title}
                                     />
                                 ))}
+                                {isAuthor && (
+                                    <button
+                                        onClick={handleAddPart}
+                                        className="px-8 py-3 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+                                        disabled={isDeleting}
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                        Tambah Part
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -140,8 +216,8 @@ export default function NovelDetailTemplate({
                                 </h3>
                                 <div className="flex flex-wrap gap-2">
                                     {genres.map((genre) => (
-                                        <Badge 
-                                            key={`${genre.work_id}-${genre.genre_id}`} 
+                                        <Badge
+                                            key={`${genre.work_id}-${genre.genre_id}`}
                                             variant="secondary"
                                         >
                                             {genre?.genres?.genre || 'Unknown Genre'}

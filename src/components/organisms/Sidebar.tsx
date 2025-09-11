@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import SidebarMenuItem from '../molecules/SidebarMenuItem';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface SidebarProps {
     activeMenu: string;
@@ -77,8 +78,7 @@ export default function Sidebar({ activeMenu, isOpen, onClose }: SidebarProps) {
             `}>
                 {/* Logo */}
                 <div className="px-6 py-8 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-
+                    <Link href={'/home'} className="flex items-center gap-3 cursor-pointer">
                         <Image
                             src="/logo.png"
                             alt="LiniAksara Logo"
@@ -88,7 +88,7 @@ export default function Sidebar({ activeMenu, isOpen, onClose }: SidebarProps) {
                         <h1 className="text-xl font-bold text-gray-900 dark:text-white">
                             LiniAksara
                         </h1>
-                    </div>
+                    </Link>
                     <button
                         onClick={onClose}
                         className="lg:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"

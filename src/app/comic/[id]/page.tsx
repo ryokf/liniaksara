@@ -61,6 +61,7 @@ export default async function ComicDetailPage({
     }] : [];
 
     const templateProps = {
+        id: work.id,
         title: work.title,
         category: work.workType?.type || "Comic",
         releaseDate: new Date(work.created_at).toLocaleDateString(),
@@ -69,6 +70,7 @@ export default async function ComicDetailPage({
         coverImage: work.cover || "/images/default-cover.svg",
         genres,
         author: work.author?.username || "Unknown",
+        authorId: work.author?.id || "",
         publisher: "Self Published",
         chapters,
         relatedWorks: transformedRelatedWorks
