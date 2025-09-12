@@ -10,6 +10,7 @@ import { WorkGenre } from '@/types/works';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import AddPartButton from '../atoms/AddPartButton';
 
 interface Chapter {
     id: string;
@@ -138,7 +139,7 @@ export default function NovelDetailTemplate({
                                     <>
                                         <button
                                             onClick={handleEdit}
-                                            className="px-8 py-3 rounded-full gradient-bg text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+                                            className="px-8 py-3 rounded-full bg-amber-500 text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
                                             disabled={isDeleting}
                                         >
                                             <Edit className="w-5 h-5" />
@@ -193,14 +194,10 @@ export default function NovelDetailTemplate({
                                     />
                                 ))}
                                 {isAuthor && (
-                                    <button
-                                        onClick={handleAddPart}
-                                        className="px-8 py-3 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
-                                        disabled={isDeleting}
-                                    >
-                                        <Plus className="w-5 h-5" />
-                                        Tambah Part
-                                    </button>
+                                    <AddPartButton workId={id} onSuccess={() => {
+                                        // Refresh the chapter list or perform any other action on success
+                                    }}
+                                    type="novel" />
                                 )}
                             </div>
                         </div>
