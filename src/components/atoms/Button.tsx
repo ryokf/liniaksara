@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
 
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger';
+
 interface ButtonProps {
-    variant?: 'primary' | 'secondary' | 'outline';
+    variant?: ButtonVariant;
     size?: 'sm' | 'md' | 'lg';
     children: ReactNode;
     onClick?: () => void;
@@ -23,10 +25,11 @@ export default function Button({
 }: ButtonProps) {
     const baseStyles = 'transition-all duration-300 rounded-full font-semibold';
 
-    const variantStyles = {
+    const variantStyles: Record<ButtonVariant, string> = {
         primary: 'btn-primary shadow-md',
         secondary: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700',
         outline: 'border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-white',
+        danger: 'bg-red-600 text-white hover:bg-red-700 shadow-md',
     };
 
     const sizeStyles = {

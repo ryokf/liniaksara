@@ -1,7 +1,6 @@
 export const runtime = 'nodejs';
 import { notFound } from 'next/navigation';
 import { getWorkDetail, getRelatedWorks, getWorkParts } from '@/services/workDetailService';
-import MovieDetailTemplate from '@/components/templates/MovieDetailTemplate';
 import { WorkDetail, MoviePart } from '@/types/workDetail';
 import { WorkGenre } from '@/types/works';
 import WorkDetailTemplate from '@/components/templates/WorkDetailTemplate';

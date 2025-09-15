@@ -13,6 +13,7 @@ import { useState } from 'react';
 import AddPartButton from '../atoms/AddPartButton';
 import ChapterItem from '../molecules/ChapterItem';
 import MovieEpisodeCard from '../molecules/MovieEpisodeCard';
+import DeleteWorkButton from '../molecules/DeleteWorkButton';
 
 interface ComicDetailTemplateProps {
     id: string;
@@ -151,14 +152,7 @@ export default function WorkDetailTemplate({
                                             <Edit className="w-5 h-5" />
                                             Edit Karya
                                         </button>
-                                        <button
-                                            onClick={handleDelete}
-                                            className="px-8 py-3 rounded-full bg-red-600 text-white font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
-                                            disabled={isDeleting}
-                                        >
-                                            <Trash2 className="w-5 h-5" />
-                                            {isDeleting ? 'Menghapus...' : 'Hapus Karya'}
-                                        </button>
+                                        <DeleteWorkButton workId={id}></DeleteWorkButton>
                                     </>
                                 ) : (
                                     <>
