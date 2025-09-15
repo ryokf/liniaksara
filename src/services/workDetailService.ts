@@ -2,7 +2,7 @@ import supabase from "@/config/supabase";
 
 interface Genre {
     id: number;
-    name: string;
+    genre: string;
 }
 
 interface WorkGenre {
@@ -20,6 +20,7 @@ interface Part {
     description?: string;
     thumbnail?: string;
     content_url?: string;
+    is_free?: boolean;
     created_at: string;
     updated_at: string;
 }

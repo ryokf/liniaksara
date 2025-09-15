@@ -4,6 +4,7 @@ import { getWorkDetail, getRelatedWorks, getWorkParts } from '@/services/workDet
 import MovieDetailTemplate from '@/components/templates/MovieDetailTemplate';
 import { WorkDetail, MoviePart } from '@/types/workDetail';
 import { WorkGenre } from '@/types/works';
+import WorkDetailTemplate from '@/components/templates/WorkDetailTemplate';
 
 export default async function MovieDetailPage({
     params,
@@ -36,48 +37,40 @@ export default async function MovieDetailPage({
     const sortedParts = movieParts.sort((a, b) => a.part_order - b.part_order);
 
     // Transform genres
-    const genres: WorkGenre[] = work.workType ? [{
-        work_id: work.id,
-        genre_id: work.workType.id,
+    const genres = work.work_genres?.map(wg => ({
+        work_id: wg.work_id,
+        genre_id: wg.genre_id,
         genres: {
-            id: work.workType.id,
-            genre: work.workType.type
+            id: wg.genres?.id || 0,
+            genre: wg.genres?.genre || ''  // Convert 'name' to 'genre'
         }
-    }] : [];
+    })) || [];
+
 
     // Transform data for the template
     const movieData = {
         id: work.id,
-        workId: work.id,
         title: work.title,
         category: 'Movie',
         releaseDate: new Date(work.created_at).toLocaleDateString(),
-        authorId: work.author?.id || '',
         rating: '0', // TODO: Implement rating system
         description: work.description || '',
         coverImage: work.cover || '/images/default-cover.svg',
         price: work.price || 0,
         genres,
-        director: work.author?.username || 'Unknown',
-        directorId: work.author?.id || '',
-        episodes: sortedParts.map((part) => ({
+        author: work.author?.username || 'Unknown',
+        authorId: work.author?.id || '',
+        publisher: 'Self Published',
+        chapters: sortedParts.map((part) => ({
             id: part.id.toString(),
-            work_id: part.work_id,
+            workId: part.work_id,
+            type: "movie",
             part_order: part.part_order,
             title: part.title,
             thumbnail: part.thumbnail || '/images/default-cover.svg',
-            duration: part.duration ? `${Math.floor(part.duration / 60)}m ${part.duration % 60}s` : 'Unknown',
             is_free: part.is_free,
-        })),
-        relatedWorks: relatedWorks.map((relatedWork) => ({
-            id: relatedWork.id,
-            title: relatedWork.title,
-            cover: relatedWork.cover || '/images/default-cover.svg',
-            director: relatedWork.author?.username || 'Unknown',
-            type: 'Movie',
-            price: relatedWork.price || 0,
         })),
     };
 
-    return <MovieDetailTemplate {...movieData} />;
+    return <WorkDetailTemplate {...movieData} />;
 }

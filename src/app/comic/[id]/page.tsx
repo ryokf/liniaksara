@@ -1,15 +1,16 @@
 export const runtime = 'nodejs';
 import { notFound } from 'next/navigation';
 import { getWorkDetail, getRelatedWorks, getWorkParts } from '@/services/workDetailService';
-import ComicDetailTemplate from '@/components/templates/ComicDetailTemplate';
-import { Part, WorkType, WorkGenre } from '@/types/works';
-import { WorkDetail } from '@/types/workDetail';
+import WorkDetailTemplate from '@/components/templates/WorkDetailTemplate';
 
 interface ChapterData {
     id: string;
     workId: string;
     type: string;
+    part_order: number;
     title: string;
+    thumbnail?: string;
+    is_free: boolean;
 }
 
 interface RelatedWorkData {
@@ -39,7 +40,10 @@ export default async function ComicDetailPage({
         id: String(part.id),
         workId: part.work_id,
         type: "comic",
-        title: part.title
+        part_order: part.part_order || 0,
+        title: part.title,
+        thumbnail: part.thumbnail || '/images/default-cover.svg',
+        is_free: part.is_free || false
     }));
 
     // Transform related works
@@ -51,14 +55,15 @@ export default async function ComicDetailPage({
     }));
 
     // Use workType property for genre information
-    const genres = work.workType ? [{
-        work_id: work.id,
-        genre_id: work.workType.id,
+    const genres = work.work_genres?.map(wg => ({
+        work_id: wg.work_id,
+        genre_id: wg.genre_id,
         genres: {
-            id: work.workType.id,
-            genre: work.workType.type
+            id: wg.genres?.id || 0,
+            genre: wg.genres?.genre || ''  // Convert 'name' to 'genre'
         }
-    }] : [];
+    })) || [];
+
 
     const templateProps = {
         id: work.id,
@@ -66,15 +71,22 @@ export default async function ComicDetailPage({
         category: work.workType?.type || "Comic",
         releaseDate: new Date(work.created_at).toLocaleDateString(),
         rating: "0",
+        price: work.price?.toString() || "0",
         description: work.description || "",
         coverImage: work.cover || "/images/default-cover.svg",
         genres,
         author: work.author?.username || "Unknown",
         authorId: work.author?.id || "",
         publisher: "Self Published",
-        chapters,
-        relatedWorks: transformedRelatedWorks
+        chapters: chapters.map((chapter, index) => ({
+            id: chapter.id,
+            workId: id,
+            type: "Comic",
+            part_order: index + 1,
+            title: chapter.title,
+            is_free: chapter.is_free || false
+        }))
     };
 
-    return <ComicDetailTemplate {...templateProps} />;
+    return <WorkDetailTemplate {...templateProps} />;
 }

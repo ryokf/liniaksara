@@ -2,7 +2,7 @@ export const runtime = 'nodejs';
 
 import { notFound } from 'next/navigation';
 import { getWorkDetail, getWorkParts } from '@/services/workDetailService';
-import NovelDetailTemplate from '@/components/templates/NovelDetailTemplate';
+import WorkDetailTemplate from '@/components/templates/WorkDetailTemplate';
 
 export default async function NovelDetailPage({
   params,
@@ -22,7 +22,7 @@ export default async function NovelDetailPage({
     genre_id: wg.genre_id,
     genres: {
       id: wg.genres?.id || 0,
-      genre: wg.genres?.name || ''  // Convert 'name' to 'genre'
+      genre: wg.genres?.genre || ''  // Convert 'name' to 'genre'
     }
   })) || [];
 
@@ -41,10 +41,13 @@ export default async function NovelDetailPage({
     publisher: "Lini Aksara",
     chapters: chapters.map((chapter, index) => ({
       id: chapter.id,
-      chapterNumber: index + 1,
-      title: chapter.title
+      workId: id,
+      type: "novel",
+      part_order: index + 1,
+      title: chapter.title,
+      is_free: chapter.is_free || false
     }))
   };
 
-  return <NovelDetailTemplate {...novelData} />;
+  return <WorkDetailTemplate {...novelData} />;
 }
