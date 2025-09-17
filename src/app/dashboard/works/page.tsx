@@ -11,6 +11,7 @@ import FilterDropdown from '@/components/molecules/FilterDropdown';
 import { getUserWorks } from '@/services/myWorkService';
 import { useAuth } from '@/contexts/AuthContext';
 import { Work } from '@/types/works';
+import supabase from '@/config/supabase';
 
 type SortOption = 'newest' | 'oldest' | 'title-asc' | 'title-desc';
 type StatusFilter = 'all' | 'published' | 'draft';
@@ -36,7 +37,6 @@ export default function MyWorksPage() {
         threshold: 0.5,
         triggerOnce: false
     });
-
     const loadWorks = useCallback(async (page: number = 1, isLoadMore: boolean = false) => {
         if (!userLogin) return;
         try {
@@ -47,13 +47,13 @@ export default function MyWorksPage() {
             }
 
             const { works: newWorks, count } = await getUserWorks(userLogin.id, page);
-            
+
             if (isLoadMore) {
                 setWorks(prev => [...prev, ...newWorks]);
             } else {
                 setWorks(newWorks);
             }
-            
+
             setTotalCount(count);
             setError(null);
         } catch (err) {
@@ -98,15 +98,15 @@ export default function MyWorksPage() {
             .filter((work) => {
                 console.log(work);
                 const matchesSearch = work.title.toLowerCase().includes(searchQuery.toLowerCase());
-                const matchesStatus = statusFilter === 'all' 
-                    ? true 
-                    : statusFilter === 'published' 
-                        ? !work.is_draft 
+                const matchesStatus = statusFilter === 'all'
+                    ? true
+                    : statusFilter === 'published'
+                        ? !work.is_draft
                         : work.is_draft;
                 const matchesType = typeFilter === 'all'
                     ? true
                     : work.work_type?.type?.toLowerCase() === typeFilter;
-                
+
                 return matchesSearch && matchesStatus && matchesType;
             })
             // Apply sorting
@@ -220,22 +220,20 @@ export default function MyWorksPage() {
                         <div className="flex gap-2 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
                             <button
                                 onClick={() => setViewMode('grid')}
-                                className={`p-2 rounded ${
-                                    viewMode === 'grid'
+                                className={`p-2 rounded ${viewMode === 'grid'
                                         ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400'
                                         : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'
-                                }`}
+                                    }`}
                                 title="Tampilan Grid"
                             >
                                 <LayoutGrid size={20} />
                             </button>
                             <button
                                 onClick={() => setViewMode('list')}
-                                className={`p-2 rounded ${
-                                    viewMode === 'list'
+                                className={`p-2 rounded ${viewMode === 'list'
                                         ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400'
                                         : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'
-                                }`}
+                                    }`}
                                 title="Tampilan List"
                             >
                                 <List size={20} />
@@ -288,10 +286,10 @@ export default function MyWorksPage() {
                                 ))}
                             </div>
                         )}
-                        
+
                         {/* Load More Trigger */}
                         {works.length < totalCount && (
-                            <div 
+                            <div
                                 ref={loadMoreRef}
                                 className="flex justify-center items-center py-8"
                             >

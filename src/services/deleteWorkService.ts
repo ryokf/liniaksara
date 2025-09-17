@@ -8,7 +8,26 @@ interface DeleteWorkResponse {
 
 export async function deleteWork(workId: string): Promise<DeleteWorkResponse> {
     try {
-        // First, delete all parts associated with the work
+        // First, get the work data to get the cover path
+        const { data: work, error: workFetchError } = await supabase
+            .from('works')
+            .select('cover')
+            .eq('id', workId)
+            .single();
+
+        if (workFetchError) throw workFetchError;
+
+        // Delete the cover image if it exists
+        if (work?.cover) {
+            const { error: storageError } = await supabase
+                .storage
+                .from('work-cover')
+                .remove([work.cover]);
+
+            if (storageError) throw storageError;
+        }
+
+        // Then delete all parts associated with the work
         const { error: partsError } = await supabase
             .from('parts')
             .delete()
@@ -16,7 +35,7 @@ export async function deleteWork(workId: string): Promise<DeleteWorkResponse> {
 
         if (partsError) throw partsError;
 
-        // Then delete the work itself
+        // Finally delete the work itself
         const { error: workError } = await supabase
             .from('works')
             .delete()

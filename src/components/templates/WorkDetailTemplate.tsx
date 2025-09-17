@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Bookmark, Edit, Play, Plus, Star, Trash2 } from 'lucide-react';
 import Badge from '../atoms/Badge';
+import EditWorkButton from '../molecules/EditWorkButton';
 import InfoSection from '../molecules/InfoSection';
 import Navbar from '../molecules/Navbar';
 import ComicEpisodeCard from '../molecules/ComicEpisodeCard';
@@ -143,16 +144,21 @@ export default function WorkDetailTemplate({
                             <div className="flex flex-wrap gap-4 pt-4">
                                 {isAuthor ? (
                                     <>
-
-                                        <button
-                                            onClick={handleEdit}
-                                            className="px-8 py-3 rounded-full bg-amber-500 text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
-                                            disabled={isDeleting}
-                                        >
-                                            <Edit className="w-5 h-5" />
-                                            Edit Karya
-                                        </button>
-                                        <DeleteWorkButton workId={id}></DeleteWorkButton>
+                                        <EditWorkButton
+                                            work={{
+                                                id,
+                                                title,
+                                                description,
+                                                author_id: authorId,
+                                                work_type_id: 1,
+                                                genres: genres.map((g, index) => ({ id: index + 1, genre: g.toString() })),
+                                                work_type: { type: category, id: 1 },
+                                                is_draft: false,
+                                                created_at: releaseDate,
+                                                author: { id: authorId, username: author, updated_at: new Date().toISOString(), email: '' }
+                                            }}
+                                        />
+                                        <DeleteWorkButton workId={id} />
                                     </>
                                 ) : (
                                     <>
@@ -191,6 +197,7 @@ export default function WorkDetailTemplate({
                                             part_order={chapter.part_order || 0}
                                             thumbnail={chapter.thumbnail || '/images/default-cover.svg'}
                                             is_free={chapter.is_free}
+                                            isAuthor={isAuthor}
                                         />
                                     ))
                                 )
@@ -205,6 +212,7 @@ export default function WorkDetailTemplate({
                                             type="novel"
                                             chapterNumber={chapter.part_order || 0}
                                             title={chapter.title}
+                                            isAuthor={isAuthor}
                                         />
                                     ))
                                 )
@@ -221,6 +229,7 @@ export default function WorkDetailTemplate({
                                             thumbnail={chapter.thumbnail || '/images/default-cover.svg'}
                                             isFree={chapter.is_free}
                                             duration='00:00'
+                                            isAuthor={isAuthor}
                                         />
                                     ))
                                 )
