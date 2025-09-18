@@ -50,13 +50,15 @@ export default function FollowButton({ userId, onFollowChange, className = '' }:
             } else {
                 success = await unfollowUser(userLogin.id, userId);
             }
-
+            
             if (!success) {
                 // Revert optimistic update if failed
                 setFollowing(following);
                 if (onFollowChange) onFollowChange(following);
                 toast.error('Gagal mengubah status follow');
             }
+            window.location.reload();
+            
         } catch (error) {
             console.error('Error toggling follow:', error);
             // Revert optimistic update

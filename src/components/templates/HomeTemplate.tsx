@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Work } from '@/types/works';
 import { WorkTransaction } from '@/types/workTransaction';
 import { User } from '@supabase/supabase-js';
-import { getPopularWorkByType, getPopularWorks } from '@/services/workServices';
+import { getPopularWorkByType, getPopularWorks, getFollowingWorks } from '@/services/workServices';
 import { getWorkTransactions } from '@/services/WorkTransactionService';
 import { getUser } from '@/services/userServices';
 import HeroCarousel from '../organisms/HeroCarousel';

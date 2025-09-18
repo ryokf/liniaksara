@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import FeedCard from "@/components/molecules/FeedCard";
 import TopCreatorScroll from "@/components/organisms/TopCreatorMobile";
 import { Work } from "@/types/works";
-import { getLatestOnePageWorks, getLatestWorks } from "@/services/workServices";
+import { getLatestOnePageWorks, getLatestWorks, getFollowingWorks } from "@/services/workServices";
 import { getUser } from "@/services/userServices";
 import { getWorkTransactions } from "@/services/WorkTransactionService";
 import { User } from "@supabase/supabase-js";
@@ -17,9 +17,22 @@ export default function MobileFeed() {
     const [user, setUser] = useState<User | null>(null);
     const [library, setLibrary] = useState<WorkTransaction[]>([]);
 
-    const fetchWorks = async () => {
+    const fetchWorks = async (userId: string | null) => {
         try {
-            const latestWorks = await getLatestOnePageWorks();
+            let latestWorks: Work[] = [];
+            
+            if (userId) {
+                // If user is logged in, get works from followed users
+                latestWorks = await getFollowingWorks(userId);
+                
+                // If no followed works found, fall back to latest one-page works
+                if (latestWorks.length === 0) {
+                    latestWorks = await getLatestOnePageWorks();
+                }
+            } else {
+                // If not logged in, show latest one-page works
+                latestWorks = await getLatestOnePageWorks();
+            }
 
             setWorks(latestWorks);
         } catch (error) {
@@ -30,8 +43,12 @@ export default function MobileFeed() {
     };
 
     useEffect(() => {
-        fetchWorks();
-    }, []);
+        if (user) {
+            fetchWorks(user.id);
+        } else {
+            fetchWorks(null);
+        }
+    }, [user]);
 
     
     const fetchUser = async () => {
