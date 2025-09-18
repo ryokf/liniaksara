@@ -14,7 +14,7 @@ export interface Part {
     title: string;
     part_order: number;
     content?: string;
-    content_url?: string;
+    content_url: string;
     type: string;
     creatorId: string;
     workId: string;
@@ -27,9 +27,10 @@ export interface Part {
 export interface PartListClientProps {
     parts: Part[];
     isAuthor: boolean;
+    onOrderChange?: (updatedList: Part[]) => void;
 }
 
-const PartListClient: React.FC<PartListClientProps> = ({ parts, isAuthor }) => {
+const PartListClient: React.FC<PartListClientProps> = ({ parts, isAuthor, onOrderChange }) => {
     const router = useRouter();
     const [items, setItems] = useState<Part[]>(parts);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -120,7 +121,9 @@ const PartListClient: React.FC<PartListClientProps> = ({ parts, isAuthor }) => {
                 return item;
             }).sort((a, b) => a.part_order - b.part_order);
 
-            setItems(updatedItems);
+            const sortedItems = updatedItems.sort((a, b) => a.part_order - b.part_order);
+            setItems(sortedItems);
+            onOrderChange?.(sortedItems);
             toast.success('Bagian berhasil diperbarui');
         } catch (error) {
             console.error('Error updating part:', error);

@@ -39,6 +39,7 @@ interface ComicDetailTemplateProps {
         part_order: number;
         title: string;
         thumbnail?: string;
+        content_url?: string;
         is_free: boolean;
     }>;
 }
@@ -61,12 +62,16 @@ export default function WorkDetailTemplate({
     const router = useRouter();
     const [isDeleting, setIsDeleting] = useState(false);
     const [chapterList, setChapterList] = useState(() =>
-        // Ensure all required fields are strings
+        // Ensure all required fields are present and have correct types
         chapters.map(chapter => ({
             ...chapter,
             id: String(chapter.id),
             workId: String(chapter.workId || id),
             type: String(category).toLowerCase(),
+            creatorId: authorId, // Add creatorId
+            status: 'published', // Add default status
+            content_url: chapter.content_url || '', // Use existing content_url or empty string
+            is_free: chapter.is_free ?? true // Ensure is_free has a default value
         }))
     );
 
@@ -77,8 +82,12 @@ export default function WorkDetailTemplate({
             id: String(chapter.id),
             workId: String(chapter.workId || id),
             type: String(category).toLowerCase(),
+            creatorId: authorId, // Add creatorId
+            status: 'published', // Add default status
+            content_url: chapter.content_url || '', // Use existing content_url or empty string
+            is_free: chapter.is_free ?? true // Ensure is_free has a default value
         })));
-    }, [chapters, category, id]);
+    }, [chapters, category, id, authorId]);
 
     const isAuthor = Boolean(userLogin && userLogin.id === authorId);
 
@@ -213,10 +222,8 @@ export default function WorkDetailTemplate({
                         <div className="space-y-8">
                             <PartList
                                 parts={chapterList || []}
-                                category={category.toLowerCase()}
                                 isAuthor={!!isAuthor}
-                                workId={id}
-                                onOrderChange={(updatedList) => {
+                                onOrderChange={(updatedList: typeof chapterList) => {
                                     setChapterList(updatedList);
                                 }}
                             />
