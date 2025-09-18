@@ -7,10 +7,12 @@ import FilterButton from '../atoms/FilterButton';
 import WorkCard from '../molecules/WorkCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faShareAlt, faBookmark, faShare } from '@fortawesome/free-solid-svg-icons';
+import FollowButton from '../molecules/FollowButton';
 
 type WorkType = 'book' | 'image' | 'video';
 
 interface UserProfile {
+    id: string;
     username: string;
     bio: string;
     photo_url: string;
@@ -81,6 +83,8 @@ export default function ProfileTemplate({ profile, works }: ProfileTemplateProps
         return () => window.removeEventListener('keydown', onKey);
     }, [setSelectedWork]);
 
+    console.log('Profile:', profile);
+
     return (
         <main className="min-h-screen bg-white dark:bg-gray-900 pt-10">
             <Navbar />
@@ -124,9 +128,13 @@ export default function ProfileTemplate({ profile, works }: ProfileTemplateProps
                     </div>
 
                     {/* Follow Button */}
-                    <button className="px-8 py-2.5 rounded-full gradient-bg text-white font-medium hover:opacity-90 transition-opacity">
-                        Follow
-                    </button>
+                                        {/* Follow Button */}
+                    <FollowButton
+                        userId={profile.id}
+                        className="px-8 py-2.5"
+                    />
+
+                    {/* Filters */}
                 </div>
 
                 {/* Filters */}

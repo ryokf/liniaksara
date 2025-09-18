@@ -66,6 +66,7 @@ export default function ProfilePage() {
     return (
         <ProfileTemplate 
             profile={{
+                id: profile.id,
                 username: profile.username,
                 bio: profile.bio || '',
                 photo_url: profile.photo_url || '/images/default-avatar.svg',

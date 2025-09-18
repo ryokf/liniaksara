@@ -17,6 +17,31 @@ export interface UserProfileWithStats extends UserProfile {
     following_count: number;
 }
 
+export interface UpdateProfileData {
+    username?: string;
+    full_name?: string;
+    bio?: string;
+    photo_url?: string;
+    email?: string;
+}
+
+export async function updateProfile(userId: string, data: UpdateProfileData): Promise<UserProfile | null> {
+    try {
+        const { data: updatedProfile, error } = await supabase
+            .from('profiles')
+            .update(data)
+            .eq('id', userId)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return updatedProfile;
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        throw error;
+    }
+}
+
 export async function getUserProfile(username: string): Promise<UserProfileWithStats | null> {
     try {
         // Fetch user profile
