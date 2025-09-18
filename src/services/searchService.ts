@@ -2,8 +2,19 @@ import supabase from '@/config/supabase';
 import { Work } from '@/types/works';
 import { PostgrestError } from '@supabase/supabase-js';
 
+/**
+ * Constants
+ */
+const DEFAULT_SEARCH_LIMIT = 20;
+
+/**
+ * Types of search that can be performed
+ */
 export type SearchType = 'works' | 'users';
 
+/**
+ * Interface representing a user in search results
+ */
 export interface SearchUser {
     id: string;
     username: string;
@@ -20,12 +31,20 @@ export interface SearchUser {
     }>;
 }
 
+/**
+ * Interface representing combined search results
+ */
 export interface SearchResults {
     works: Work[];
     users: SearchUser[];
     type: SearchType;
 }
 
+/**
+ * Search for works by title
+ * @param query - The search query string
+ * @returns Promise resolving to an array of Work objects
+ */
 export async function searchWorks(query: string): Promise<Work[]> {
     if (!query) return [];
     
@@ -42,11 +61,6 @@ export async function searchWorks(query: string): Promise<Work[]> {
                 )
             `)
             .ilike('title', `%${query}%`)
-
-            console.log('Search query:', query);
-            console.log('Supabase response data:', data);
-            console.log('Supabase response error:', error);
-            
             // .eq('is_draft', false)
 
         if (error) {
@@ -57,10 +71,15 @@ export async function searchWorks(query: string): Promise<Work[]> {
         return data || [];
     } catch (err) {
         console.error('Error in searchWorks:', err);
-        throw err;
+        throw new Error(`Unexpected error searching works: ${err instanceof Error ? err.message : String(err)}`);
     }
 }
 
+/**
+ * Search for users by username
+ * @param query - The search query string
+ * @returns Promise resolving to an array of SearchUser objects
+ */
 export async function searchUsers(query: string): Promise<SearchUser[]> {
     if (!query) return [];
     
@@ -73,7 +92,7 @@ export async function searchUsers(query: string): Promise<SearchUser[]> {
                 photo_url
             `)
             .ilike('username', `%${query}%`)
-            // .limit(20);
+            .limit(DEFAULT_SEARCH_LIMIT);
 
         if (error) {
             console.error('Error searching users:', error);
@@ -90,10 +109,16 @@ export async function searchUsers(query: string): Promise<SearchUser[]> {
         return transformedData;
     } catch (err) {
         console.error('Error in searchUsers:', err);
-        throw err;
+        throw new Error(`Unexpected error searching users: ${err instanceof Error ? err.message : String(err)}`);
     }
 }
 
+/**
+ * Perform a search for works or users
+ * @param query - The search query string
+ * @param type - The type of search to perform (works or users)
+ * @returns Promise resolving to SearchResults object
+ */
 export async function search(query: string, type: SearchType = 'works'): Promise<SearchResults> {
     if (!query) return { works: [], users: [], type };
 

@@ -1,18 +1,24 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import supabase from "@/config/supabase";
-import LandingPage from "@/components/organisms/LandingPage";
-
 import { useRouter } from "next/navigation";
+import supabase from "@/config/supabase";
+// Unused import removed
+// import LandingPage from "@/components/organisms/LandingPage";
 
+/**
+ * Interface representing an authenticated user
+ */
 interface User {
     id: string;
     email: string;
     displayName?: string;
-    photo?: string; // Optional, if you want to include user profile picture
+    photo?: string;
 }
 
+/**
+ * Interface for the authentication context
+ */
 interface AuthContextType {
     userLogin: User | null;
     loading: boolean;
@@ -20,8 +26,15 @@ interface AuthContextType {
     signOut: () => Promise<void>;
 }
 
+/**
+ * Context for authentication state and functions
+ */
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * Provider component for authentication context
+ * @param children - Child components that will have access to auth context
+ */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [userLogin, setUserLogin] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
@@ -83,19 +96,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         };
     }, []);
 
-    // Separate effect for navigation
+    // Handle navigation based on authentication state
     useEffect(() => {
         if (userLogin && window.location.pathname === '/') {
             router.push('/home');
         }
     }, [userLogin, router]);
 
+    /**
+     * Sign out the current user
+     */
     const signOut = async () => {
         try {
-            setUserLogin(null);
             const { error } = await supabase.auth.signOut();
-            if (error) throw error;
+            if (error) {
+                console.error('Error signing out:', error);
+                throw error;
+            }
+            setUserLogin(null);
         } catch (error) {
+            console.error('Sign out error:', error);
             setError(error as Error);
         }
     };
@@ -107,6 +127,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 }
 
+/**
+ * Hook to access authentication context
+ * @returns The authentication context
+ * @throws Error if used outside of AuthProvider
+ */
 export function useAuth() {
     const context = useContext(AuthContext);
     if (context === undefined) {

@@ -1,7 +1,18 @@
 import supabase from '@/config/supabase';
 import { Work } from '@/types/works';
 
-export const getLatestWorks = async (limit: number = 10): Promise<Work[]> => {
+/**
+ * Constants for query limits
+ */
+const DEFAULT_LIMIT = 10;
+const POPULAR_WORKS_LIMIT = 4;
+
+/**
+ * Fetches the latest works with author information and parts count
+ * @param limit - Maximum number of works to return
+ * @returns Promise resolving to an array of Work objects
+ */
+export const getLatestWorks = async (limit: number = DEFAULT_LIMIT): Promise<Work[]> => {
     const { data, error } = await supabase
         .from('works')
         .select(`
@@ -19,6 +30,7 @@ export const getLatestWorks = async (limit: number = 10): Promise<Work[]> => {
         .limit(limit);
 
     if (error) {
+        console.error('Error fetching latest works:', error);
         throw new Error(`Failed to fetch latest works: ${error.message}`);
     }
 
@@ -34,7 +46,11 @@ export const getLatestWorks = async (limit: number = 10): Promise<Work[]> => {
     })) as Work[];
 }
 
-export const getLatestOnePageWorks = async () => {
+/**
+ * Fetches the latest one-page works with author information
+ * @returns Promise resolving to an array of Work objects
+ */
+export const getLatestOnePageWorks = async (): Promise<Work[]> => {
     const {data, error} = await supabase
         .from('works')
         .select(`
@@ -45,7 +61,8 @@ export const getLatestOnePageWorks = async () => {
         .order('created_at', { ascending: false })
 
     if (error) {
-        throw new Error(`Failed to fetch latest works: ${error.message}`);
+        console.error('Error fetching latest one-page works:', error);
+        throw new Error(`Failed to fetch latest one-page works: ${error.message}`);
     }
 
     return data.map(work => ({
@@ -60,37 +77,42 @@ export const getLatestOnePageWorks = async () => {
     })) as Work[];
 }
 
+/**
+ * Fetches popular works based on creation date
+ * @returns Promise resolving to an array of Work objects
+ */
 export const getPopularWorks = async (): Promise<Work[]> => {
-    try {
-        const { data, error } = await supabase
-            .from('works')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(4);
+    const { data, error } = await supabase
+        .from('works')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(POPULAR_WORKS_LIMIT);
 
-        if (error) throw error;
-
-        return data as Work[];
-    } catch (error) {
+    if (error) {
         console.error('Error fetching popular works:', error);
-        throw error;
+        throw new Error(`Failed to fetch popular works: ${error.message}`);
     }
+
+    return data as Work[];
 }
 
+/**
+ * Fetches popular works by type
+ * @param typeId - The work type ID to filter by
+ * @returns Promise resolving to an array of Work objects
+ */
 export const getPopularWorkByType = async (typeId: number): Promise<Work[]> => {
-    try {
-        const { data, error } = await supabase
-            .from('works')
-            .select('*, work_types(*), profiles(*)')
-            .eq('work_type_id', typeId)
-            .order('created_at', { ascending: false })
-            .limit(10);
+    const { data, error } = await supabase
+        .from('works')
+        .select('*, work_types(*), profiles(*)')
+        .eq('work_type_id', typeId)
+        .order('created_at', { ascending: false })
+        .limit(DEFAULT_LIMIT);
 
-        if (error) throw error;
-
-        return data as Work[];
-    } catch (error) {
+    if (error) {
         console.error('Error fetching popular works by type:', error);
-        throw error;
+        throw new Error(`Failed to fetch popular works by type: ${error.message}`);
     }
+
+    return data as Work[];
 }
