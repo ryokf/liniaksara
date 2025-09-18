@@ -12,6 +12,7 @@ interface ComicEpisodeCardProps {
     description?: string;
     is_free?: boolean;
     isAuthor?: boolean;
+    onEdit?: () => void;
 }
 
 export default function ComicEpisodeCard({
@@ -23,7 +24,8 @@ export default function ComicEpisodeCard({
     thumbnail,
     description,
     is_free,
-    isAuthor
+    isAuthor,
+    onEdit
 }: ComicEpisodeCardProps) {
     const imgSrc = thumbnail ?? 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/axl1r8AAAAASUVORK5CYII=';
     
@@ -71,6 +73,7 @@ export default function ComicEpisodeCard({
                             partId={id}
                             workId={workId}
                             type="comic"
+                            onEditClick={onEdit}
                         />
                     </div>
                 )}

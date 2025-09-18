@@ -13,6 +13,7 @@ interface MovieEpisodeCardProps {
     duration: string;
     isFree: boolean;
     isAuthor?: boolean;
+    onEdit?: () => void;
 }
 
 export default function MovieEpisodeCard({
@@ -23,7 +24,8 @@ export default function MovieEpisodeCard({
     thumbnail,
     duration,
     isFree,
-    isAuthor
+    isAuthor,
+    onEdit
 }: MovieEpisodeCardProps) {
     return (
         <div className="group">
@@ -69,6 +71,7 @@ export default function MovieEpisodeCard({
                             partId={id}
                             workId={workId}
                             type="movie"
+                            onEditClick={onEdit}
                         />
                     </div>
                 )}

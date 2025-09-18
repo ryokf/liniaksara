@@ -10,11 +10,14 @@ import ComicEpisodeCard from '../molecules/ComicEpisodeCard';
 import { WorkGenre } from '@/types/works';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AddPartButton from '../atoms/AddPartButton';
 import ChapterItem from '../molecules/ChapterItem';
 import MovieEpisodeCard from '../molecules/MovieEpisodeCard';
 import DeleteWorkButton from '../molecules/DeleteWorkButton';
+import { DragDropContext } from 'react-beautiful-dnd';
+import PartList from '../molecules/PartList';
+import { updatePartOrder } from '@/services/updatePartOrderService';
 
 interface ComicDetailTemplateProps {
     id: string;
@@ -57,10 +60,27 @@ export default function WorkDetailTemplate({
     const { userLogin } = useAuth();
     const router = useRouter();
     const [isDeleting, setIsDeleting] = useState(false);
+    const [chapterList, setChapterList] = useState(() =>
+        // Ensure all required fields are strings
+        chapters.map(chapter => ({
+            ...chapter,
+            id: String(chapter.id),
+            workId: String(chapter.workId || id),
+            type: String(category).toLowerCase(),
+        }))
+    );
 
-    const isAuthor = userLogin && userLogin.id === authorId;
+    // Update chapterList when chapters prop changes
+    useEffect(() => {
+        setChapterList(chapters.map(chapter => ({
+            ...chapter,
+            id: String(chapter.id),
+            workId: String(chapter.workId || id),
+            type: String(category).toLowerCase(),
+        })));
+    }, [chapters, category, id]);
 
-    console.log(isAuthor)
+    const isAuthor = Boolean(userLogin && userLogin.id === authorId);
 
     const handleEdit = () => {
         router.push(`/dashboard/works/edit/${id}`);
@@ -87,6 +107,12 @@ export default function WorkDetailTemplate({
     const handleAddPart = () => {
         router.push(`/dashboard/works/parts/add/${id}`);
     };
+
+    const allowedTypes = ['novel', 'comic', 'movie', 'series'] as const;
+    type AllowedType = typeof allowedTypes[number];
+    const normalizedType: AllowedType | undefined = allowedTypes.find(
+        t => t === (category?.toLowerCase() as AllowedType)
+    );
 
     console.log(genres)
     return (
@@ -185,65 +211,25 @@ export default function WorkDetailTemplate({
                     <div className="lg:col-span-2 space-y-12">
                         {/* Episodes */}
                         <div className="space-y-8">
-                            {
-                                category == 'Comic' && (
-                                    chapters.map((chapter) => (
-                                        <ComicEpisodeCard 
-                                            key={chapter.id}
-                                            id={chapter.id}
-                                            workId={id}
-                                            type="comic"
-                                            title={chapter.title}
-                                            part_order={chapter.part_order || 0}
-                                            thumbnail={chapter.thumbnail || '/images/default-cover.svg'}
-                                            is_free={chapter.is_free}
-                                            isAuthor={isAuthor}
-                                        />
-                                    ))
-                                )
-                            }
-                            {
-                                category == 'Novel' && (
-                                    chapters.map((chapter) => (
-                                        <ChapterItem
-                                            key={chapter.id}
-                                            id={chapter.id}
-                                            workId={id}
-                                            type="novel"
-                                            chapterNumber={chapter.part_order || 0}
-                                            title={chapter.title}
-                                            isAuthor={isAuthor}
-                                        />
-                                    ))
-                                )
-                            }
-                            {
-                                category == 'Movie' && (
-                                    chapters.map((chapter) => (
-                                        <MovieEpisodeCard
-                                            key={chapter.id}
-                                            id={chapter.id}
-                                            workId={id}
-                                            title={chapter.title}
-                                            episodeNumber={chapter.part_order}
-                                            thumbnail={chapter.thumbnail || '/images/default-cover.svg'}
-                                            isFree={chapter.is_free}
-                                            duration='00:00'
-                                            isAuthor={isAuthor}
-                                        />
-                                    ))
-                                )
-                            }
+                            <PartList
+                                parts={chapterList || []}
+                                category={category.toLowerCase()}
+                                isAuthor={!!isAuthor}
+                                workId={id}
+                                onOrderChange={(updatedList) => {
+                                    setChapterList(updatedList);
+                                }}
+                            />
 
-                            {
-                                isAuthor && (
-
-                                    <AddPartButton workId={id} onSuccess={() => {
+                            {isAuthor && (
+                                <AddPartButton
+                                    workId={id}
+                                    onSuccess={() => {
                                         // Refresh the chapter list or perform any other action on success
                                     }}
-                                        type="comic" />
-                                )
-                            }
+                                    type={normalizedType}
+                                />
+                            )}
                         </div>
                     </div>
 

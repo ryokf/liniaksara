@@ -9,9 +9,10 @@ interface ChapterItemProps {
     chapterNumber: number;
     title: string;
     isAuthor?: boolean;
+    onEdit?: () => void;
 }
 
-export default function ChapterItem({ id, workId, type, chapterNumber, title, isAuthor }: ChapterItemProps) {
+export default function ChapterItem({ id, workId, type, chapterNumber, title, isAuthor, onEdit }: ChapterItemProps) {
     return (
         <div className="flex items-center justify-between p-4 rounded-xl bg-white dark:bg-gray-800 hover:shadow-lg dark:hover:shadow-primary/5 transition-all group">
             <Link 
@@ -34,6 +35,7 @@ export default function ChapterItem({ id, workId, type, chapterNumber, title, is
                         partId={id}
                         workId={workId}
                         type={type}
+                        onEditClick={onEdit}
                     />
                 )}
                 <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
