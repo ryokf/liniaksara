@@ -5,9 +5,23 @@ import { useRouter } from 'next/navigation';
 import Button from '../atoms/Button';
 import InputField from '../atoms/InputField';
 import { updateWork } from '@/services/updateWorkService';
-import { Work, Genre } from '@/types/works';
+import { Work } from '@/types/works';
 import supabase from '@/config/supabase';
 
+// Work may come with either a direct work_type_id or a joined relation work_type
+type WorkMaybeWithType = Work & {
+  work_type_id?: number;
+  work_type?: { id: number; type?: string } | null;
+};
+
+type EditWorkForm = {
+  title: string;
+  description: string;
+  cover: string;
+  is_draft: boolean;
+  price: number;
+  work_type_id?: number; // optional to allow undefined during initialization/invalid state
+};
 
 interface EditWorkModalProps {
     work: Work;
@@ -18,13 +32,13 @@ interface EditWorkModalProps {
 export default function EditWorkModal({ work, isOpen, onClose }: EditWorkModalProps) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<EditWorkForm>({
         title: work.title,
         description: work.description || '',
         cover: work.cover || '',
         is_draft: work.is_draft ?? true,
         price: work.price ?? 0,
-        work_type_id: (work as any).work_type_id ?? (work as any).work_type?.id ?? undefined
+        work_type_id: (work as WorkMaybeWithType).work_type_id ?? (work as WorkMaybeWithType).work_type?.id ?? undefined
     });
 
     const [workTypes, setWorkTypes] = useState<Array<{ id: number; type: string }>>([]);
