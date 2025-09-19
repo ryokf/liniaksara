@@ -2,6 +2,53 @@
 
 LiniAksara is a modern creative platform designed to host, share, and discover various types of creative content including comics, novels, videos, and community activities. Built with Next.js 14 (App Router) and integrated with Supabase for authentication and data management.
 
+## Project Overview
+
+LiniAksara serves as a bridge between creators and consumers of digital content, focusing on:
+
+- **Content Creation & Distribution**: Supporting various content types from comics to videos
+- **Creator Community**: Building meaningful connections between creators and their audience
+- **Content Monetization**: Enabling creators to monetize their work through premium content
+- **User Experience**: Delivering a personalized and engaging content discovery experience
+
+## Key Features
+
+### Social Features
+
+- **Follow System**
+  - Follow/Unfollow creators
+  - Personalized feed based on followed creators
+  - Real-time follow status updates
+  - Optimistic UI updates for better UX
+
+- **Profile Management**
+  - Customizable user profiles
+  - Works showcase
+  - Follower/Following statistics
+  - Activity feed
+
+### Content Features
+
+- **Multi-format Support**
+  - Comics and Light Novels
+  - Videos (Anime & Drama)
+  - One-page Artworks & Fanart
+  - Community Content
+
+- **Reading & Viewing**
+  - Built-in Comic Reader
+  - PDF Reader for Novels
+  - Video Player Integration
+  - Free/Premium Content Management
+
+### Creator Tools
+
+- **Content Management**
+  - Work Upload System
+  - Chapter/Episode Management
+  - Draft & Publish System
+  - Cover Image Management
+
 ## Core Features
 
 ### Content Management
@@ -78,23 +125,46 @@ Struktur folder utama:
 - Layanan data di `src/services` untuk pemanggilan Supabase dan logika bisnis.
 - Konteks autentikasi di `src/contexts` untuk mengelola state user sisi client.
 
-## Teknologi Utama
+## Technical Stack
 
-- Next.js 15 (App Router) dengan React 19 dan dev server Turbopack.
-- Supabase:
-  - Auth di client dengan `@supabase/auth-helpers-nextjs`.
-  - Middleware untuk proteksi route dan redirect berbasis sesi di `src/middleware.ts`.
-- Tailwind CSS v4 untuk styling.
-- Next/Image untuk optimasi gambar dan remote image domain yang dikonfigurasi di `next.config.ts`.
-- Ikon: `lucide-react`, `react-icons`, dan FontAwesome React.
-- TypeScript untuk type-safety, dengan alias `@/*` (lihat `tsconfig.json`).
+### Frontend
 
-File penting:
-- <mcfile name="next.config.ts" path="/Users/ryokhrisna/data/coding/liniaksara/next.config.ts"></mcfile>
-- <mcfile name="middleware.ts" path="/Users/ryokhrisna/data/coding/liniaksara/src/middleware.ts"></mcfile>
-- <mcfile name="supabase.ts" path="/Users/ryokhrisna/data/coding/liniaksara/src/config/supabase.ts"></mcfile>
-- <mcfile name="HomeTemplate.tsx" path="/Users/ryokhrisna/data/coding/liniaksara/src/components/templates/HomeTemplate.tsx"></mcfile>
-- <mcfile name="ComicDetailTemplate.tsx" path="/Users/ryokhrisna/data/coding/liniaksara/src/components/templates/ComicDetailTemplate.tsx"></mcfile>
+- **Framework**: Next.js 14 (App Router)
+- **UI/UX**:
+  - Tailwind CSS for styling
+  - Component-based architecture (Atomic Design)
+  - Framer Motion for animations
+  - Dark mode support
+
+- **State Management**:
+  - React Context for global state
+  - Optimistic updates
+  - Real-time data synchronization
+
+### Backend (Supabase)
+
+- **Database**:
+  - PostgreSQL with RLS policies
+  - Structured content management
+  - Social features schema
+  - Transaction tracking
+
+- **Authentication**:
+  - Supabase Auth
+  - Protected routes
+  - Role-based access
+
+- **Storage**:
+  - Media file management
+  - Content delivery
+  - Asset optimization
+
+### Key Technologies
+
+- TypeScript for type safety
+- Next.js Image optimization
+- Supabase Auth Helpers
+- Lucide React & FontAwesome icons
 
 ## Fitur Utama
 
@@ -112,43 +182,94 @@ File penting:
   - Pengguna tanpa sesi akan di-redirect ke `/` saat mengakses route terproteksi.
   - Pengguna yang sudah login diarahkan ke `/home` jika mengunjungi `/login` atau `/register`.
 
-## Persiapan Lingkungan
+## Project Structure
 
-1. Pastikan Node.js LTS terbaru terpasang.
-2. Instal dependensi:
-   ```bash
-   npm install
-   ```
-3. Buat file `.env.local` di root proyek dan isi variabel berikut:
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-   (Ganti dengan kredensial Supabase Anda)
-4. Opsional: Terapkan migrasi SQL jika menggunakan Supabase lokal:
-   - Jalankan file di `supabase/migrations/20230813_create_creator_stats.sql` untuk statistik kreator.
+```
+src/
+├── app/                # Next.js App Router
+│   ├── (auth)/        # Authentication routes
+│   ├── dashboard/     # User dashboard
+│   ├── home/         # Main feed
+│   ├── profile/      # User profiles
+│   ├── read/        # Content viewing
+│   └── watch/       # Video content
+├── components/       # UI Components
+│   ├── atoms/       # Basic components
+│   ├── molecules/   # Composite components
+│   ├── organisms/   # Complex components
+│   └── templates/   # Page layouts
+├── services/        # API services
+├── contexts/        # React contexts
+├── types/          # TypeScript types
+└── config/         # Configuration
+```
 
-## Menjalankan Secara Lokal
+## Getting Started
 
-- Mode pengembangan:
-  ```bash
-  npm run dev
-  ```
-  Buka http://localhost:3000 di browser.
+### Prerequisites
 
-- Build dan production:
-  ```bash
-  npm run build
-  npm start
-  ```
+- Node.js >= 18.0.0
+- npm >= 9.0.0
 
-- Linting:
-  ```bash
-  npm run lint
-  ```
+### Installation
 
-Script yang tersedia (lihat `package.json`):
-- `dev`: next dev menggunakan Turbopack.
-- `build`: next build.
-- `start`: next start.
-- `lint`: next lint.
+1. Clone the repository:
+
+```bash
+git clone https://github.com/ryokf/liniaksara.git
+cd liniaksara
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up environment variables:
+
+```bash
+# Create .env.local and add:
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
+```
+
+### Development
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000) to view the application.
+
+### Building for Production
+
+```bash
+npm run build
+npm start
+```
+
+## Current Status
+
+✅ Completed:
+- Core authentication system
+- Follow system implementation
+- Basic content management
+- Profile system
+- Feed personalization
+
+🚧 In Progress:
+- Enhanced social features
+- Content recommendation system
+- Advanced creator tools
+
+📅 Planned:
+- Analytics dashboard
+- Monetization features
+- Advanced search capabilities
+
+## License
+
+This project is proprietary and all rights are reserved.
