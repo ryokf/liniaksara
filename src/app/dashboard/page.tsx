@@ -2,17 +2,22 @@ import {
     Users,
     Eye,
     ThumbsUp,
-    MessageSquare,
+    Book,
     TrendingUp,
-    Award
+    Award,
+    Clock
 } from 'lucide-react';
 import DashboardLayout from '@/components/templates/DashboardLayout';
+import { getUserDashboardStats } from '@/services/dashboardService';
+import { cookies } from 'next/headers';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { redirect } from 'next/navigation';
 
 // Komponen statistik card
 function StatCard({ icon: Icon, label, value, trend }: {
     icon: React.ElementType;
     label: string;
-    value: string;
+    value: string | number;
     trend?: string;
 }) {
     return (
@@ -63,22 +68,56 @@ function AchievementCard({ title, progress }: { title: string; progress: number 
     );
 }
 
-// Data dummy untuk statistik
-const stats = [
-    { icon: Users, label: 'Total Pengikut', value: '2,543', trend: '+12% bulan ini' },
-    { icon: Eye, label: 'Total Views', value: '45.2K', trend: '+25% bulan ini' },
-    { icon: ThumbsUp, label: 'Total Likes', value: '12.8K', trend: '+18% bulan ini' },
-    { icon: MessageSquare, label: 'Total Komentar', value: '1,289', trend: '+7% bulan ini' }
-];
+// Komponen recent activity
+import Image from 'next/image';
+import type { DashboardWork } from '@/services/dashboardService';
+import supabase from '@/config/supabase';
+import { getUser } from '@/services/userServices';
+import { FaDollarSign } from 'react-icons/fa';
 
-// Data dummy untuk achievements
-const achievements = [
-    { title: 'Penulis Bintang', progress: 75 },
-    { title: 'Top Contributor', progress: 45 },
-    { title: 'Social Butterfly', progress: 90 }
-];
+function RecentWorkCard({ work }: { work: DashboardWork }) {
+    return (
+        <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+            <div className="w-16 h-16 relative rounded-lg overflow-hidden mr-4">
+                <Image 
+                    src={work.cover || '/images/default-cover.svg'} 
+                    alt={work.title} 
+                    className="object-cover"
+                    fill 
+                    sizes="64px"
+                />
+            </div>
+            <div className="flex-1">
+                <h4 className="text-gray-900 dark:text-white font-medium mb-1">{work.title}</h4>
+                <p className="text-gray-600 dark:text-gray-400 text-sm flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    {new Date(work.created_at).toLocaleDateString()}
+                </p>
+            </div>
+            <div className="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700">
+                <span className="text-sm text-gray-600 dark:text-gray-300">{work.work_types.type}</span>
+            </div>
+        </div>
+    );
+}
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+    const supabase = createServerComponentClient({ cookies });
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+        redirect('/login');
+    }
+
+    const stats = await getUserDashboardStats(session.user.id);
+
+    // Data dummy untuk achievements - TODO: Implement achievements system
+    const achievements = [
+        { title: 'Penulis Bintang', progress: 75 },
+        { title: 'Top Contributor', progress: 45 },
+        { title: 'Social Butterfly', progress: 90 }
+    ];
+
     return (
         <DashboardLayout activeMenu="/dashboard">
             {/* Header */}
@@ -93,9 +132,55 @@ export default function DashboardPage() {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                {stats.map((stat, index) => (
-                    <StatCard key={index} {...stat} />
-                ))}
+                <StatCard icon={Book} label="Total Works" value={stats.totalWorks} />
+                <StatCard icon={Users} label="Total Followers" value={stats.totalFollowers} />
+                <StatCard icon={Eye} label="Total Views" value={stats.totalViews} />
+                <StatCard icon={FaDollarSign} label="Balance" value={0} />
+            </div>
+
+            {/* Recent Works */}
+            <div className="mb-8">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                    Recent Works
+                </h2>
+                <div className="grid gap-4">
+                    {stats.recentWorks.map((work) => (
+                        <RecentWorkCard key={work.id} work={work} />
+                    ))}
+                </div>
+            </div>
+
+            {/* Recent Transactions */}
+            <div className="mb-8">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                    Recent Transactions
+                </h2>
+                <div className="grid gap-4">
+                    {stats.recentTransactions.map((transaction) => (
+                        <div key={transaction.id} className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+                            <div className="w-12 h-12 relative rounded-full overflow-hidden mr-4">
+                                <Image 
+                                    src={transaction.profiles.photo_url || '/images/default-avatar.svg'} 
+                                    alt={transaction.profiles.username} 
+                                    className="object-cover"
+                                    fill
+                                    sizes="48px"
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <h4 className="text-gray-900 dark:text-white font-medium">
+                                    {transaction.profiles.username}
+                                </h4>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                                    Purchased {transaction.works.title}
+                                </p>
+                            </div>
+                            <p className="text-gray-600 dark:text-gray-400 text-sm">
+                                {new Date(transaction.created_at).toLocaleDateString()}
+                            </p>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Achievements Section */}
