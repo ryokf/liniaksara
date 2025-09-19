@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const snap = new Midtrans.Snap({
     isProduction: true,
     serverKey: process.env.SECRET ?? '',
-    clientKey: process.env.NEXT_PUBLIC_CLIENT ?? '',
+    clientKey: process.env.NEXT_PUBLIC_CLIENT,
 });
 
 export async function POST(request: Request) {

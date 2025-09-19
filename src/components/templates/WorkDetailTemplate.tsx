@@ -18,6 +18,17 @@ import DeleteWorkButton from '../molecules/DeleteWorkButton';
 import { DragDropContext } from 'react-beautiful-dnd';
 import PartList from '../molecules/PartList';
 import { updatePartOrder } from '@/services/updatePartOrderService';
+import PaymentButton from '../molecules/PaymentButton';
+
+// Safe formatter for IDR that accepts number or numeric string
+const formatIDR = (value: number | string) => {
+    const n = typeof value === 'string' ? Number(value) : value;
+    if (Number.isFinite(n)) {
+        return new Intl.NumberFormat('id-ID').format(n as number);
+    }
+    // Fallback: return original value as string if not numeric
+    return String(value);
+};
 
 interface ComicDetailTemplateProps {
     id: string;
@@ -53,6 +64,7 @@ export default function WorkDetailTemplate({
     description,
     coverImage,
     genres,
+    price,
     author,
     authorId,
     publisher,
@@ -149,6 +161,18 @@ export default function WorkDetailTemplate({
                                 {description}
                             </p>
 
+                            <p className="text-gray-400 text-sm">
+                                {genres.join(', ')}
+                            </p>
+
+                            <p className="text-lg font-bold">
+                                {
+                                    price === 0 ? 'Gratis' : (
+                                        `Rp${formatIDR(price)}`
+                                    )
+                                }
+                            </p>
+
                             {/* Action Buttons */}
                             {/* Action Buttons */}
                             <div className="flex flex-wrap gap-4 pt-4">
@@ -172,10 +196,7 @@ export default function WorkDetailTemplate({
                                     </>
                                 ) : (
                                     <>
-                                        <button className="px-8 py-3 rounded-full gradient-bg text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
-                                            <Play className="w-5 h-5" fill="currentColor" />
-                                            Baca Sekarang
-                                        </button>
+                                        <PaymentButton price={Number(price)} work_id={id} />
                                         <button className="px-8 py-3 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors flex items-center gap-2">
                                             <Bookmark className="w-5 h-5" />
                                             Tambah ke List

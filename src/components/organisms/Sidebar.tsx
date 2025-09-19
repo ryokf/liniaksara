@@ -3,6 +3,7 @@ import {
     Library,
     UserCircle,
     Settings,
+    PaintbrushIcon,
 } from 'lucide-react';
 import SidebarMenuItem from '../molecules/SidebarMenuItem';
 import Image from 'next/image';
@@ -23,6 +24,11 @@ export default function Sidebar({ activeMenu, isOpen, onClose }: SidebarProps) {
         },
         {
             icon: Library,
+            label: 'Perpustakaan',
+            href: '/dashboard/library'
+        },
+        {
+            icon: PaintbrushIcon,
             label: 'Karya Saya',
             href: '/dashboard/works'
         },

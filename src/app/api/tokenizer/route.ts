@@ -5,11 +5,11 @@ import { NextResponse } from "next/server";
 const snap = new Midtrans.Snap({
     isProduction: true,
     serverKey: process.env.SECRET ?? '',
-    clientKey: process.env.NEXT_PUBLIC_CLIENT ?? '',
+    clientKey: process.env.NEXT_PUBLIC_CLIENT,
 });
 
 export async function POST(request: Request) {
-    const { price, id } = await request.json()
+    const { price, id, customer_details } = await request.json()
 
     const parameter = {
         transaction_details: {
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
         "customer_details": {
             "first_name": "TEST",
             "last_name": "UTOMO",
-            "email": "test@midtrans.com",
+            "email": customer_details.email || "",
             "phone": "+628123456",
             "billing_address": {
                 "first_name": "TEST",
