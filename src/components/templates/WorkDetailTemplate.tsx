@@ -91,31 +91,6 @@ export default function WorkDetailTemplate({
 
     const isAuthor = Boolean(userLogin && userLogin.id === authorId);
 
-    const handleEdit = () => {
-        router.push(`/dashboard/works/edit/${id}`);
-    };
-
-    const handleDelete = async () => {
-        if (!confirm('Apakah Anda yakin ingin menghapus karya ini?')) {
-            return;
-        }
-
-        try {
-            setIsDeleting(true);
-            // await deleteWork(id);
-            router.push('/dashboard/works');
-            router.refresh();
-        } catch (error) {
-            console.error('Error deleting work:', error);
-            alert('Gagal menghapus karya. Silakan coba lagi.');
-        } finally {
-            setIsDeleting(false);
-        }
-    };
-
-    const handleAddPart = () => {
-        router.push(`/dashboard/works/parts/add/${id}`);
-    };
 
     const allowedTypes = ['novel', 'comic', 'movie', 'series'] as const;
     type AllowedType = typeof allowedTypes[number];

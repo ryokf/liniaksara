@@ -1,6 +1,67 @@
 # LiniAksara
 
-LiniAksara adalah platform kreatif untuk menikmati dan mengelola konten lintas media: novel/komik, film/video, serta aktivitas komunitas kreator. Proyek ini dibangun dengan Next.js (App Router) dan terintegrasi dengan Supabase untuk autentikasi serta data.
+LiniAksara is a modern creative platform designed to host, share, and discover various types of creative content including comics, novels, videos, and community activities. Built with Next.js 14 (App Router) and integrated with Supabase for authentication and data management.
+
+## Core Features
+
+### Content Management
+- **Multi-format Content Support**
+  - Comics and Light Novels
+  - Videos (Anime & Drama)
+  - One-page Artworks & Fanart
+  - Community Content
+
+### User Experience
+- **Personalized Feed**
+  - Follow System for Creators
+  - Personalized Content Feed
+  - Popular Works Carousel
+  - Top Creators Showcase
+
+### Creator Tools
+- **Content Publishing**
+  - Work Upload System
+  - Chapter/Episode Management
+  - Draft & Publish System
+  - Cover Image Management
+
+### Community Features
+- **Social Interaction**
+  - Follow System
+  - Like & Comment
+  - Share Functionality
+  - Creator Profiles
+
+### Content Access
+- **Reading & Viewing**
+  - Built-in Comic Reader
+  - PDF Reader for Novels
+  - Video Player Integration
+  - Free/Premium Content Management
+
+## Technology Stack
+
+### Frontend
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS
+- **UI Components**: Custom Component System
+  - Atoms
+  - Molecules
+  - Organisms
+  - Templates
+- **State Management**: React Context
+- **Animation**: Framer Motion
+
+### Backend
+- **Database**: Supabase PostgreSQL
+- **Authentication**: Supabase Auth
+- **Storage**: Supabase Storage
+- **API**: REST API with Supabase Client
+
+### Infrastructure
+- **Hosting**: Vercel
+- **CDN**: Vercel Edge Network
+- **Storage**: Supabase Storage
 
 ## Konsep Produk
 
