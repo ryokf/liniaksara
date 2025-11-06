@@ -34,8 +34,6 @@ const nextConfig: NextConfig = {
       };
     }
     return config;
-
-    return config;
   },
 };
 

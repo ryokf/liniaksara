@@ -25,7 +25,7 @@ export default function Footer() {
             <h4 className="text-xl font-bold text-gray-800 dark:text-white">LiniAksara</h4>
           </div>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            International creative ecosystem platform is non-pirated and will not use your work for AI training, it&apos;s safe guys. The creator is also a creator and programmer, hehehehe. A meeting place for comics, light novels, fanart, anime, drama, and community.
+            A global creative ecosystem with clear artist protections: anti-piracy, no AI training, creator-owned. Gather for comics, light novels, fanart, anime, drama, and vibrant community spaces.
           </p>
         </div>
 

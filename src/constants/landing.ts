@@ -9,6 +9,7 @@ import {
   faInfinity,
 } from "@fortawesome/free-solid-svg-icons";
 
+
 export const Features = [
   {
     icon: faBookOpen,
@@ -52,7 +53,7 @@ export const WhyLiniAksaraItems = [
   {
     icon: faShieldAlt,
     color: "feature-icon-1",
-    title: "Protected with Smart Contracts",
+    title: "Anti piracy & No AI Training",
   },
   {
     icon: faPaintBrush,
@@ -73,22 +74,22 @@ export const WhyLiniAksaraItems = [
 
 export const ContentTypes = [
   {
-    src: "/images/komik.jpg",
+    src: "/comic.jpg",
     title: "Comics",
     desc: "Enjoy comics from talented local and international creators, with a wide range of genres and unique stories.",
   },
   {
-    src: "/images/ln.jpg",
+    src: "/novel.jpg",
     title: "Novels & Light Novels",
     desc: "Light yet immersive reads. Explore fantasy realms, heartwarming romance, and thrilling adventures.",
   },
   {
-    src: "/images/fanart.jpg",
+    src: "/illustration.jpg",
     title: "Fanart & Illustrations",
     desc: "View and share colorful visual artworks from the creative International community.",
   },
   {
-    src: "/images/anime.png",
+    src: "/anime.jpeg",
     title: "Anime & Donghua",
     desc: "Stream your favorite anime with official licenses and top-quality viewing experience.",
   },

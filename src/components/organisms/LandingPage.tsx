@@ -57,7 +57,7 @@ export default function LandingPage() {
 
             <WhyLiniAksara />
 
-            <ContentShowcase />
+            {/* <ContentShowcase /> */}
 
             <Footer />
         </div>

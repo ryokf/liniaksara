@@ -12,7 +12,7 @@ interface HeroProps {
 export default function Hero({ onOpen }: HeroProps) {
     return (
         <motion.section
-            className="relative bg-white dark:bg-gray-950 overflow-hidden py-10 md:py-40"
+            className="relative bg-gray-950 overflow-hidden py-10 md:py-40"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -40,7 +40,7 @@ export default function Hero({ onOpen }: HeroProps) {
                     >
                         An International Platform <br />
                         <span className="gradient-text">
-                            For Original Works Made Without AI
+                            For Cross-Media Storytelling
                         </span>
                     </motion.h1>
 
@@ -50,7 +50,7 @@ export default function Hero({ onOpen }: HeroProps) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                        In every stroke and sentence, there is an unspoken hope. LiniAksara wanna be a home for works that come with writer&apos;s heart to reader. The infinite world is waiting to be tread, doesn&apos;t wind want to open this page?
+                        In ink and breath, a hidden hope lingers—quiet as dawn between the margins, steady as a pulse beneath the paper, waiting to be heard. LiniAksara is a home for works carried from the writer’s heart to the reader’s light, a warm threshold where languages meet, where indie voices cross oceans and time zones to find their kin. The horizon widens, shall the breeze turn the first page?
                     </motion.p>
 
                     <motion.div
@@ -61,9 +61,9 @@ export default function Hero({ onOpen }: HeroProps) {
                     >
                         <Link
                             href="/register"
-                            className="flex items-center justify-center gap-2 btn-primary px-6 py-3 rounded-full shadow-lg"
+                            className="flex items-center justify-center gap-2 btn-primary px-6 py-3 rounded-full shadow-lg font-semibold"
                         >
-                            Start Adventure
+                            Start Journey
                         </Link>
                     </motion.div>
                 </motion.div>
@@ -78,7 +78,7 @@ export default function Hero({ onOpen }: HeroProps) {
                     <div className="relative w-[350px] aspect-square md:w-[400px] md:h-[400px]">
                         <Image
                             src="/hero.png"
-                            alt="Maskot Inkur"
+                            alt="Maskot LiniAksara"
                             fill
                             className="object-contain"
                             priority

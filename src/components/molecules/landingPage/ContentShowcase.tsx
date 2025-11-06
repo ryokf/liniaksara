@@ -36,6 +36,7 @@ export default function ContentShowcase() {
                 width={400}
                 height={300}
                 className="w-full h-40 object-cover rounded-md mb-4"
+                // unoptimized
               />
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                 {item.title}
