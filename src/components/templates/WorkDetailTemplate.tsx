@@ -162,7 +162,7 @@ export default function WorkDetailTemplate({
                             </p>
 
                             <p className="text-gray-400 text-sm">
-                                {genres.join(', ')}
+                                {genres.map(g => g?.genres?.genre).join(', ')}
                             </p>
 
                             <p className="text-lg font-bold">
