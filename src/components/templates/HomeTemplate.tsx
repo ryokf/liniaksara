@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Work } from '@/types/works';
 import { WorkTransaction } from '@/types/workTransaction';
 import { User } from '@supabase/supabase-js';
-import { getPopularWorkByType, getPopularWorks, getFollowingWorks } from '@/services/workServices';
+import { getPopularWorkByType, getPopularWorks, getFollowingWorks, getPopularWorksByTypeNames } from '@/services/workServices';
 import { getWorkTransactions } from '@/services/WorkTransactionService';
 import { getUser } from '@/services/userServices';
 import HeroCarousel from '../organisms/HeroCarousel';
@@ -38,7 +38,8 @@ export default function HomeTemplate() {
 
     const fetchPopularNovels = async () => {
         try {
-            const novels = await getPopularWorkByType(19);
+            // Query by name — tidak bergantung pada ID sequence
+            const novels = await getPopularWorksByTypeNames(['Novel', 'Light Novel']);
             setPopularNovels(novels);
         } catch (error) {
             console.error("Failed to fetch popular novels:", error);
@@ -47,7 +48,7 @@ export default function HomeTemplate() {
 
     const fetchPopularMovies = async () => {
         try {
-            const movies = await getPopularWorkByType(20); // Assuming 20 is the ID for movies
+            const movies = await getPopularWorksByTypeNames(['Anime', 'Donghua', 'Drama']);
             setPopularMovies(movies);
         } catch (error) {
             console.error("Failed to fetch popular movies:", error);
@@ -56,7 +57,7 @@ export default function HomeTemplate() {
 
     const fetchPopularComic = async () => {
         try {
-            const comic = await getPopularWorkByType(22); // Assuming 21 is the ID for Comic
+            const comic = await getPopularWorksByTypeNames(['Komik', 'Webtoon', 'Manhwa', 'Manhua']);
             setPopularComics(comic);
         } catch (error) {
             console.error("Failed to fetch popular Comics:", error);
@@ -65,7 +66,7 @@ export default function HomeTemplate() {
 
     const fetchPopularSeries = async () => {
         try {
-            const series = await getPopularWorkByType(23); // Assuming 23 is the ID for Series
+            const series = await getPopularWorksByTypeNames(['Drama', 'Anime', 'Donghua']);
             setPopularSeries(series);
         } catch (error) {
             console.error("Failed to fetch popular Series:", error);
