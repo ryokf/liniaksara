@@ -22,7 +22,7 @@
     "framer-motion": "^12.9.2",
     "lucide-react": "^0.488.0",
     "midtrans-client": "^1.4.2",
-    "next": "15.4.5",
+    "next": "16.2.7",
     "next-auth": "^4.24.11",
     "next-transpile-modules": "^10.0.1",
     "pdfjs-dist": "^5.4.54",
@@ -42,7 +42,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.4.5",
+    "eslint-config-next": "16.2.7",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

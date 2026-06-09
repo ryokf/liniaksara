@@ -9,8 +9,8 @@ import {
 } from 'lucide-react';
 import DashboardLayout from '@/components/templates/DashboardLayout';
 import { getUserDashboardStats } from '@/services/dashboardService';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { redirect } from 'next/navigation';
 
 // Komponen statistik card
@@ -102,7 +102,19 @@ function RecentWorkCard({ work }: { work: DashboardWork }) {
 }
 
 export default async function DashboardPage() {
-    const supabase = createServerComponentClient({ cookies });
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+            cookies: {
+                getAll() {
+                    return cookieStore.getAll()
+                },
+                setAll() {}, // read-only in Server Component
+            },
+        }
+    );
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {
